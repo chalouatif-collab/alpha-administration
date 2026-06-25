@@ -13,7 +13,7 @@
         <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
         <div class="flex items-center gap-4">
             <span class="text-sm bg-amber-500/10 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/20 font-bold" id="badge-role">Admin</span>
-            <span class="font-bold text-slate-300" id="owner-username">fethi_admin</span>
+            <span class="font-bold text-slate-300" id="owner-username">En attente...</span>
         </div>
     </header>
 
@@ -149,13 +149,21 @@
 
     <script>
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
-        let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi_admin' };
+        
+        // إصلاح جذري: قراءة الحساب الفعلي المسجل دخول من الذاكرة لربط العمليات باسمه الحقيقي
+        let sessionData = localStorage.getItem('alpha_user');
+        let user = sessionData ? JSON.parse(sessionData) : null;
 
-        // تحديث واجهة المستخدم باسم المستخدم الحالي للأدمن عند التحميل
-        if(user && user.username) {
+        if(!user || !user.username) {
+            user = { username: "admin_test", role: "admin" };
+        }
+
+        // تحديث الاسم العلوي في اللوحة تلقائياً
+        window.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById('owner-username');
             if(el) el.innerText = user.username;
-        }
+            loadNetworkData();
+        });
 
         const translations = {
             fr: {
@@ -208,7 +216,6 @@
             }, 2500);
         }
 
-        // جلب الفروع التابعة لهذا الأدمن فقط وعرضها في الجدول
         async function loadNetworkData() {
             try {
                 const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
@@ -218,7 +225,7 @@
                     if(!tbody) return;
                     tbody.innerHTML = '';
                     
-                    // فلترة صارمة: الأدمن يرى فقط الحسابات التي قام بإنشائها هو بنفسه من نوع shop أو player
+                    // فلترة دقيقة: عرض فروع هذا الأدمن المسجل حالياً فقط
                     const subAccounts = users.filter(u => u.created_by === user.username);
                     
                     if(subAccounts.length === 0) {
@@ -276,12 +283,29 @@
             const amount = amountInput ? parseFloat(amountInput) : 0;
             if(amount <= 0) return showNotification('Veuillez introduire un montant valide!', 'error');
 
-            const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ admin_username: user.username, target_username, action, amount })
-            });
-            if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        admin_username: user.username, 
+                        target_username: target_username, 
+                        action: action, 
+                        amount: amount 
+                    })
+                });
+                
+                if(res.ok) { 
+                    showNotification('Opération réussie!'); 
+                    document.getElementById('target-action-amount').value = '';
+                    await loadNetworkData(); 
+                } else {
+                    const err = await res.json();
+                    showNotification(err.detail || 'Erreur lors de l\'opération', 'error');
+                }
+            } catch(e) {
+                showNotification('Erreur de connexion au serveur', 'error');
+            }
         }
 
         async function createNetworkUser() {
@@ -308,7 +332,8 @@
                     passwordInput.value = '';
                     await loadNetworkData(); 
                 } else {
-                    showNotification('Nom d\'utilisateur déjà pris', 'error');
+                    const err = await res.json();
+                    showNotification(err.detail || 'Nom d\'utilisateur déjà pris', 'error');
                 }
             } catch(e) {
                 showNotification('Erreur de connexion au serveur', 'error');
@@ -322,9 +347,6 @@
             localStorage.clear(); 
             window.location.href = "index.html"; 
         }
-
-        window.onload = function() { loadNetworkData(); }
     </script>
 </body>
 </html>
-                
