@@ -215,7 +215,7 @@
 
         async function loadNetworkData() {
             try {
-                // تعديل جوهري: تم إلغاء تصفية السيرفر المربكة وطلب كافة الحسابات بشكل عام ومباشر
+                // استهداف الرابط المباشر العام بدون بارامترات الفلترة المعطلة
                 const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
                 if(uRes.ok){
                     const users = await uRes.json();
