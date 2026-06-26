@@ -132,7 +132,6 @@
         </div>
     </div>
 
-    <!-- النافذة المنبثقة الشاملة لعرض تفاصيل الرهانات الرياضية المباشرة -->
     <div id="history-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative">
             <button onclick="closeModal('history-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -256,14 +255,14 @@
             document.getElementById('rtp-val-label').innerText = rtp + '%';
         }
 
-        // 🚀 تعديل ذكي ومصلح بالكامل لجلب الأوراق الحقيقية من مسار السيرفر الجديد
+        // 🚀 دالة الفتح والجلب الفوري والمصلح للأوراق السحابية
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
             const title = document.getElementById('modal-title');
             const headers = document.getElementById('modal-table-headers');
             const body = document.getElementById('modal-table-body');
             
-            const target_username = document.getElementById('ctrl-target-user').value;
+            const target_username = document.getElementById('ctrl-target-user').value.trim().toLowerCase(); // إجبار الحروف الصغيرة
             
             title.innerText = "Historique de " + type.toUpperCase();
             body.innerHTML = '';
@@ -298,10 +297,9 @@
                     }
                 } catch(e){}
             } else if (type === 'sport') {
-                // ⚽ جلب الأوراق الرياضية الملعوبة الحية والمخزنة في السيرفر للاعب المختار
-                if(!target_username) {
+                if(!target_username || target_username === "sélectionnez...") {
                     headers.innerHTML = `<th class="p-2">Info</th>`;
-                    body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold">Sélectionnez un joueur dans la console d'abord ! (الرجاء اختيار لاعب أولاً)</td></tr>`;
+                    body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold">Sélectionnez un joueur dans la console d'abord !</td></tr>`;
                     modal.style.display = 'flex';
                     return;
                 }
@@ -309,6 +307,7 @@
                 headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
                 
                 try {
+                    // 🛡️ التعديل الجوهري: معالجة الاستجابة الحقيقية بصيغة JSON وتحليل مصفوفة المباريات المختارة
                     const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${target_username}`);
                     if (res.ok) {
                         const tickets = await res.json();
@@ -319,11 +318,15 @@
                                 if (t.status === "perdu") badgeColor = "text-rose-400";
                                 if (t.status === "cashout") badgeColor = "text-purple-400";
 
-                                // بناء نصوص المباريات داخل الورقة
-                                let matchesHtml = t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>');
+                                let matchesHtml = "";
+                                if (Array.isArray(t.details_list)) {
+                                    matchesHtml = t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>');
+                                } else {
+                                    matchesHtml = t.match || "Match Inconnu";
+                                }
 
                                 body.innerHTML += `
-                                    <tr class="hover:bg-slate-800/30">
+                                    <tr class="border-b border-slate-800/40 hover:bg-slate-800/30">
                                         <td class="p-2 text-slate-400 text-xs">#${t.ticket_id}<br><span class="text-[10px]">${t.date}</span></td>
                                         <td class="p-2 text-white font-sans text-xs">${matchesHtml}</td>
                                         <td class="p-2 text-center font-mono">X${parseFloat(t.total_cote).toFixed(2)}<br><span class="text-slate-400">${parseFloat(t.mise).toFixed(2)} TND</span></td>
@@ -332,9 +335,8 @@
                             });
                         }
                     }
-                } catch(e) { console.error("Error fetching admin sports tickets data", e); }
+                } catch(e) { console.error("Error connecting to live server tickets API", e); }
             } else {
-                // الكازينو حالياً
                 headers.innerHTML = `<th class="p-2">Détails</th><th class="p-2 text-right">Statut</th>`;
                 body.innerHTML = `<tr><td class="p-2 text-slate-500">Aucun pari actif enregistré sur ce serveur.</td><td class="p-2 text-right text-slate-500">0.00 TND</td></tr>`;
             }
