@@ -35,11 +35,14 @@
                     <button onclick="switchShopPanelSection('compte')" id="btn-shop-compte" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left active-shop-btn">
                         👤 Gestion des Joueurs (اللاعبين)
                     </button>
-                    <button onclick="switchShopPanelSection('sport')" id="btn-shop-sport" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        ⚽ Tickets en cours
+                    <button onclick="switchShopPanelSection('transfert')" id="btn-shop-transfert" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
+                        💸 Historique de Transfert
                     </button>
-                    <button onclick="switchShopSectionMock('casino')" id="btn-shop-casino" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        🎰 Casino Logs Hub88
+                    <button onclick="switchShopPanelSection('casino')" id="btn-shop-casino" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
+                        🎰 Historique de Casino (Hub88)
+                    </button>
+                    <button onclick="switchShopPanelSection('sport')" id="btn-shop-sport" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
+                        ⚽ Tickets de Sport
                     </button>
                     <button onclick="switchShopPanelSection('security')" id="btn-shop-security" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
                         🔑 Sécurité du magasin
@@ -118,10 +121,24 @@
                                 </tr>
                             </thead>
                             <tbody id="players-table-body" class="divide-y divide-slate-900/60 font-mono">
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </section>
+            </div>
+
+            <div id="panel-shop-transfert" class="shop-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">💸 Historique des Transferts et Transactions :</div>
+                <div class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Aucune transaction enregistrée pour le moment.
+                </div>
+            </div>
+
+            <div id="panel-shop-casino" class="shop-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">🎰 Historique des Sessions Casino (Hub88 API) :</div>
+                <div class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Logs Hub88 synchronisés. Aucun pari de casino trouvé pour vos joueurs.
+                </div>
             </div>
 
             <div id="panel-shop-sport" class="shop-main-view space-y-4 hidden">
@@ -168,10 +185,6 @@
             const targetBtn = document.getElementById(`btn-shop-${sectionId}`);
             if (targetSection) targetSection.classList.remove('hidden');
             if (targetBtn) targetBtn.classList.add('active-shop-btn');
-        }
-
-        function switchShopSectionMock(name) {
-            showNotification(`Section ${name} Active ! Logs Hub88 synchronisés.`);
         }
 
         async function loadShopPlayersData() {
@@ -221,7 +234,6 @@
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
-        // دالة جافا سكريبت الجديدة لإرسال أمر تغيير كلمة السر إلى مسار السيرفر الحقيقي المكتمل
         async function changePlayerPasswordFromShop() {
             const targetPlayer = document.getElementById('target-player-name').value.trim().toLowerCase();
             const newPassword = document.getElementById('shop-player-new-pass').value;
