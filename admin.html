@@ -5,65 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha Core - Admin Control Panel</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .active-admin-btn {
+            background-color: rgba(245, 158, 11, 0.15) !important;
+            border-color: #f59e0b !important;
+            color: #f59e0b !important;
+        }
+    </style>
 </head>
-<body class="bg-[#090d16] text-slate-200 min-h-screen p-4 relative">
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+<body class="bg-[#090d16] text-slate-200 min-h-screen p-4 flex flex-col md:flex-row md:overflow-hidden relative gap-4">
+    
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <header class="bg-slate-900 border-b border-slate-800 p-4 rounded-xl flex justify-between items-center mb-6 shadow-xl">
-        <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
-        <div class="flex items-center gap-4">
-            <span class="text-sm bg-amber-500/10 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/20 font-bold" id="badge-role">Admin</span>
-            <span class="font-bold text-slate-300" id="owner-username">En attente...</span>
-        </div>
-    </header>
-
-    <div class="max-w-7xl mx-auto table w-full border-spacing-4">
-        <div class="table-row">
-            
-            <div class="table-cell w-64 bg-slate-900 border border-slate-800 rounded-2xl p-4 vertical-align-top shadow-xl">
-                <div class="mb-4 p-2 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
-                    <span class="text-xs font-bold text-slate-400">🌐 Langue:</span>
-                    <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
-                        <option value="fr">Français</option>
-                        <option value="ar">العربية</option>
-                        <option value="en">English</option>
-                    </select>
-                </div>
-
-                <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3 px-2" id="menu-title">Gestion Admin</h2>
-                <div class="space-y-2">
-                    <button onclick="fetchAndOpenHistory('transfert')" class="w-full text-left bg-slate-950 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-500/30 text-xs text-slate-300 hover:text-amber-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">
-                        💸 Historique des transactions
-                    </button>
-                    <button onclick="fetchAndOpenHistory('compte')" class="w-full text-left bg-slate-950 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-500/30 text-xs text-slate-300 hover:text-amber-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">
-                        👤 Réseau créé (Shops / Players)
-                    </button>
-                    <button onclick="openPasswordModal()" class="w-full text-left bg-slate-950 hover:bg-amber-500/10 border border-slate-800 hover:border-amber-500/30 text-xs text-slate-300 hover:text-amber-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">
-                        🔑 Modifier mon mot de passe
-                    </button>
-                </div>
-
-                <div class="mt-6 pt-4 border-t border-slate-800">
-                    <button onclick="logout()" class="w-full text-center bg-rose-600/20 hover:bg-rose-600 border border-rose-600/40 text-rose-400 hover:text-white text-xs font-bold p-3 rounded-xl transition-all cursor-pointer block" id="btn-logout">
-                        🚪 Déconnexion
-                    </button>
-                </div>
+    <aside class="w-full md:w-72 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shrink-0 h-auto md:h-[calc(100vh-2rem)] shadow-xl z-40">
+        <div class="space-y-6">
+            <div class="p-2 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
+                <span class="text-xs font-bold text-slate-400">🌐 Langue:</span>
+                <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                </select>
             </div>
 
-            <div class="table-cell vertical-align-top pl-4 space-y-6">
+            <div>
+                <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3 px-2" id="menu-title">Gestion Admin</h2>
+                <nav class="space-y-2 text-xs font-bold" id="admin-sidebar-nav">
+                    <button onclick="switchAdminPanelSection('reseau')" id="btn-admin-reseau" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block active-admin-btn">
+                        👑 Network Created (الشبكة)
+                    </button>
+                    <button onclick="switchAdminPanelSection('casino')" id="btn-admin-casino" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block text-slate-300 hover:text-amber-400">
+                        🎰 Historique de casino
+                    </button>
+                    <button onclick="switchAdminPanelSection('transfert')" id="btn-admin-transfert" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block text-slate-300 hover:text-amber-400">
+                        💸 Historique de transfére
+                    </button>
+                    <button onclick="switchAdminPanelSection('transaction')" id="btn-admin-transaction" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block text-slate-300 hover:text-amber-400">
+                        📊 Historique de transaction
+                    </button>
+                    <button onclick="switchAdminPanelSection('sport')" id="btn-admin-sport" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block text-slate-300 hover:text-amber-400">
+                        ⚽ Tickets en cours
+                    </button>
+                    <button onclick="openPasswordModal()" class="w-full text-left bg-slate-950 border border-slate-800 p-3 rounded-xl transition-all cursor-pointer block text-slate-300 hover:text-amber-400">
+                        🔑 Modifier mon mot de passe
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <div class="pt-4 border-t border-slate-800">
+            <button onclick="logout()" class="w-full text-center bg-rose-600/20 hover:bg-rose-600 border border-rose-600/40 text-rose-400 hover:text-white text-xs font-bold p-3 rounded-xl transition-all cursor-pointer block" id="btn-logout">
+                🚪 Déconnexion
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-auto md:h-[calc(100vh-2rem)] overflow-hidden relative">
+        <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center mb-4 shadow-xl shrink-0">
+            <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm bg-amber-500/10 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/20 font-bold" id="badge-role">Admin</span>
+                <span class="font-bold text-slate-300" id="owner-username">En attente...</span>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto no-scrollbar space-y-6">
+
+            <div id="panel-admin-reseau" class="admin-main-view space-y-6">
                 
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/60">
-                        <span class="text-xs text-slate-400 block mb-1" id="lbl-selected-user">Compte Sélectionné</span>
-                        <input type="text" id="ctrl-target-user" class="text-white font-bold bg-transparent font-mono text-sm focus:outline-none w-full" placeholder="Sélectionnez..." readonly>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-wrap gap-3 items-center justify-between">
+                    <div class="flex gap-3 flex-wrap items-center bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 w-full lg:w-auto">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[11px] text-slate-400" id="lbl-selected-user">Compte Sélectionné:</span>
+                            <input type="text" id="ctrl-target-user" class="text-amber-400 font-bold bg-transparent font-mono text-xs focus:outline-none w-28" placeholder="Sélectionnez..." readonly>
+                        </div>
+                        <div class="h-5 w-px bg-slate-800 hidden sm:block"></div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[11px] text-slate-400">RTP:</span>
+                            <span id="rtp-val-label" class="text-cyan-400 font-bold font-mono text-xs mr-1">50%</span>
+                            <input type="range" id="ctrl-rtp-range" min="1" max="99" value="50" oninput="document.getElementById('rtp-val-label').innerText = this.value + '%'" class="w-24 accent-amber-500 h-1 bg-slate-800 rounded-lg cursor-pointer">
+                        </div>
+                        <div class="h-5 w-px bg-slate-800 hidden sm:block"></div>
+                        <div class="flex gap-1.5">
+                            <button onclick="saveRtpAndBlock(0)" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-[10px] font-bold px-3 py-1 rounded-lg transition-all cursor-pointer shadow">🔓 Sauvegarder</button>
+                            <button onclick="saveRtpAndBlock(1)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-[10px] font-bold px-3 py-1 rounded-lg transition-all cursor-pointer shadow">⛔ Bloquer</button>
+                        </div>
                     </div>
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/60">
-                        <label class="text-xs text-slate-400 block mb-1">🎮 Configuration RTP: <span id="rtp-val-label" class="text-amber-400 font-bold">50%</span></label>
-                        <input type="range" id="ctrl-rtp-range" min="1" max="99" value="50" oninput="document.getElementById('rtp-val-label').innerText = this.value + '%'" class="w-full accent-amber-500 h-1 bg-slate-800 rounded-lg cursor-pointer">
-                    </div>
-                    <div class="flex gap-2 w-full">
-                        <button onclick="saveRtpAndBlock(0)" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold py-3.5 rounded-xl transition-all cursor-pointer">🔓 Sauvegarder</button>
-                        <button onclick="saveRtpAndBlock(1)" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold py-3.5 rounded-xl transition-all cursor-pointer">⛔ Bloquer</button>
+
+                    <div class="flex items-center gap-2 bg-slate-950 p-2.5 rounded-xl border border-slate-800 w-full lg:w-auto justify-end">
+                        <input type="password" id="ctrl-player-new-pass" placeholder="كلمة سر جديدة للحساب" class="bg-slate-900 border border-slate-700 text-xs px-2 py-1 rounded-lg text-white font-mono w-40 focus:outline-none focus:border-cyan-500">
+                        <button onclick="changePlayerPasswordFromAdmin()" class="bg-cyan-600 hover:bg-cyan-700 text-white font-black text-[10px] px-3 py-1 rounded-lg cursor-pointer transition-all shadow">🔑 تعديل السر</button>
                     </div>
                 </div>
 
@@ -90,13 +123,13 @@
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="bg-amber-500 p-4 text-slate-950 font-bold flex justify-between items-center text-xs">
+                    <div class="bg-amber-500 p-4 text-slate-950 font-bold flex justify-between items-center text-xs flex-wrap gap-2">
                         <span id="title-table-console">📋 Console financière des Comptes (فقط الحسابات التابعة لك)</span>
                         <div class="flex gap-2">
-                            <input type="text" id="target-action-user" class="bg-white p-1 rounded font-mono text-center text-slate-900" readonly placeholder="Sélectionnez...">
-                            <input type="number" id="target-action-amount" class="bg-white p-1 rounded font-mono text-center text-slate-900 w-24" placeholder="Montant TND">
-                            <button onclick="executeAction('charge')" class="bg-slate-950 text-white px-3 py-1 rounded font-bold cursor-pointer" id="btn-credit">Créditer</button>
-                            <button onclick="executeAction('withdraw')" class="bg-rose-700 text-white px-3 py-1 rounded font-bold cursor-pointer" id="btn-retirer">Retirer</button>
+                            <input type="text" id="target-action-user" class="bg-white p-1 rounded font-mono text-center text-slate-900 w-28 text-xs" readonly placeholder="Sélectionnez...">
+                            <input type="number" id="target-action-amount" class="bg-white p-1 rounded font-mono text-center text-slate-900 w-24 text-xs" placeholder="Montant TND">
+                            <button onclick="executeAction('charge')" class="bg-slate-950 text-white px-3 py-1 rounded font-bold text-xs cursor-pointer" id="btn-credit">Créditer</button>
+                            <button onclick="executeAction('withdraw')" class="bg-rose-700 text-white px-3 py-1 rounded font-bold text-xs cursor-pointer" id="btn-retirer">Retirer</button>
                         </div>
                     </div>
                     <div class="p-4 overflow-x-auto text-xs">
@@ -116,24 +149,37 @@
                         </table>
                     </div>
                 </div>
-
             </div>
-        </div>
-    </div>
 
-    <div id="history-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative">
-            <button onclick="closeModal('history-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
-            <h3 id="modal-title" class="text-base font-bold text-amber-400 mb-4">Historique</h3>
-            <div class="overflow-x-auto max-h-64 rounded-xl border border-slate-800 bg-slate-950 p-2">
-                <table class="w-full text-left text-xs font-mono">
-                    <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
-                        <tr id="modal-table-headers"></tr>
-                    </thead>
-                    <tbody id="modal-table-body" class="divide-y divide-slate-800/50 text-slate-300"></tbody>
-                </table>
+            <div id="panel-admin-casino" class="admin-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">🎰 Historique de casino (Hub88 Master API) :</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Aucun pari de casino enregistré sur l'ensemble de la plateforme.
+                </div>
             </div>
-        </div>
+
+            <div id="panel-admin-transfert" class="admin-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">💸 Historique de transfére :</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Aucun transfert financier trouvé dans les bases de données.
+                </div>
+            </div>
+
+            <div id="panel-admin-transaction" class="admin-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">📊 Historique de transaction :</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Aucune transaction comptable enregistrée.
+                </div>
+            </div>
+
+            <div id="panel-admin-sport" class="admin-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets en cours :</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
+                    Aucun ticket actif en attente de traitement.
+                </div>
+            </div>
+
+        </main>
     </div>
 
     <div id="password-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
@@ -149,8 +195,6 @@
 
     <script>
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
-        
-        // إصلاح جذري: قراءة الحساب الفعلي المسجل دخول من الذاكرة لربط العمليات باسمه الحقيقي
         let sessionData = localStorage.getItem('alpha_user');
         let user = sessionData ? JSON.parse(sessionData) : null;
 
@@ -158,7 +202,6 @@
             user = { username: "admin_test", role: "admin" };
         }
 
-        // تحديث الاسم العلوي في اللوحة تلقائياً
         window.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById('owner-username');
             if(el) el.innerText = user.username;
@@ -167,17 +210,17 @@
 
         const translations = {
             fr: {
-                menu: "Gestion Admin", selected: "Compte Sélectionné", create: "👑 Créer un compte (Shop / Player) تحت سلطتك",
+                menu: "Gestion Admin", selected: "Compte Sélectionné:", create: "👑 Créer un compte (Shop / Player) تحت سلطتك",
                 user: "Nom d'utilisateur", pass: "Mot de passe", console: "📋 Console financière des Comptes (فقط الحسابات التابعة لك)",
                 credit: "Créditer", retirer: "Retirer", th_c: "Compte", th_r: "Rôle", th_cr: "Créateur", th_s: "Solde Actuel (TND)", out: "🚪 Déconnexion"
             },
             ar: {
-                menu: "إدارة الأدمن", selected: "الحساب المختار", create: "👑 إنشاء حساب (شوب / لاعب) تحت إشرافك المباشر",
+                menu: "إدارة الأدمن", selected: "الحساب المختار:", create: "👑 إنشاء حساب (شوب / لاعب) تحت إشرافك المباشر",
                 user: "اسم المستخدم", pass: "كلمة المرور", console: "📋 لوحة الشحن والسحب للحسابات التابعة لك فقط",
                 credit: "شحن رصيد", retirer: "سحب رصيد", th_c: "الحساب", th_r: "الرتبة", th_cr: "المنشِئ", th_s: "الرصيد الحالي (TND)", out: "🚪 تسجيل الخروج"
             },
             en: {
-                menu: "Admin Menu", selected: "Selected Account", create: "👑 Create Sub-Account (Shop / Player)",
+                menu: "Admin Menu", selected: "Selected Account:", create: "👑 Create Sub-Account (Shop / Player)",
                 user: "Username", pass: "Password", console: "📋 Balance Control Console (Your Branch Only)",
                 credit: "Charge", retirer: "Withdraw", th_c: "Account", th_r: "Role", th_cr: "Created By", th_s: "Available Balance (TND)", out: "🚪 Logout"
             }
@@ -216,6 +259,16 @@
             }, 2500);
         }
 
+        function switchAdminPanelSection(sectionId) {
+            document.querySelectorAll('.admin-main-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById('admin-sidebar-nav').querySelectorAll('button').forEach(btn => btn.classList.remove('active-admin-btn'));
+            
+            const targetSection = document.getElementById(`panel-admin-${sectionId}`);
+            const targetBtn = document.getElementById(`btn-admin-${sectionId}`);
+            if (targetSection) targetSection.classList.remove('hidden');
+            if (targetBtn) targetBtn.classList.add('active-admin-btn');
+        }
+
         async function loadNetworkData() {
             try {
                 const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
@@ -225,7 +278,6 @@
                     if(!tbody) return;
                     tbody.innerHTML = '';
                     
-                    // فلترة دقيقة: عرض فروع هذا الأدمن المسجل حالياً فقط
                     const subAccounts = users.filter(u => u.created_by === user.username);
                     
                     if(subAccounts.length === 0) {
@@ -262,6 +314,33 @@
             document.getElementById('target-action-user').value = username;
             document.getElementById('ctrl-rtp-range').value = rtp;
             document.getElementById('rtp-val-label').innerText = rtp + '%';
+        }
+
+        async function changePlayerPasswordFromAdmin() {
+            const target = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
+            const newPassword = document.getElementById('ctrl-player-new-pass').value;
+            
+            if(!target) return showNotification('الرجاء اختيار حساب أولاً من الجدول', 'error');
+            if(!newPassword || newPassword.length < 4) return showNotification('كلمة المرور قصيرة جداً (4 رموز كحد أدنى)', 'error');
+            
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_username: user.username,
+                        target_username: target,
+                        new_password: newPassword
+                    })
+                });
+                if(res.ok) {
+                    showNotification(`تم تعديل كلمة سر الحساب [ ${target} ] بنجاح بنظام الكازينو!`);
+                    document.getElementById('ctrl-player-new-pass').value = '';
+                    document.getElementById('ctrl-target-user').value = '';
+                } else {
+                    showNotification('فشلت عملية التعديل برمجياً', 'error');
+                }
+            } catch(e) { showNotification('خطأ في الاتصال بالسيرفر', 'error'); }
         }
 
         async function saveRtpAndBlock(blockStatus) {
