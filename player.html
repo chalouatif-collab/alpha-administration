@@ -38,6 +38,7 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
+    <!-- 1️⃣ نافذة تسجيل الدخول المنبثقة المحمية (Modal) -->
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -64,6 +65,7 @@
         </div>
     </div>
 
+    <!-- 2️⃣ القائمة الجانبية (Sidebar) -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -123,6 +125,7 @@
         </div>
     </aside>
 
+    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي للشبكة -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
@@ -144,6 +147,7 @@
 
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
+            <!-- أ) واجهة الترحيب (Accueil) -->
             <div id="pane-accueil" class="player-view-section space-y-4">
                 <div class="bg-gradient-to-r from-teal-500/10 to-transparent border border-slate-800 p-6 rounded-2xl">
                     <h2 class="text-xl font-black text-white mb-2" id="trans-acc-welcome">Bienvenue sur Alphabet 👑</h2>
@@ -151,6 +155,7 @@
                 </div>
             </div>
 
+            <!-- ب) واجهة الرياضة والمباريات المزامنة والرهان المتعدد السلس -->
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
@@ -160,6 +165,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
+                    <!-- كوبون الرهان المشترك -->
                     <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold transition-all duration-300">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider" id="trans-ticket-title">📋 TICKET DE PARI</span>
@@ -192,6 +198,7 @@
                 </div>
             </div>
 
+            <!-- ج) واجهة الأوراق المقسمة إلى 4 تبويبات داخل Mes Paris -->
             <div id="pane-paris" class="player-view-section space-y-4 hidden">
                 <div class="flex border-b border-slate-800/80 gap-1 overflow-x-auto no-scrollbar">
                     <button onclick="switchBetsSubTab('encours')" id="sub-tab-encours" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer active-sub-tab">⏳ En cours</button>
@@ -202,6 +209,7 @@
                 <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
             </div>
 
+            <!-- د) واجهة لعبة الكراش الطيارة الحقيقية (Alphabet Aviator الحية) -->
             <div id="pane-crash" class="player-view-section space-y-6 hidden">
                 <div class="max-w-2xl mx-auto bg-[#090f24] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
                     <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
@@ -212,6 +220,7 @@
                         <span id="crash-status-badge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase">Waiting</span>
                     </div>
 
+                    <!-- شاشة شبكة الرسم البياني التفاعلي للطيارة -->
                     <div class="h-64 bg-[#050814] border border-slate-800 rounded-2xl relative overflow-hidden crash-graph-grid flex items-center justify-center">
                         <div id="crash-multiplier-display" class="text-5xl md:text-6xl font-black text-white font-mono tracking-tight z-10 drop-shadow-md">1.00x</div>
                         <div id="crash-airplane-icon" class="absolute bottom-6 left-6 text-4xl opacity-0 transition-all duration-100 ease-out z-20">🚀</div>
@@ -221,6 +230,7 @@
                         </div>
                     </div>
 
+                    <!-- أزرار التحكم بالرهان والسحب الفوري -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-[#050814]/60 p-4 rounded-xl border border-slate-800/80 font-bold text-xs">
                         <div class="space-y-1.5">
                             <label class="text-slate-400 block">Mise du Crash (رهان الطيارة):</label>
@@ -235,6 +245,7 @@
                 </div>
             </div>
 
+            <!-- هـ) صالة ألعاب الكازينو -->
             <div id="pane-casino" class="player-view-section space-y-6 hidden">
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
@@ -251,11 +262,13 @@
                 </div>
             </div>
 
+            <!-- و) الكوبون المصغر العائم -->
             <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
                 <span class="text-lg">📋</span>
                 <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
             </div>
 
+            <!-- ز) نافذة ماكينة السلوتس -->
             <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
                 <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
                     <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -352,7 +365,6 @@
             document.getElementById('main-ticket-slip').classList.remove('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-100');
-            floater.刻度 = "scale-0";
             floater.classList.add('scale-0');
         }
 
@@ -454,6 +466,7 @@
             document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
         }
 
+        // 🚀 إصلاح: دالة معالجة وحفظ الكوبونات متعددة الخيارات مباشرة إلى قاعدة بيانات السيرفر
         async function submitSportTicket() {
             if(!playerSession) { return openLoginModal(); }
             if(comboTicketMatchesList.length === 0) return;
@@ -466,6 +479,7 @@
             btn.disabled = true;
 
             try {
+                // أولاً: إجراء السحب المالي المعتاد من الرصيد الحقيقي
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -479,9 +493,7 @@
                     
                     const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
                     const calculatedGain = stake * totalOdds;
-                    
-                    // كاش أوت آمن ومدروس: 90% من رأس المال لمنع التلاعب قبل بدء المباريات
-                    const cashOutValueCalculated = stake * 0.90;
+                    const cashOutValueCalculated = stake * 0.90; // الكاش أوت المحمي المدروس لـ رأس المال
 
                     const betTicketObject = {
                         id: Math.floor(100000 + Math.random() * 900000),
@@ -494,6 +506,17 @@
                         cashOutAmount: cashOutValueCalculated, 
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
+
+                    // ثانياً: شحن وإرسال محتوى ورقة الرهان كاملة إلى السيرفر الخارجي ليتم ربطها مباشرة بلوحة تحكم السوبر أونر
+                    await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            username: playerSession.username,
+                            ticket_data: betTicketObject
+                        })
+                    }).catch(err => console.error("Sync backup server ticket error"));
+
                     myActiveBetsList.push(betTicketObject);
                     updateActiveBetsBadgeCount();
 
@@ -505,6 +528,7 @@
             btn.disabled = false;
         }
 
+        // 🚀 إصلاح: دالة مزامنة حالة الكاش أوت كلياً إلى السيرفر المربوط بحساب السوبر أونر
         async function executeTicketCashOut(ticketId, cashOutAmount) {
             if(!playerSession) return;
             try {
@@ -524,12 +548,45 @@
                         targetTicket.status = "cashout";
                         targetTicket.finalCashoutPaid = cashOutAmount; 
                     }
+
+                    // بث تحديث إغلاق الحالة فوراً إلى السيرفر لتنعكس في لوحة السوبر أونر في نفس الثانية
+                    await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            ticket_id: ticketId,
+                            status: "cashout",
+                            amount_paid: cashOutAmount
+                        })
+                    }).catch(err => console.error("Sync update status error"));
                     
                     updateActiveBetsBadgeCount();
                     showNotification(dictionary_translations[currentLangCode].cashout_success);
                     renderMyBetsHistoryPane();
                 } else { showNotification('فشل تنفيذ الكاش أوت', 'error'); }
             } catch(e) { showNotification('خطأ اتصال مالي', 'error'); }
+        }
+
+        async function adminSimulateBetResult(ticketId, targetResult) {
+            const ticket = myActiveBetsList.find(b => b.id === ticketId);
+            if(!ticket) return;
+
+            ticket.status = targetResult;
+
+            if(targetResult === 'gagne') {
+                try {
+                    await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: ticket.gain })
+                    });
+                    await refreshPlayerBalance();
+                } catch(e) { console.error("Simulated charge error"); }
+            }
+
+            updateActiveBetsBadgeCount();
+            showNotification(`تم تحديث حالة التذكرة #${ticketId}`);
+            renderMyBetsHistoryPane();
         }
 
         function updateActiveBetsBadgeCount() {
@@ -713,6 +770,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
                 });
+
                 if(!deductRes.ok) {
                     isCrashRoundRunning = false;
                     stakeInput.disabled = false;
@@ -743,9 +801,7 @@
                 planeIcon.style.left = `${6 + progressPercent}%`;
                 planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
 
-                if(crashMultiplier >= luckyCrashPointTarget) {
-                    triggerAirplaneCrashBlast();
-                }
+                if(crashMultiplier >= luckyCrashPointTarget) { triggerAirplaneCrashBlast(); }
             }, 80);
         }
 
