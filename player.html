@@ -15,8 +15,9 @@
         }
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
         .active-menu-btn {
-            background-color: rgba(20, 184, 166, 0.15) !important;
-            color: #14b8a6 !important;
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+            border-radius: 12px;
         }
         .active-filter-btn {
             background-color: #14b8a6 !important;
@@ -54,45 +55,56 @@
         </div>
     </div>
 
-    <!-- 2️⃣ القائمة الجانبية المنسقة لـ Alphabet -->
-    <aside id="main-sidebar" class="w-full md:w-64 bg-[#090f24] border-b md:border-b-0 md:border-r border-slate-800/60 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl hidden">
+    <!-- 2️⃣ القائمة الجانبية (Sidebar) المحدثة والمطابقة للصورة تماماً -->
+    <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 hidden">
         <div class="space-y-6">
-            <div class="flex items-center gap-3 px-2">
-                <div class="w-8 h-8 rounded-xl bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-sm">A</div>
-                <span class="text-lg font-black tracking-wider text-white">Alphabet</span>
+            <!-- اللوجو العلوي المحمي -->
+            <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
+                <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
+                <span class="text-base font-black tracking-wider text-white">Alphabet</span>
             </div>
 
-            <nav class="space-y-1.5 text-xs font-bold text-slate-400">
-                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
-                    🏠 Accueil
+            <!-- أزرار القائمة الجانبية المطابقة للصورة حرفياً -->
+            <nav class="space-y-1 text-sm font-bold text-slate-300">
+                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
+                    <span>🏠</span> Accueil
                 </button>
-                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    🏆 Sport
+                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🏆</span> Sport
                 </button>
-                <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    栏 Le casino
+                <button onclick="switchSection('sport')" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <div class="flex items-center gap-4"><span>📋</span> Mes Paris</div>
+                    <span class="bg-[#eab308]/20 text-[#eab308] text-[10px] px-1.5 py-0.5 rounded-full font-bold">0</span>
                 </button>
-                <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    👤 Casino en direct
+                <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🎰</span> Le casino
                 </button>
-                <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    🚀 Jeux de crash
+                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-60">
+                    <span>👤</span> Casino en direct
                 </button>
-                <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    🔥 Meilleurs jeux
+                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-60">
+                    <span>🚀</span> Jeux de crash
                 </button>
-                <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    🎁 Promotions
+                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-60">
+                    <span>🔥</span> Meilleurs jeux
+                </button>
+                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-60">
+                    <span>🎁</span> Promotions
+                </button>
+                <button class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <div class="flex items-center gap-4"><span>💬</span> Langue</div>
+                    <span class="text-[9px] text-slate-500">▼</span>
                 </button>
             </nav>
         </div>
 
-        <div class="pt-4 border-t border-slate-800/60 space-y-2 text-[10px] text-slate-500 font-bold">
-            <button onclick="logoutPlayer()" class="w-full bg-rose-950/20 hover:bg-rose-900/40 border border-rose-500/20 text-rose-400 font-black p-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mb-4">
-                🚪 Sortir
+        <!-- الجزء السفلي للشريط الجانبي المطابق تماماً للصورة -->
+        <div class="pt-4 border-t border-slate-900 space-y-2 text-[11px] text-slate-500 font-bold text-center">
+            <button onclick="logoutPlayer()" class="w-full bg-rose-950/10 hover:bg-rose-900/30 border border-rose-500/10 text-rose-400 font-black p-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mb-2">
+                Sortir
             </button>
-            <div class="px-2">Jouez De Façon Responsable</div>
-            <div class="px-2 uppercase text-[9px]">General Terms and Conditions</div>
+            <div class="text-slate-400">Jouez De Façon Responsable</div>
+            <div class="uppercase text-[10px] text-slate-500">GENERAL TERMS AND CONDITIONS</div>
         </div>
     </aside>
 
@@ -165,8 +177,6 @@
 
             <!-- ج) صالة ألعاب الكازينو الاحترافية المطابقة تماماً للصورة الأخيرة -->
             <div id="pane-casino" class="player-view-section space-y-6 hidden">
-                
-                <!-- بار فلاتر مزودي الألعاب الملونة -->
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1">🎮 مزودي الألعاب العالميين</span>
                     <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold">
@@ -177,13 +187,9 @@
                     </div>
                 </div>
 
-                <!-- شبكة صالة ألعاب الكازينو الرقمية الفخمة -->
                 <div class="space-y-3">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">🎰 صالة ألعاب الكازينو الرقمية</h3>
-                    
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        
-                        <!-- كرت 1: Gates of Olympus -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
                             <div class="h-28 bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-4xl shadow-inner relative">
                                 ⚡<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-amber-400 px-1.5 py-0.5 rounded font-bold">SLOT</span>
@@ -194,7 +200,6 @@
                             </div>
                         </div>
 
-                        <!-- كرت 2: Sweet Bonanza -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
                             <div class="h-28 bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-4xl shadow-inner relative">
                                 🍭<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-pink-400 px-1.5 py-0.5 rounded font-bold">SLOT</span>
@@ -205,7 +210,6 @@
                             </div>
                         </div>
 
-                        <!-- كرت 3: Lightning Roulette -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
                             <div class="h-28 bg-gradient-to-br from-red-600 to-slate-900 flex items-center justify-center text-4xl shadow-inner relative">
                                 🎡<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-red-400 px-1.5 py-0.5 rounded font-bold">LIVE</span>
@@ -216,7 +220,6 @@
                             </div>
                         </div>
 
-                        <!-- كرت 4: Infinite Blackjack -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
                             <div class="h-28 bg-gradient-to-br from-teal-800 to-slate-900 flex items-center justify-center text-4xl shadow-inner relative">
                                 🃏<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-teal-400 px-1.5 py-0.5 rounded font-bold">CARDS</span>
@@ -227,7 +230,6 @@
                             </div>
                         </div>
 
-                        <!-- كرت 5: Wanted Dead or a Wild -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
                             <div class="h-28 bg-gradient-to-br from-amber-800 to-orange-950 flex items-center justify-center text-4xl shadow-inner relative">
                                 🤠<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-orange-400 px-1.5 py-0.5 rounded font-bold">HACKSAW</span>
@@ -238,7 +240,6 @@
                             </div>
                         </div>
 
-                        <!-- كرت 6: Alphabet Aviator المخصصة للشبكة -->
                         <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group border-teal-500/30">
                             <div class="h-28 bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-4xl shadow-inner relative">
                                 🚀<span class="absolute top-2 right-2 text-[10px] bg-slate-950 text-white px-1.5 py-0.5 rounded font-bold">CRASH</span>
@@ -248,12 +249,11 @@
                                 <button onclick="openLiveGame('Alphabet Aviator')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <!-- د) الماكينة المنبثقة للعب السلوتس والمزامنة المالية (Modal Game View) -->
+            <!-- د) نافذة ماكينة اللعب المنبثقة للرصيد المشترك -->
             <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
                 <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
                     <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
