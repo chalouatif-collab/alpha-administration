@@ -19,7 +19,6 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 1️⃣ الشريط الجانبي المطور للـ Shop -->
     <aside class="w-full md:w-72 bg-[#090d1a] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="bg-[#0b101f] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
@@ -56,7 +55,6 @@
         </div>
     </aside>
 
-    <!-- 2️⃣ منطقة المحتوى الرئيسية الكبرى -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="bg-[#0b101f]/90 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-3">
@@ -70,9 +68,7 @@
 
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar space-y-6">
 
-            <!-- التبويب الأول: الحسابات والعمليات المالية للاعبين التابعين للمحل -->
             <div id="panel-shop-compte" class="shop-main-view space-y-6">
-                <!-- كرت تفريع حساب جديد -->
                 <section class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-5 shadow-xl space-y-4">
                     <h3 class="text-xs font-black text-slate-300 flex items-center gap-2">🕹️ إنشاء حساب لاعب جديد تحت متجرك</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
@@ -88,15 +84,27 @@
                     <button onclick="createPlayerAccount()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black text-xs px-6 py-2.5 rounded-xl transition-all cursor-pointer shadow-md">تثبيت وإنشاء الحساب</button>
                 </section>
 
-                <!-- لوحة إدارة الحسابات التابعة للمحل والشحن والسحب -->
                 <section class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl">
-                    <div class="bg-gradient-to-r from-emerald-500/10 to-transparent p-4 border-b border-slate-800/60 flex justify-between items-center flex-wrap gap-2">
-                        <h3 class="text-xs font-black text-white flex items-center gap-2">📋 إدارة الحسابات المالية التابعة لمتجرك</h3>
-                        <div class="flex gap-1.5 flex-wrap">
-                            <input type="text" id="target-player-name" placeholder="لاعبك المحدد" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1 rounded-lg text-amber-400 font-mono w-28 focus:outline-none" readonly>
-                            <input type="number" id="finance-amount" placeholder="المبلغ (TND)" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1 rounded-lg text-emerald-400 font-mono w-24 focus:outline-none">
-                            <button onclick="executeShopFinance('charge')" class="bg-emerald-500 text-slate-950 font-black text-[10px] px-3 py-1 rounded-lg cursor-pointer hover:bg-emerald-600 transition-all shadow">شحن من رصيدك</button>
-                            <button onclick="executeShopFinance('withdraw')" class="bg-rose-600 text-white font-black text-[10px] px-3 py-1 rounded-lg cursor-pointer hover:bg-rose-700 transition-all shadow">سحب لرصيدك</button>
+                    <div class="bg-gradient-to-r from-emerald-500/10 to-transparent p-4 border-b border-slate-800/60 flex flex-col gap-4">
+                        <div class="flex justify-between items-center flex-wrap gap-2">
+                            <h3 class="text-xs font-black text-white flex items-center gap-2">📋 إدارة الحسابات المالية والبرمجية التابعة لمتجرك</h3>
+                        </div>
+                        <div class="flex gap-2 flex-wrap items-center bg-[#04060c]/60 p-3 rounded-xl border border-slate-800/80">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] text-slate-400 font-sans">اللاعب:</span>
+                                <input type="text" id="target-player-name" placeholder="حدد لاعباً" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1.5 rounded-lg text-amber-400 font-mono w-28 focus:outline-none" readonly>
+                            </div>
+                            <div class="h-6 w-px bg-slate-800 hidden sm:block"></div>
+                            <div class="flex items-center gap-1.5">
+                                <input type="number" id="finance-amount" placeholder="المبلغ (TND)" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1.5 rounded-lg text-emerald-400 font-mono w-24 focus:outline-none">
+                                <button onclick="executeShopFinance('charge')" class="bg-emerald-500 text-slate-950 font-black text-[10px] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-emerald-600 transition-all shadow">💰 شحن</button>
+                                <button onclick="executeShopFinance('withdraw')" class="bg-rose-600 text-white font-black text-[10px] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-rose-700 transition-all shadow">💸 سحب</button>
+                            </div>
+                            <div class="h-6 w-px bg-slate-800 hidden md:block"></div>
+                            <div class="flex items-center gap-1.5 flex-1 justify-end min-w-[240px]">
+                                <input type="password" id="shop-player-new-pass" placeholder="كلمة مرور جديدة" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1.5 rounded-lg text-white font-mono w-36 focus:outline-none focus:border-cyan-500">
+                                <button onclick="changePlayerPasswordFromShop()" class="bg-cyan-600 text-white font-black text-[10px] px-3 py-1.5 rounded-lg cursor-pointer hover:bg-cyan-700 transition-all shadow flex items-center gap-1">🔑 تغيير كلمة السر</button>
+                            </div>
                         </div>
                     </div>
                     <div class="overflow-x-auto no-scrollbar">
@@ -106,18 +114,16 @@
                                     <th class="p-3">اسم لاعبك</th>
                                     <th class="p-3">الرصيد المتاح (TND)</th>
                                     <th class="p-3">الحالة البرمجية</th>
-                                    <th class="p-3">تحديد سريع</th>
+                                    <th class="p-3">تحديد سريع للعمليات</th>
                                 </tr>
                             </thead>
                             <tbody id="players-table-body" class="divide-y divide-slate-900/60 font-mono">
-                                <!-- تضاف الحسابات المنشأة ديناميكياً هنا -->
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </section>
             </div>
 
-            <!-- التبويب الثاني: سجل الرهانات الرياضية للتحكم الفوري والحسم للمحل -->
             <div id="panel-shop-sport" class="shop-main-view space-y-4 hidden">
                 <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets de sport actifs de vos joueurs :</div>
                 <div id="shop-sport-container" class="grid grid-cols-1 gap-3">
@@ -125,7 +131,6 @@
                 </div>
             </div>
 
-            <!-- التبويب الخامس: تغيير كلمة مرور المحل -->
             <div id="panel-shop-security" class="shop-main-view max-w-md mx-auto hidden">
                 <div class="bg-[#0b101f] border border-slate-800 p-6 rounded-2xl space-y-4 shadow-xl">
                     <h4 class="text-xs font-black text-amber-400 uppercase tracking-wider">🔑 Modifier le mot de passe Boutique</h4>
@@ -169,17 +174,14 @@
             showNotification(`Section ${name} Active ! Logs Hub88 synchronisés.`);
         }
 
-        // جلب شبكة اللاعبين التابعين لهذا المتجر حصرياً من السيرفر
         async function loadShopPlayersData() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/users`);
                 if(res.ok) {
                     const allUsers = await res.json();
-                    // فلترة وعرض الحسابات التي أنشأها هذا المتجر فقط ومن نوع player
                     createdPlayersList = allUsers.filter(u => u.created_by === shopSessionUser.username);
                     renderPlayersTable();
                     
-                    // تحديث رصيد المتجر الحالي من قاعدة البيانات ليكون دقيقاً ومباشراً
                     const me = allUsers.find(u => u.username === shopSessionUser.username);
                     if(me) {
                         shopSessionUser.balance = me.balance;
@@ -197,7 +199,6 @@
             if(!username || !password) return showNotification('جميع الحقول مطلوبة', 'error');
             
             try {
-                // إصلاح: إرسال الـ Payload كاملاً ومتوافقاً 100% مع الـ RegisterRequest الخاص بالسيرفر
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
@@ -220,19 +221,45 @@
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
+        // دالة جافا سكريبت الجديدة لإرسال أمر تغيير كلمة السر إلى مسار السيرفر الحقيقي المكتمل
+        async function changePlayerPasswordFromShop() {
+            const targetPlayer = document.getElementById('target-player-name').value.trim().toLowerCase();
+            const newPassword = document.getElementById('shop-player-new-pass').value;
+            
+            if(!targetPlayer) return showNotification('الرجاء اختيار لاعب أولاً من الجدول أسفله', 'error');
+            if(!newPassword || newPassword.length < 4) return showNotification('كلمة المرور قصيرة جداً (مطلوب 4 رموز على الأقل)', 'error');
+            
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_username: shopSessionUser.username,
+                        target_username: targetPlayer,
+                        new_password: newPassword
+                    })
+                });
+                if(res.ok) {
+                    showNotification(`تم تحديث كلمة مرور اللاعب [ ${targetPlayer} ] بنجاح!`);
+                    document.getElementById('shop-player-new-pass').value = '';
+                    document.getElementById('target-player-name').value = '';
+                } else {
+                    showNotification('فشلت عملية التعديل، تأكد من اتصال الخادم', 'error');
+                }
+            } catch(e) { showNotification('خطأ في الاتصال بالخادم المالي والبرمجي', 'error'); }
+        }
+
         async function executeShopFinance(action) {
             const targetPlayer = document.getElementById('target-player-name').value.trim().toLowerCase();
             let amount = parseFloat(document.getElementById('finance-amount').value);
             
             if(!targetPlayer || isNaN(amount) || amount <= 0) return showNotification('بيانات المعاملة غير صحيحة أو لم تختر لاعباً', 'error');
 
-            // فحص رصيد المتجر محلياً قبل الخصم كحماية إضافية للشبكة الكازينو
             if(action === 'charge' && shopSessionUser.balance < amount) {
                 return showNotification('رصيد متجرك الحالي غير كافٍ للشحن!', 'error');
             }
 
             try {
-                // إصلاح جذري: توجيه الطلب للمسار المالي الموحد المتوافق مع الـ UpdateBalanceRequest في السيرفر
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
@@ -245,14 +272,13 @@
                 });
                 
                 if(res.ok) {
-                    // شحن أو خصم رصيد متجرك موازياً في السيرفر لضمان دقة الدينار التونسي
-                    const updateMeRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             admin_username: "System",
                             target_username: shopSessionUser.username,
-                            action: action === 'charge' ? 'withdraw' : 'charge', // عكس العملية للمحل
+                            action: action === 'charge' ? 'withdraw' : 'charge',
                             amount: amount
                         })
                     });
@@ -268,7 +294,7 @@
                     await loadShopPlayersData();
                 } else {
                     const errData = await res.json();
-                    showNotification(errData.detail || 'فشلت العملية الموالية، تأكد من رصيد اللاعب', 'error');
+                    showNotification(errData.detail || 'فشلت العملية، تأكد من رصيد اللاعب', 'error');
                 }
             } catch(e) { showNotification('خطأ في معالجة الشبكة المالية للمحلات', 'error'); }
         }
