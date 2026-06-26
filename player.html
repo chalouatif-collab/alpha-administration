@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <!-- 2️⃣ القائمة الجانبية المفتوحة للتصفح دائماً (Sidebar) -->
+    <!-- 2️⃣ القائمة الجانبية (Sidebar) -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -71,9 +71,9 @@
                 <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🏆</span> <span id="menu-sport">Sport</span>
                 </button>
-                <button onclick="switchSection('sport')" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <div class="flex items-center gap-4"><span>📋</span> <span id="menu-paris">Mes Paris</span></div>
-                    <span class="bg-[#eab308]/20 text-[#eab308] text-[10px] px-1.5 py-0.5 rounded-full font-bold">0</span>
+                    <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
                 </button>
                 <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🎰</span> <span id="menu-casino">Le casino</span>
@@ -105,7 +105,6 @@
         </div>
 
         <div class="pt-4 border-t border-slate-900 space-y-2 text-[11px] text-slate-500 font-bold text-center">
-            <!-- زر الخروج يظهر فقط إذا كان هناك جلسة لاعب -->
             <button onclick="logoutPlayer()" id="sidebar-logout-btn" class="w-full bg-rose-950/10 hover:bg-rose-900/30 border border-rose-500/10 text-rose-400 font-black p-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mb-2 hidden">
                 <span id="trans-btn-exit">Sortir</span>
             </button>
@@ -117,7 +116,7 @@
         </div>
     </aside>
 
-    <!-- 3️⃣ منطقة الهيدر ومنطقة التصفح الرئيسية المفتوحة دائماً -->
+    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي للشبكة -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
@@ -127,19 +126,17 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <!-- خانة الرصيد المحمية -->
                 <div class="bg-[#050814] border border-slate-800 px-4 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
                     <span class="text-slate-400 font-sans" id="trans-lbl-solde">Solde:</span>
                     <span class="text-[#14b8a6] font-black text-sm" id="player-balance-val">0.00</span>
                     <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 ml-1.5 font-sans text-[11px]">🔄</button>
                 </div>
-                <!-- زر الدخول العلوي المتبدل ديناميكياً -->
                 <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-xs font-black px-4 py-2 rounded-xl cursor-pointer transition-all">Connexion</button>
                 <button onclick="logoutPlayer()" id="top-logout-btn" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-black px-4 py-2 rounded-xl cursor-pointer transition-all hidden">Sortir</button>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar">
+        <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
             <!-- أ) واجهة الترحيب (Accueil) -->
             <div id="pane-accueil" class="player-view-section space-y-4">
@@ -159,10 +156,14 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
-                    <div class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold">
+                    <!-- كوبون الرهان الأساسي (يختفي ويظهر ديناميكياً) -->
+                    <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold transition-all duration-300">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider" id="trans-ticket-title">📋 TICKET DE PARI</span>
-                            <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px]" id="trans-ticket-clear">Vider 🗑️</button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="minimizeTicket()" class="text-teal-400 hover:text-teal-500 font-bold text-sm px-1">─</button>
+                                <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px]" id="trans-ticket-clear">Vider 🗑️</button>
+                            </div>
                         </div>
                         <div id="ticket-odds-box" class="min-h-[60px] flex flex-col justify-center text-center text-slate-500">
                             Aucun match sélectionné
@@ -188,7 +189,15 @@
                 </div>
             </div>
 
-            <!-- ج) صالة ألعاب الكازينو الاحترافية المطابقة تماماً للصورة الأخيرة -->
+            <!-- ج) واجهة الأوراق الملغومة والمنفذة الحية (Mes Paris View) -->
+            <div id="pane-paris" class="player-view-section space-y-4 hidden">
+                <h3 class="text-sm font-black uppercase tracking-wider text-slate-400" id="trans-myparis-header">📋 رهاناتي المقبولة والجارية (My Active Bets)</h3>
+                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- يمتلئ الكود برهانات الكوبون فور التثبيت المالي الناجح -->
+                </div>
+            </div>
+
+            <!-- د) صالة ألعاب الكازينو الرقمية -->
             <div id="pane-casino" class="player-view-section space-y-6 hidden">
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
@@ -206,18 +215,22 @@
                 </div>
             </div>
 
-            <!-- د) نافذة ماكينة اللعب المنبثقة للرصيد المشترك -->
+            <!-- هـ) الكوبون المصغر العائم في الجانب الأيمن السفلي للماوس واللمس -->
+            <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
+                <span class="text-lg">📋</span>
+                <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">1</span>
+            </div>
+
+            <!-- و) نافذة ماكينة السلوتس -->
             <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
                 <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
                     <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
                     <h3 class="text-xs font-black text-teal-400 tracking-wider uppercase" id="modal-game-title">GATES OF OLYMPUS</h3>
-                    
                     <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800 rounded-2xl shadow-inner">
                         <div id="slot-reel-1" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
                         <div id="slot-reel-2" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
                         <div id="slot-reel-3" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
                     </div>
-
                     <div class="flex items-center justify-center gap-4 text-xs font-bold">
                         <div class="flex items-center gap-2 bg-[#050814] border border-slate-800 px-3 py-2 rounded-xl">
                             <span id="trans-slot-bet">BET TND:</span>
@@ -240,90 +253,15 @@
         let playerSession = null;
         let balanceInterval = null;
         let selectedMatch = null; 
-        let currentLang = 'fr'; 
+        let myActiveBetsList = []; // مصفوفة لتخزين رهانات ورقة العميل محلياً وعرضها في "Mes Paris"
         const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
-        const dictionary = {
-            fr: {
-                login_sub: "Espace Secure - Alphabet", lbl_user: "Nom d'utilisateur", lbl_pass: "Mot de passe", btn_login: "Connexion",
-                m_accueil: "Accueil", m_sport: "Sport", m_paris: "Mes Paris", m_casino: "Le casino", m_live: "Casino en direct", m_crash: "Jeux de crash", m_meilleurs: "Meilleurs games", m_promotions: "Promotions", m_langue: "Langue",
-                btn_exit: "Sortir", btn_navlogin: "Connexion", footer_resp: "Jouez De Façon Responsable", footer_terms: "GENERAL TERMS AND CONDITIONS",
-                badge_real: "Compte Réel 🇹🇳", badge_guest: "Mode Invité 🌐", lbl_solde: "Solde:", acc_welcome: "Bienvenue sur Alphabet 👑", acc_desc: "Accédez aux meilleurs paris sportifs en direct et aux machines à sous casino synchronisés directement avec votre solde.",
-                sport_title: "⚽ MATCHES EN DIRECT & À VENIR", sport_badge: "COTES EN DIRECT", ticket_title: "📋 TICKET DE PARI", ticket_clear: "Vider 🗑️", ticket_empty: "Aucun match sélectionné", ticket_cote: "Cote Total:", ticket_mise: "Mise TND:", ticket_gain: "Gain possible:", ticket_submit: "Valider le Pari ⚽",
-                cas_prov: "🎮 Fournisseurs de jeux mondiaux", cas_all: "Tout", cas_hall: "🎰 Salle de Casino Virtuelle", slot_bet: "MISE TND:", slot_win: "Félicitations ! Vous avez gagné",
-                err_fields: "Veuillez remplir tous les champs !", err_auth: "Identifiants incorrects !", err_server: "Erreur serveur", err_balance: "Solde insuffisant !", ticket_success: "Pari validé avec succès !", err_must_login: "Veuillez vous connecter d'abord để thực hiện !"
-            },
-            ar: {
-                login_sub: "بوابة اللاعبين المؤمنة - Alphabet", lbl_user: "اسم اللاعب (Username)", lbl_pass: "كلمة المرور (Password)", btn_login: "دخول اللعبة",
-                m_accueil: "الرئيسية", m_sport: "الرياضة", m_paris: "رهاناتي", m_casino: "الكازينو", m_live: "كازينو مباشر", m_crash: "ألعاب كراش", m_meilleurs: "أفضل الألعاب", m_promotions: "العروض", m_langue: "اللغة",
-                btn_exit: "تسجيل الخروج", btn_navlogin: "تسجيل الدخول", footer_resp: "العرفان بالمسؤولية في اللعب", footer_terms: "الشروط والأحكام العامة للشبكة",
-                badge_real: "الحساب حقيقي 🇹🇳", badge_guest: "وضع الزائر 🌐", lbl_solde: "الرصيد المتاح:", acc_welcome: "مرحباً بك في Alphabet 👑", acc_desc: "تصفح جداول المباريات الحية أو استمتع بألعاب الكازينو برصيدك المحدث فورياً بالدينار التونسي.",
-                sport_title: "⚽ المباريات المباشرة والقادمة", sport_badge: "مباشر الآن", ticket_title: "📋 كوبون الرهان المشترك", ticket_clear: "تفريغ 🗑️", ticket_empty: "لم تقم باختيار أي مباراة بعد", ticket_cote: "الضارب الإجمالي:", ticket_mise: "مبلغ اللعب (Mise):", ticket_gain: "الربح المتوقع:", ticket_submit: "تأكيد وإرسال الورقة ⚽",
-                cas_prov: "🎮 مزودي الألعاب العالميين", cas_all: "الكل", cas_hall: "🎰 صالة ألعاب الكازينو الرقمية", slot_bet: "الرهان TND:", slot_win: "مبروك الفوز! لقد ربحت",
-                err_fields: "الرجاء ملء جميع الحقول أولاً", err_auth: "بيانات الدخول خاطئة !", err_server: "عطل اتصال بالسيرفر", err_balance: "رصيدك الحالي غير كافٍ !", ticket_success: "تم قبول الكوبون وتثبيت الرهان بنجاح !", err_must_login: "الرجاء تسجيل الدخول أولاً للعب بمال حقيقي !"
-            },
-            en: {
-                login_sub: "Secure Players Gateway - Alphabet", lbl_user: "Username", lbl_pass: "Password", btn_login: "Login Account",
-                m_accueil: "Home", m_sport: "Sportsbook", m_paris: "My Bets", m_casino: "Casino Hall", m_live: "Live Casino", m_crash: "Crash Games", m_meilleurs: "Top Games", m_promotions: "Promotions", m_langue: "Language",
-                btn_exit: "Logout", btn_navlogin: "Login", footer_resp: "Play Responsibly", footer_terms: "GENERAL TERMS AND CONDITIONS",
-                badge_real: "Real Balance 🇹🇳", badge_guest: "Guest Mode 🌐", lbl_solde: "Balance:", acc_welcome: "Welcome to Alphabet 👑", acc_desc: "Access the best live sports betting odds and casino slots synchronized with your balance.",
-                sport_title: "⚽ LIVE & UPCOMING MATCHES", sport_badge: "LIVE ODDS", ticket_title: "📋 BETTING SLIP", ticket_clear: "Clear 🗑️", ticket_empty: "No match selected yet", ticket_cote: "Total Odds:", ticket_mise: "Stake TND:", ticket_gain: "Potential Gain:", ticket_submit: "Confirm Bet Slip ⚽",
-                cas_prov: "🎮 Global Game Providers", cas_all: "All", cas_hall: "🎰 Virtual Casino Room", slot_bet: "BET TND:", slot_win: "Congratulations! You won",
-                err_fields: "Please fill in all fields!", err_auth: "Invalid credentials!", err_server: "Server error", err_balance: "Insufficient balance!", ticket_success: "Bet slip submitted successfully!", err_must_login: "Please login first to bet real money!"
-            }
+        const dictionary_translations = {
+            fr: { ticket_empty: "Aucun match sélectionné", my_bets_title: "Mes Paris Active", ticket_success: "Pari validé avec succès !" },
+            ar: { ticket_empty: "لم تقم باختيار أي مباراة بعد", my_bets_title: "أوراقي النشطة الجارية", ticket_success: "تم قبول وتثبيت الكوبون المالي بنجاح !" },
+            en: { ticket_empty: "No match selected yet", my_bets_title: "My Active Bets", ticket_success: "Ticket submitted successfully!" }
         };
-
-        function openLoginModal() { document.getElementById('player-login-modal').style.display = 'flex'; }
-        function closeLoginModal() { document.getElementById('player-login-modal').style.display = 'none'; }
-
-        function changePlayerLanguage(lang) {
-            currentLang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-
-            const t = dictionary[lang];
-            document.getElementById('trans-login-sub').innerText = t.login_sub;
-            document.getElementById('trans-lbl-user').innerText = t.lbl_user;
-            document.getElementById('trans-lbl-pass').innerText = t.lbl_pass;
-            document.getElementById('trans-btn-login').innerText = t.btn_login;
-
-            document.getElementById('menu-accueil').innerText = t.m_accueil;
-            document.getElementById('menu-sport').innerText = t.m_sport;
-            document.getElementById('menu-paris').innerText = t.m_paris;
-            document.getElementById('menu-casino').innerText = t.m_casino;
-            document.getElementById('menu-live').innerText = t.m_live;
-            document.getElementById('menu-crash').innerText = t.m_crash;
-            document.getElementById('menu-meilleurs').innerText = t.m_meilleurs;
-            document.getElementById('menu-promotions').innerText = t.m_promotions;
-            document.getElementById('menu-langue').innerText = t.m_langue;
-            document.getElementById('trans-btn-exit').innerText = t.btn_exit;
-            document.getElementById('trans-btn-navlogin').innerText = t.btn_navlogin;
-            document.getElementById('trans-footer-resp').innerText = t.footer_resp;
-            document.getElementById('trans-footer-terms').innerText = t.footer_terms;
-
-            document.getElementById('trans-badge-real').innerText = playerSession ? t.badge_real : t.badge_guest;
-            document.getElementById('trans-lbl-solde').innerText = t.lbl_solde;
-            document.getElementById('trans-acc-welcome').innerText = t.acc_welcome;
-            document.getElementById('trans-acc-desc').innerText = t.acc_desc;
-
-            document.getElementById('trans-sport-title').innerText = t.sport_title;
-            document.getElementById('trans-sport-badge').innerText = t.sport_badge;
-            document.getElementById('trans-ticket-title').innerText = t.ticket_title;
-            document.getElementById('trans-ticket-clear').innerText = t.ticket_clear;
-            document.getElementById('trans-ticket-cote').innerText = t.ticket_cote;
-            document.getElementById('trans-ticket-mise').innerText = t.ticket_mise;
-            document.getElementById('trans-ticket-gain').innerText = t.ticket_gain;
-            document.getElementById('ticket-submit-btn').innerText = t.ticket_submit;
-            if(!selectedMatch) document.getElementById('ticket-odds-box').innerText = t.ticket_empty;
-
-            document.getElementById('trans-cas-prov').innerText = t.cas_prov;
-            document.getElementById('trans-cas-all').innerText = t.cas_all;
-            document.getElementById('trans-cas-hall').innerText = t.cas_hall;
-            document.getElementById('trans-slot-bet').innerText = t.slot_bet;
-
-            renderCasinoGames();
-            if(!document.getElementById('pane-sport').classList.contains('hidden')) loadLiveMatchesData();
-        }
+        let currentLangCode = "fr";
 
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -337,13 +275,27 @@
 
         function switchSection(sectionId) {
             document.querySelectorAll('.player-view-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`pane-${sectionId}`).classList.remove('hidden');
+            const panelElement = document.getElementById(`pane-${sectionId}`);
+            if (panelElement) panelElement.classList.remove('hidden');
             
-            document.getElementById('main-sidebar').querySelectorAll('button').forEach(btn => btn.classList.remove('active-menu-btn'));
-            const targetBtn = document.getElementById(`btn-menu-${sectionId}`);
-            if(targetBtn) targetBtn.classList.add('active-menu-btn');
-
             if(sectionId === 'sport') loadLiveMatchesData();
+            if(sectionId === 'paris') renderMyBetsHistoryPane();
+        }
+
+        function minimizeTicket() {
+            if(!selectedMatch) return;
+            document.getElementById('main-ticket-slip').classList.add('hidden', 'lg:hidden');
+            const floater = document.getElementById('floating-mini-ticket');
+            floater.classList.remove('scale-0');
+            floater.classList.add('scale-100');
+            document.getElementById('mini-ticket-badge').innerText = "1";
+        }
+
+        function maximizeTicket() {
+            document.getElementById('main-ticket-slip').classList.remove('hidden', 'lg:hidden');
+            const floater = document.getElementById('floating-mini-ticket');
+            floater.classList.remove('scale-100');
+            floater.classList.add('scale-0');
         }
 
         async function refreshPlayerBalance() {
@@ -364,8 +316,7 @@
         async function handlePlayerAuth() {
             const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
             const password = document.getElementById('p-auth-password').value;
-            
-            if(!username || !password) return showNotification(dictionary[currentLang].err_fields, 'error');
+            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
             try {
                 const res = await fetch(`${BACKEND_URL}/api/login`, {
@@ -377,57 +328,19 @@
 
                 if(res.ok) {
                     playerSession = data;
-                    closeLoginModal();
-                    
-                    // تبديل الأزرار ديناميكياً بعد الدخول
-                    document.getElementById('sidebar-login-btn').classList.add('hidden');
-                    document.getElementById('top-login-btn').classList.add('hidden');
-                    document.getElementById('sidebar-logout-btn').classList.remove('hidden');
-                    document.getElementById('top-logout-btn').classList.remove('hidden');
-
+                    document.getElementById('player-login-card').classList.add('hidden');
+                    document.getElementById('main-sidebar').classList.remove('hidden');
+                    document.getElementById('main-content-area').classList.remove('hidden');
                     document.getElementById('player-name-display').innerText = `${playerSession.username}`;
-                    document.getElementById('trans-badge-real').innerText = dictionary[currentLang].badge_real;
                     
                     await refreshPlayerBalance();
                     balanceInterval = setInterval(refreshPlayerBalance, 4000);
-                } else {
-                    showNotification(dictionary[currentLang].err_auth, 'error');
-                }
-            } catch(e) { showNotification(dictionary[currentLang].err_server, 'error'); }
-        }
-
-        function renderCasinoGames() {
-            const container = document.getElementById('games-grid-container');
-            const playText = currentLang === 'ar' ? 'إلعب الآن' : (currentLang === 'en' ? 'Play' : 'Jouer');
-            const games = [
-                { name: "Gates of Olympus", icon: "⚡", style: "from-amber-500 to-amber-600", tag: "SLOT" },
-                { name: "Sweet Bonanza", icon: "🍭", style: "from-pink-500 to-rose-500", tag: "SLOT" },
-                { name: "Lightning Roulette", icon: "🎡", style: "from-red-600 to-slate-900", tag: "LIVE" },
-                { name: "Infinite Blackjack", icon: "🃏", style: "from-teal-800 to-slate-900", tag: "CARDS" },
-                { name: "Wanted Dead or a Wild", icon: "🤠", style: "from-amber-800 to-orange-950", tag: "HACKSAW" },
-                { name: "Alphabet Aviator", icon: "🚀", style: "from-teal-500 to-teal-600", tag: "CRASH" }
-            ];
-
-            container.innerHTML = games.map(g => `
-                <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
-                    <div class="h-28 bg-gradient-to-br ${g.style} flex items-center justify-center text-4xl shadow-inner relative">
-                        ${g.icon}<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-teal-400 px-1.5 py-0.5 rounded font-bold">${g.tag}</span>
-                    </div>
-                    <div class="p-3 space-y-2">
-                        <div class="text-[11px] font-black text-white truncate">${g.name}</div>
-                        <button onclick="openLiveGame('${g.name}')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">${playText}</button>
-                    </div>
-                </div>
-            `).join('');
+                    switchSection('accueil');
+                } else { showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); }
+            } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
         function openLiveGame(gameName) {
-            // التحقق من هوية اللاعب قبل السماح بفتح اللعبة واللف بمال حقيقي
-            if(!playerSession) {
-                showNotification(dictionary[currentLang].err_must_login, 'error');
-                openLoginModal();
-                return;
-            }
             document.getElementById('modal-game-title').innerText = gameName;
             document.getElementById('modal-slot-machine').style.display = 'flex';
         }
@@ -436,14 +349,12 @@
 
         async function loadLiveMatchesData() {
             const container = document.getElementById('matches-list-container');
+            container.innerHTML = '<div class="text-center py-4 text-slate-500">Chargement...</div>';
             try {
                 const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
                 if(res.ok) {
                     const matches = await res.json();
-                    if(matches && matches.length > 0) {
-                        renderMatchesList(matches);
-                        return;
-                    }
+                    if(matches && matches.length > 0) { return renderMatchesList(matches); }
                 }
                 injectBackupMatches();
             } catch(e) { injectBackupMatches(); }
@@ -458,7 +369,7 @@
                 const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.20;
 
                 return `
-                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left">
+                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
                         <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
                             <span>🏆 ${m.sport_title}</span>
                             <span class="text-teal-400 font-mono">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
@@ -466,7 +377,7 @@
                         <div class="text-xs text-white">⚽ ${m.home_team} vs ${m.away_team}</div>
                         <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
                             <button onclick="selectBetOutcome('${m.home_team}', ${homeOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">1<br>${homeOdds.toFixed(2)}</button>
-                            <button onclick="selectBetOutcome('Draw', ${drawOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
+                            <button onclick="selectBetOutcome('Nul', ${drawOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
                             <button onclick="selectBetOutcome('${m.away_team}', ${awayOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">2<br>${awayOdds.toFixed(2)}</button>
                         </div>
                     </div>
@@ -476,20 +387,20 @@
 
         function injectBackupMatches() {
             const container = document.getElementById('matches-list-container');
-            const liveBadge = currentLang === 'ar' ? '🔴 مباشر' : '🔴 LIVE';
             const backups = [
-                { title: "Ligue 1 Pro", home: currentLang === 'ar' ? "الترجي الرياضي" : "EST Tunis", away: currentLang === 'ar' ? "النادي الإفريقي" : "CA Africain", c1: 1.75, cx: 3.10, c2: 2.50 },
-                { title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 }
+                { title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
+                { title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
+                { title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
             ];
             container.innerHTML = backups.map(m => `
                 <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
                     <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
-                        <span>🏆 ${m.title}</span><span class="text-teal-400">${liveBadge}</span>
+                        <span>🏆 ${m.title}</span><span class="text-teal-400">🔴 LIVE</span>
                     </div>
                     <div class="text-xs text-white">⚽ ${m.home} vs ${m.away}</div>
                     <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
                         <button onclick="selectBetOutcome('${m.home}', ${m.c1}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">1<br>${m.c1.toFixed(2)}</button>
-                        <button onclick="selectBetOutcome('Draw', ${m.cx}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">X<br>${m.cx.toFixed(2)}</button>
+                        <button onclick="selectBetOutcome('Nul', ${m.cx}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">X<br>${m.cx.toFixed(2)}</button>
                         <button onclick="selectBetOutcome('${m.away}', ${m.c2}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">2<br>${m.c2.toFixed(2)}</button>
                     </div>
                 </div>
@@ -497,24 +408,27 @@
         }
 
         function selectBetOutcome(outcome, odds, matchName) {
-            const optText = currentLang === 'ar' ? 'الخيار:' : 'Option:';
             selectedMatch = { outcome, odds, matchName };
             document.getElementById('ticket-odds-box').innerHTML = `
                 <div class="bg-[#050814] border border-slate-800 p-2.5 rounded-xl space-y-1 text-left">
                     <div class="text-slate-400 text-[10px]">${matchName}</div>
-                    <div class="text-white text-[11px]">${optText} <span class="text-teal-400">${outcome}</span></div>
+                    <div class="text-white text-[11px]">Option: <span class="text-teal-400">${outcome}</span></div>
                     <div class="text-right text-cyan-400 font-mono font-black">Cote: ${odds.toFixed(2)}</div>
                 </div>
             `;
             document.getElementById('ticket-total-odds').innerText = odds.toFixed(2);
             calculatePotentialGain();
+            
+            // تصغير الكوبون تلقائياً ليتحول إلى أيقونة صغيرة طافية على اليمين للسماح بإضافة مباريات أخرى بسهولة
+            setTimeout(minimizeTicket, 600);
         }
 
         function clearTicket() {
             selectedMatch = null;
-            document.getElementById('ticket-odds-box').innerHTML = dictionary[currentLang].ticket_empty;
+            document.getElementById('ticket-odds-box').innerHTML = dictionary_translations[currentLangCode].ticket_empty;
             document.getElementById('ticket-total-odds').innerText = "1.00";
             calculatePotentialGain();
+            document.getElementById('floating-mini-ticket').classList.add('scale-0');
         }
 
         function calculatePotentialGain() {
@@ -524,17 +438,12 @@
         }
 
         async function submitSportTicket() {
-            if(!playerSession) {
-                showNotification(dictionary[currentLang].err_must_login, 'error');
-                openLoginModal();
-                return;
-            }
-            if(!selectedMatch) return showNotification('الرجاء اختيار مباراة أولاً !', 'error');
+            if(!playerSession) { return openLoginModal(); }
+            if(!selectedMatch) return;
             
             await refreshPlayerBalance(); 
             const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            
-            if(stake <= 0 || playerSession.balance < stake) return showNotification(dictionary[currentLang].err_balance, 'error');
+            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
 
             const btn = document.getElementById('ticket-submit-btn');
             btn.disabled = true;
@@ -550,18 +459,70 @@
                     const data = await res.json();
                     playerSession.balance = data.balance;
                     document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                    showNotification(dictionary[currentLang].ticket_success || 'Pari validé !');
+                    
+                    // حفظ الورقة بنجاح داخل الذاكرة وإدراجها في شاشة رهاناتي لضمان بقائها
+                    const betTicketObject = {
+                        id: Math.floor(100000 + Math.random() * 900000),
+                        match: selectedMatch.matchName,
+                        choice: selectedMatch.outcome,
+                        cote: selectedMatch.odds,
+                        mise: stake,
+                        gain: stake * selectedMatch.odds,
+                        date: new Date().toLocaleTimeString('fr-FR')
+                    };
+                    myActiveBetsList.push(betTicketObject);
+                    
+                    // تحديث شارات العداد باللون الأصفر في القائمة الجانبية
+                    document.getElementById('my-bets-badge-count').innerText = myActiveBetsList.length;
+
+                    showNotification(dictionary_translations[currentLangCode].ticket_success);
                     clearTicket();
-                } else { showNotification(dictionary[currentLang].err_server, 'error'); }
-            } catch(e) { showNotification(dictionary[currentLang].err_server, 'error'); }
+                    maximizeTicket();
+                } else { showNotification('خطأ في معالجة رصيد السيرفر', 'error'); }
+            } catch(e) { showNotification('خطأ شبكة مالي', 'error'); }
             btn.disabled = false;
+        }
+
+        function renderMyBetsHistoryPane() {
+            const container = document.getElementById('my-bets-history-list');
+            if(myActiveBetsList.length === 0) {
+                container.innerHTML = '<div class="col-span-full text-center py-8 text-slate-500 font-bold uppercase">Aucun ticket actif لم تقم بطلب أي رهانات حتى الآن</div>';
+                return;
+            }
+            container.innerHTML = myActiveBetsList.map(b => `
+                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-2 font-mono text-xs shadow-md">
+                    <div class="flex justify-between items-center text-[10px] text-slate-500 border-b border-slate-800/60 pb-1.5">
+                        <span>Ref ID: #${b.id}</span><span>⏱️ ${b.date}</span>
+                    </div>
+                    <div class="text-white font-sans font-bold text-xs">${b.match}</div>
+                    <div class="text-slate-400">الخيار المستهدف: <span class="text-amber-400 font-bold">${b.choice}</span></div>
+                    <div class="flex justify-between items-center pt-1 text-[11px]">
+                        <span>Cote: <span class="text-cyan-400 font-bold">${b.cote.toFixed(2)}</span></span>
+                        <span>Mise: <span class="text-white font-bold">${b.mise.toFixed(2)} TND</span></span>
+                    </div>
+                    <div class="bg-[#050814] p-2 rounded-xl text-center text-emerald-400 font-bold border border-slate-800/80">
+                        Gain Potentiel: +${b.gain.toFixed(2)} TND
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function changePlayerLanguage(lang) {
+            currentLangCode = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            changePlayerLanguageLabels(lang);
+        }
+
+        function changePlayerLanguageLabels(lang) {
+            const t = dictionary_translations[lang];
+            if(!selectedMatch) document.getElementById('ticket-odds-box').innerText = t.ticket_empty;
         }
 
         async function spinPragmaticSlot() {
             if(!playerSession) return;
             await refreshPlayerBalance();
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
-            if(playerSession.balance < betAmount) return showNotification(dictionary[currentLang].err_balance, 'error');
+            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ للف البكرة !', 'error');
 
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
@@ -572,25 +533,20 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: betAmount })
                 });
-
-                if(!deductRes.ok) { spinBtn.disabled = false; return showNotification('Error', 'error'); }
+                if(!deductRes.ok) { spinBtn.disabled = false; return; }
 
                 const deductData = await deductRes.json();
                 playerSession.balance = deductData.balance;
                 document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
 
-                const r1 = document.getElementById('slot-reel-1');
-                const r2 = document.getElementById('slot-reel-2');
-                const r3 = document.getElementById('slot-reel-3');
+                const r1 = document.getElementById('slot-reel-1'); const r2 = document.getElementById('slot-reel-2'); const r3 = document.getElementById('slot-reel-3');
                 r1.classList.add('slot-anim'); r2.classList.add('slot-anim'); r3.classList.add('slot-anim');
 
                 setTimeout(async () => {
                     r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
-
                     const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
-
                     r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
 
                     if(res1 === res2 && res2 === res3) {
@@ -603,32 +559,28 @@
                         const winData = await winRes.json();
                         playerSession.balance = winData.balance;
                         document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                        showNotification(`${dictionary[currentLang].slot_win} ${winAmount.toFixed(2)} TND 🔥`);
+                        showNotification(`تبروك الربح العظيم! لقد كسبت ${winAmount.toFixed(2)} TND 🔥`);
                     }
                     spinBtn.disabled = false;
                 }, 400);
-            } catch(e) { spinBtn.disabled = false; showNotification('Error', 'error'); }
+            } catch(e) { spinBtn.disabled = false; }
         }
 
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             playerSession = null;
+            myActiveBetsList = [];
+            document.getElementById('my-bets-badge-count').innerText = "0";
             document.getElementById('player-name-display').innerText = "Visitor";
             document.getElementById('player-balance-val').innerText = "0.00";
-            document.getElementById('trans-badge-real').innerText = dictionary[currentLang].badge_guest;
-
-            // إعادة الأزرار لحالتها البدائية
             document.getElementById('sidebar-logout-btn').classList.add('hidden');
             document.getElementById('top-logout-btn').classList.add('hidden');
             document.getElementById('sidebar-login-btn').classList.remove('hidden');
             document.getElementById('top-login-btn').classList.remove('hidden');
-            
             switchSection('accueil');
         }
 
-        window.onload = function() {
-            renderCasinoGames();
-        };
+        window.onload = function() { renderCasinoGames(); };
     </script>
 </body>
 </html>
