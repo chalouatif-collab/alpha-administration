@@ -28,12 +28,18 @@
             color: #14b8a6 !important;
             background-color: rgba(20, 184, 166, 0.05);
         }
+        /* تأثيرات الطائرة وشبكة الكراش */
+        .crash-graph-grid {
+            background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
     </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
+    <!-- 1️⃣ نافذة تسجيل الدخول المنبثقة المحمية (Modal) -->
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -60,6 +66,7 @@
         </div>
     </div>
 
+    <!-- 2️⃣ القائمة الجانبية (Sidebar) -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -84,7 +91,8 @@
                 <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>👤</span> <span id="menu-live">Casino en direct</span>
                 </button>
-                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                <!-- 🚀 تعديل جوهري: تم تفعيل وتنشيط قسم ألعاب الكراش وربطه تفاعلياً -->
+                <button onclick="switchSection('crash')" id="btn-menu-crash" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
                 </button>
                 <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
@@ -119,6 +127,7 @@
         </div>
     </aside>
 
+    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي للشبكة -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
@@ -140,6 +149,7 @@
 
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
+            <!-- أ) واجهة الترحيب (Accueil) -->
             <div id="pane-accueil" class="player-view-section space-y-4">
                 <div class="bg-gradient-to-r from-teal-500/10 to-transparent border border-slate-800 p-6 rounded-2xl">
                     <h2 class="text-xl font-black text-white mb-2" id="trans-acc-welcome">Bienvenue sur Alphabet 👑</h2>
@@ -147,6 +157,7 @@
                 </div>
             </div>
 
+            <!-- ب) واجهة الرياضة والمباريات المزامنة والرهان المتعدد السلس -->
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
@@ -156,6 +167,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
+                    <!-- كوبون الرهان المشترك -->
                     <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold transition-all duration-300">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider" id="trans-ticket-title">📋 TICKET DE PARI</span>
@@ -188,6 +200,7 @@
                 </div>
             </div>
 
+            <!-- ج) واجهة الأوراق المقسمة إلى 4 تبويبات احترافية ملونة داخل Mes Paris -->
             <div id="pane-paris" class="player-view-section space-y-4 hidden">
                 <div class="flex border-b border-slate-800/80 gap-1 overflow-x-auto no-scrollbar">
                     <button onclick="switchBetsSubTab('encours')" id="sub-tab-encours" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer active-sub-tab">⏳ En cours</button>
@@ -195,11 +208,52 @@
                     <button onclick="switchBetsSubTab('perdu')" id="sub-tab-perdu" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">❌ Perdu</button>
                     <button onclick="switchBetsSubTab('cashout')" id="sub-tab-cashout" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">💸 Cashout</button>
                 </div>
-                
-                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    </div>
+                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
             </div>
 
+            <!-- 🚀 د) واجهة لعبة الكراش الطيارة الحقيقية (Alphabet Aviator الحية) -->
+            <div id="pane-crash" class="player-view-section space-y-6 hidden">
+                <div class="max-w-2xl mx-auto bg-[#090f24] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+                    <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">🚀</span>
+                            <h2 class="text-sm font-black text-teal-400 tracking-wider uppercase">Alphabet Aviator Real-Time</h2>
+                        </div>
+                        <span id="crash-status-badge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase">Waiting</span>
+                    </div>
+
+                    <!-- شاشة شبكة الرسم البياني التفاعلي للطيارة -->
+                    <div class="h-64 bg-[#050814] border border-slate-800 rounded-2xl relative overflow-hidden crash-graph-grid flex items-center justify-center">
+                        <!-- الرقم المضاعف المركزي الكبير -->
+                        <div id="crash-multiplier-display" class="text-5xl md:text-6xl font-black text-white font-mono tracking-tight z-10 drop-shadow-md">1.00x</div>
+                        
+                        <!-- عنصر أيقونة الطائرة الافتراضي المتحرك -->
+                        <div id="crash-airplane-icon" class="absolute bottom-6 left-6 text-4xl opacity-0 transition-all duration-100 ease-out z-20">🚀</div>
+                        
+                        <!-- شاشة الانفجار الحمراء المنبثقة -->
+                        <div id="crash-blast-screen" class="absolute inset-0 bg-rose-950/80 backdrop-blur-sm flex flex-col items-center justify-center scale-0 transition-all duration-300 z-30">
+                            <span class="text-4xl">💥</span>
+                            <span class="text-rose-400 font-black text-sm uppercase tracking-widest mt-2">FLEW AWAY @ <span id="blast-multiplier-val">0.00</span>x</span>
+                        </div>
+                    </div>
+
+                    <!-- أزرار التحكم بالرهان والسحب الفوري -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-[#050814]/60 p-4 rounded-xl border border-slate-800/80 font-bold text-xs">
+                        <div class="space-y-1.5">
+                            <label class="text-slate-400 block">Mise du Crash (رهان الطيارة):</label>
+                            <input type="number" id="crash-stake-input" value="10" min="1" class="w-full bg-[#050814] border border-slate-800 rounded-xl p-3 text-teal-400 font-mono focus:outline-none">
+                        </div>
+                        <div class="pt-5">
+                            <!-- زر التثبيت البدائي والتحول لكاش أوت حي -->
+                            <button onclick="startCrashBetRound()" id="crash-action-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg">
+                                Placer le Pari 🚀
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- هـ) صالة ألعاب الكازينو -->
             <div id="pane-casino" class="player-view-section space-y-6 hidden">
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
@@ -216,11 +270,13 @@
                 </div>
             </div>
 
+            <!-- و) الكوبون المصغر العائم -->
             <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
                 <span class="text-lg">📋</span>
                 <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
             </div>
 
+            <!-- ز) نافذة ماكينة السلوتس -->
             <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
                 <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
                     <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -257,6 +313,13 @@
         let comboTicketMatchesList = []; 
         let myActiveBetsList = []; 
         
+        // متغيرات محاكاة لعبة الكراش (Aviator) الحية
+        let crashLoopInterval = null;
+        let crashMultiplier = 1.00;
+        let isCrashRoundRunning = false;
+        let currentCrashStakeAmount = 0;
+        let hasPlayerCashedOutFromCrash = false;
+
         const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
         const dictionary_translations = {
@@ -374,7 +437,6 @@
             if(comboTicketMatchesList.length === 0) maximizeTicket();
         }
 
-        // دمج تعديلات اختيار المباريات بحرية تامة دون قيود
         function renderComboTicketUI() {
             const box = document.getElementById('ticket-odds-box');
             if(comboTicketMatchesList.length === 0) {
@@ -438,9 +500,6 @@
                     
                     const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
                     const calculatedGain = stake * totalOdds;
-
-                    // 🛠️ إصلاح ثغرة الكاش أوت الكبرى لمنع الربح العشوائي:
-                    // قبل حسم المباريات، قيمة الكاش أوت تكون دائماً أقل من رأس المال الملعوب به (Mise * 0.90) خصم 10% فائدة للمتجر
                     const cashOutValueCalculated = stake * 0.90;
 
                     const betTicketObject = {
@@ -451,7 +510,7 @@
                         totalCote: totalOdds,
                         mise: stake,
                         gain: calculatedGain,
-                        cashOutAmount: cashOutValueCalculated, // القيمة العادلة المحمية
+                        cashOutAmount: cashOutValueCalculated, 
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
                     myActiveBetsList.push(betTicketObject);
@@ -482,7 +541,7 @@
                     const targetTicket = myActiveBetsList.find(b => b.id === ticketId);
                     if(targetTicket) {
                         targetTicket.status = "cashout";
-                        targetTicket.finalCashoutPaid = cashOutAmount; // حفظ القيمة الفعلية للعملية المالية الحالية
+                        targetTicket.finalCashoutPaid = cashOutAmount; 
                     }
                     
                     updateActiveBetsBadgeCount();
@@ -510,7 +569,7 @@
             }
 
             updateActiveBetsBadgeCount();
-            showNotification(`مستوى تجريبي: تحولت التذكرة #${ticketId} إلى ${targetResult.toUpperCase()}`);
+            showNotification(`تم تحديث حالة التذكرة #${ticketId}`);
             renderMyBetsHistoryPane();
         }
 
@@ -551,7 +610,7 @@
                     bottomBoxContent = `<div class="bg-emerald-950/20 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-400 font-bold text-center">🏆 ورقة رابحة: +${b.gain.toFixed(2)} TND شُحنت للرصيد</div>`;
                 } else if(b.status === "perdu") {
                     statusBadgeStyle = "bg-rose-500/10 text-rose-400 border-rose-500/20";
-                    bottomBoxContent = `<div class="bg-rose-950/20 border border-rose-500/30 p-2.5 rounded-xl text-rose-400 font-bold text-center">❌ ورقة غير موفقة خاسرة</div>`;
+                    bottomBoxContent = `<div class="bg-rose-950/20 border border-rose-500/30 p-2.5 rounded-xl text-rose-400 font-bold text-center">❌ ورقة خاسرة</div>`;
                 } else if(b.status === "cashout") {
                     statusBadgeStyle = "bg-purple-500/10 text-purple-400 border-purple-500/20";
                     bottomBoxContent = `<div class="bg-purple-950/20 border border-purple-500/30 p-2.5 rounded-xl text-purple-400 font-bold text-center">💸 تم استرجاع كاش أوت: +${parseFloat(b.finalCashoutPaid).toFixed(2)} TND</div>`;
@@ -670,6 +729,138 @@
             `).join('');
         }
 
+        // 🚀 منظومة إدارة ألعاب الكراش المزامنة مالياً بالكامل (Real-time Crash Engine)
+        async function startCrashBetRound() {
+            if(!playerSession) { return openLoginModal(); }
+            
+            // إذا كانت الجولة تعمل بالفعل، يتحول الزر كلياً إلى وظيفة "سحب الكاش أوت الفوري" قبل الانفجار
+            if(isCrashRoundRunning) {
+                return triggerCrashCashOutEarly();
+            }
+
+            await refreshPlayerBalance();
+            const stakeInput = document.getElementById('crash-stake-input');
+            const stakeAmount = parseFloat(stakeInput.value) || 0;
+
+            if(stakeAmount <= 0 || playerSession.balance < stakeAmount) {
+                return showNotification('رصيدك الحالي غير كافٍ لبدء جولة الكراش !', 'error');
+            }
+
+            // قفل حقل المدخلات وتجهيز اللوحة
+            stakeInput.disabled = true;
+            isCrashRoundRunning = true;
+            hasPlayerCashedOutFromCrash = false;
+            currentCrashStakeAmount = stakeAmount;
+            crashMultiplier = 1.00;
+
+            document.getElementById('crash-blast-screen').classList.add('scale-0');
+            document.getElementById('crash-blast-screen').classList.remove('scale-100');
+            document.getElementById('crash-status-badge').innerText = "LIVE FLYING";
+            document.getElementById('crash-status-badge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
+
+            // تخصم قيمة الرهان الفعلي أونلاين من حساب العميل فوراً لمنع أي تلاعب
+            try {
+                const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
+                });
+
+                if(!deductRes.ok) {
+                    isCrashRoundRunning = false;
+                    stakeInput.disabled = false;
+                    return showNotification('فشلت المعاملة المالية للجولة', 'error');
+                }
+                const deductData = await deductRes.json();
+                playerSession.balance = deductData.balance;
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+            } catch(e) {
+                isCrashRoundRunning = false;
+                stakeInput.disabled = false;
+                return showNotification('خطأ شبكة مالي', 'error');
+            }
+
+            // تغيير نص ولون زر اللعب ليصبح زر السحب الفوري المربح
+            const actionBtn = document.getElementById('crash-action-btn');
+            actionBtn.innerText = "TAKE CASH OUT 💸";
+            actionBtn.className = "w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg animate-pulse";
+
+            // تحديد نقطة السقوط الكارثية عشوائياً (Crash Point) لإعطاء طابع حقيقي
+            const luckyCrashPointTarget = (Math.random() * 10) + 1.1; 
+
+            // بدء حلقة عداد الارتفاع الحي للطيارة
+            const planeIcon = document.getElementById('crash-airplane-icon');
+            planeIcon.style.opacity = "1";
+
+            crashLoopInterval = setInterval(() => {
+                crashMultiplier += 0.04;
+                document.getElementById('crash-multiplier-display').innerText = `${crashMultiplier.toFixed(2)}x`;
+
+                // تحريك الطائرة البيانية تدريجياً لليمين ولأعلى لمطابقة المؤشر الفعلي
+                const progressPercent = Math.min((crashMultiplier - 1) * 20, 85);
+                planeIcon.style.left = `${6 + progressPercent}%`;
+                planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
+
+                // إذا تخطى المؤشر نقطة الكراش المستهدفة، تنفجر الطائرة وتطير فوراً!
+                if(crashMultiplier >= luckyCrashPointTarget) {
+                    triggerAirplaneCrashBlast();
+                }
+            }, 80);
+        }
+
+        // دالة سحب الرصيد والكاش أوت الناجح قبل الانفجار
+        async function triggerCrashCashOutEarly() {
+            if(!isCrashRoundRunning || hasPlayerCashedOutFromCrash) return;
+            hasPlayerCashedOutFromCrash = true;
+            clearInterval(crashLoopInterval);
+
+            const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
+
+            // إرسال الأرباح الفورية المكتسبة للسيرفر لشحن رصيد العميل حياً
+            try {
+                const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: totalWinCalculated })
+                });
+
+                if(winRes.ok) {
+                    const winData = await winRes.json();
+                    playerSession.balance = winData.balance;
+                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                    showNotification(`Félicitations! Gagne +${totalWinCalculated.toFixed(2)} TND 🚀🔥`);
+                }
+            } catch(e) { console.error("Error pushing crash victory money"); }
+
+            // إعادة تعيين أزرار التحكم
+            resetCrashInterfaceToReady();
+        }
+
+        // حدوث الانفجار الكارثي للطيارة وضياع الرهان
+        function triggerAirplaneCrashBlast() {
+            clearInterval(crashLoopInterval);
+            isCrashRoundRunning = false;
+
+            document.getElementById('blast-multiplier-val').innerText = crashMultiplier.toFixed(2);
+            document.getElementById('crash-blast-screen').classList.remove('scale-0');
+            document.getElementById('crash-blast-screen').classList.add('scale-100');
+
+            showNotification('FLEW AWAY! الرفعة طارت وانفجرت الطائرة', 'error');
+            resetCrashInterfaceToReady();
+        }
+
+        function resetCrashInterfaceToReady() {
+            isCrashRoundRunning = false;
+            document.getElementById('crash-stake-input').disabled = false;
+            document.getElementById('crash-status-badge').innerText = "Waiting Round";
+            document.getElementById('crash-status-badge').className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
+
+            const actionBtn = document.getElementById('crash-action-btn');
+            actionBtn.innerText = "Placer le Pari 🚀";
+            actionBtn.className = "w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg";
+            document.getElementById('crash-airplane-icon').style.opacity = "0";
+        }
+
         async function spinPragmaticSlot() {
             if(!playerSession) return;
             await refreshPlayerBalance();
@@ -720,6 +911,7 @@
 
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
+            if(crashLoopInterval) clearInterval(crashLoopInterval);
             playerSession = null; myActiveBetsList = [];
             document.getElementById('my-bets-badge-count').innerText = "0";
             document.getElementById('player-name-display').innerText = "Visitor";
