@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA CASINO - بوابة اللاعبين</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        @keyframes spin-slot {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-50px); }
+            100% { transform: translateY(0); }
+        }
+        .slot-anim { animation: spin-slot 0.4s ease-in-out; }
+    </style>
+</head>
+<body class="bg-[#04060c] text-slate-200 min-h-screen font-sans flex flex-col items-center justify-center p-4 relative">
+
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
+
+    <div id="player-login-card" class="w-full max-w-md bg-[#0b101f] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
+        <div class="text-center">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center transform rotate-45 mx-auto mb-4 shadow-lg shadow-amber-500/20">
+                <span class="text-slate-950 font-black text-xl transform -rotate-45">🎰</span>
+            </div>
+            <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-400 tracking-widest">ALPHA PLAYER</h1>
+            <p class="text-xs text-slate-400 mt-2">دخول اللاعبين المباشر - Espace Joueur Secure</p>
+        </div>
+
+        <div class="space-y-4 text-xs font-bold">
+            <div>
+                <label class="text-slate-400 block mb-1.5 text-left">اسم اللاعب (Username)</label>
+                <input type="text" id="p-auth-username" placeholder="مثال: samir110" class="w-full p-3.5 rounded-xl bg-[#04060c] border border-slate-800 text-amber-400 font-mono focus:outline-none focus:border-amber-500">
+            </div>
+            <div>
+                <label class="text-slate-400 block mb-1.5 text-left">كلمة المرور (Password)</label>
+                <input type="password" id="p-auth-password" placeholder="••••••••" class="w-full p-3.5 rounded-xl bg-[#04060c] border border-slate-800 text-white font-mono focus:outline-none focus:border-amber-500">
+            </div>
+            <button onclick="handlePlayerAuth()" class="w-full bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-slate-950 font-black p-4 rounded-xl transition-all cursor-pointer shadow-lg text-sm uppercase tracking-wider">
+                دخول اللعبة 🕹️
+            </button>
+        </div>
+    </div>
+
+    <div id="player-casino-dashboard" class="w-full max-w-2xl bg-[#0b101f] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6 hidden">
+        
+        <header class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
+            <div class="flex items-center gap-2">
+                <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="player-name-display">Joueur: </span>
+                <span class="text-[10px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2 py-0.5 rounded">الحساب حقيقي 🇹🇳</span>
+            </div>
+            <div class="bg-[#04060c] border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 font-mono text-xs">
+                <span class="text-slate-400 font-sans">رصيدك الحالي:</span>
+                <span class="text-emerald-400 font-black text-base" id="player-balance-val">0.00 TND</span>
+            </div>
+        </header>
+
+        <section class="bg-[#04060c] border border-slate-800 rounded-2xl p-6 text-center space-y-6 shadow-inner">
+            <h2 class="text-xs font-black text-amber-400 tracking-widest uppercase">🍒 ALPHA GATES OF OLYMPUS SLOTS 👑</h2>
+            
+            <div class="flex justify-center gap-4 text-4xl p-6 bg-[#0b101f] border border-slate-800/80 rounded-2xl max-w-sm mx-auto shadow-md">
+                <div id="slot-reel-1" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
+                <div id="slot-reel-2" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
+                <div id="slot-reel-3" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
+            </div>
+
+            <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-bold pt-2">
+                <div class="flex items-center gap-2 bg-[#0b101f] border border-slate-800 px-3 py-2 rounded-xl">
+                    <span class="text-slate-400">الرهان (BET):</span>
+                    <select id="player-bet-select" class="bg-[#04060c] border border-slate-700 rounded px-2 py-0.5 text-amber-400 font-mono">
+                        <option value="1">1.00 TND</option>
+                        <option value="5">5.00 TND</option>
+                        <option value="10">10.00 TND</option>
+                        <option value="50">50.00 TND</option>
+                    </select>
+                </div>
+                <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm px-8 py-3 rounded-xl transition-all cursor-pointer shadow-md shadow-amber-500/10 uppercase tracking-wider">
+                    SPIN 🎰
+                </button>
+            </div>
+        </section>
+
+        <footer class="text-center">
+            <button onclick="logoutPlayer()" class="text-slate-500 hover:text-rose-400 text-[11px] font-bold transition-all cursor-pointer">🚪 تسجيل الخروج والعودة</button>
+        </footer>
+    </div>
+
+    <script>
+        const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+        let playerSession = null;
+        const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-xl shadow-2xl border text-xs font-bold text-slate-950 flex items-center gap-2 ${type === 'success' ? 'bg-amber-400 border-amber-500' : 'bg-rose-400 border-rose-500'}`;
+            toast.innerHTML = type === 'success' ? `✅ ${message}` : `❌ ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        async function handlePlayerAuth() {
+            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
+            const password = document.getElementById('p-auth-password').value;
+            
+            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if(res.ok) {
+                    playerSession = data;
+                    document.getElementById('player-login-card').classList.add('hidden');
+                    document.getElementById('player-casino-dashboard').classList.remove('hidden');
+                    document.getElementById('player-name-display').innerText = `Joueur: ${playerSession.username}`;
+                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                } else {
+                    showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error');
+                }
+            } catch(e) { showNotification('عطل اتصال بالسيرفر المالي', 'error'); }
+        }
+
+        async function spinPragmaticSlot() {
+            const betAmount = parseFloat(document.getElementById('player-bet-select').value);
+            if(playerSession.balance < betAmount) return showNotification('عذراً رصيدك الحالي غير كافٍ لإجراء هذه اللفة!', 'error');
+
+            const spinBtn = document.getElementById('spin-btn');
+            spinBtn.disabled = true;
+
+            // 1. خصم مبلغ الرهان فوراً من رصيد اللاعب في السيرفر الرئيسي
+            try {
+                const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_username: "System",
+                        target_username: playerSession.username,
+                        action: "withdraw",
+                        amount: betAmount
+                    })
+                });
+
+                if(!deductRes.ok) {
+                    spinBtn.disabled = false;
+                    return showNotification('فشلت العملية، تأكد من اتصال الخادم', 'error');
+                }
+
+                const deductData = await deductRes.json();
+                playerSession.balance = deductData.balance;
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+
+                // إضافة أنيميشن الدوران للبكرات
+                const r1 = document.getElementById('slot-reel-1');
+                const r2 = document.getElementById('slot-reel-2');
+                const r3 = document.getElementById('slot-reel-3');
+                r1.classList.add('slot-anim'); r2.classList.add('slot-anim'); r3.classList.add('slot-anim');
+
+                setTimeout(async () => {
+                    r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
+
+                    // توليد نتيجة عشوائية للبكرات
+                    const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
+                    const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
+                    const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
+
+                    r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
+
+                    // التحقق من حالة الفوز (إذا تطابقت الرموز الثلاثة)
+                    if(res1 === res2 && res2 === res3) {
+                        const winMultiplier = res1 === "👑" ? 10 : 5; 
+                        const winAmount = betAmount * winMultiplier;
+
+                        // 2. إيداع مبلغ الفوز والربح في حساب اللاعب على السيرفر
+                        const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                admin_username: "System",
+                                target_username: playerSession.username,
+                                action: "charge",
+                                amount: winAmount
+                            })
+                        });
+                        const winData = await winRes.json();
+                        playerSession.balance = winData.balance;
+                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                        showNotification(`تهانينا الفوز العظيم! لقد ربحت ${winAmount.toFixed(2)} TND 🚀🔥`);
+                    }
+
+                    spinBtn.disabled = false;
+                }, 400);
+
+            } catch(e) {
+                spinBtn.disabled = false;
+                showNotification('خطأ في معالجة المعاملة المالية', 'error');
+            }
+        }
+
+        function logoutPlayer() {
+            playerSession = null;
+            document.getElementById('p-auth-username').value = '';
+            document.getElementById('p-auth-password').value = '';
+            document.getElementById('player-casino-dashboard').classList.add('hidden');
+            document.getElementById('player-login-card').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
