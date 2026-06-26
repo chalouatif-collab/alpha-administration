@@ -132,11 +132,12 @@
         </div>
     </div>
 
+    <!-- النافذة المنبثقة الشاملة لعرض تفاصيل الرهانات الرياضية المباشرة -->
     <div id="history-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative">
             <button onclick="closeModal('history-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
             <h3 id="modal-title" class="text-base font-bold text-rose-500 mb-4">Historique</h3>
-            <div class="overflow-x-auto max-h-64 rounded-xl border border-slate-800 bg-slate-950 p-2">
+            <div class="overflow-x-auto max-h-[400px] rounded-xl border border-slate-800 bg-slate-950 p-2">
                 <table class="w-full text-left text-xs font-mono">
                     <thead class="bg-slate-900 text-slate-400 border-b border-slate-800">
                         <tr id="modal-table-headers"></tr>
@@ -215,7 +216,6 @@
 
         async function loadNetworkData() {
             try {
-                // استهداف الرابط المباشر العام بدون بارامترات الفلترة المعطلة
                 const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
                 if(uRes.ok){
                     const users = await uRes.json();
@@ -256,11 +256,14 @@
             document.getElementById('rtp-val-label').innerText = rtp + '%';
         }
 
+        // 🚀 تعديل ذكي ومصلح بالكامل لجلب الأوراق الحقيقية من مسار السيرفر الجديد
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
             const title = document.getElementById('modal-title');
             const headers = document.getElementById('modal-table-headers');
             const body = document.getElementById('modal-table-body');
+            
+            const target_username = document.getElementById('ctrl-target-user').value;
             
             title.innerText = "Historique de " + type.toUpperCase();
             body.innerHTML = '';
@@ -294,7 +297,44 @@
                         });
                     }
                 } catch(e){}
+            } else if (type === 'sport') {
+                // ⚽ جلب الأوراق الرياضية الملعوبة الحية والمخزنة في السيرفر للاعب المختار
+                if(!target_username) {
+                    headers.innerHTML = `<th class="p-2">Info</th>`;
+                    body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold">Sélectionnez un joueur dans la console d'abord ! (الرجاء اختيار لاعب أولاً)</td></tr>`;
+                    modal.style.display = 'flex';
+                    return;
+                }
+                
+                headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
+                
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${target_username}`);
+                    if (res.ok) {
+                        const tickets = await res.json();
+                        if (tickets && tickets.length > 0) {
+                            tickets.forEach(t => {
+                                let badgeColor = "text-cyan-400";
+                                if (t.status === "gagne") badgeColor = "text-emerald-400 font-black";
+                                if (t.status === "perdu") badgeColor = "text-rose-400";
+                                if (t.status === "cashout") badgeColor = "text-purple-400";
+
+                                // بناء نصوص المباريات داخل الورقة
+                                let matchesHtml = t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>');
+
+                                body.innerHTML += `
+                                    <tr class="hover:bg-slate-800/30">
+                                        <td class="p-2 text-slate-400 text-xs">#${t.ticket_id}<br><span class="text-[10px]">${t.date}</span></td>
+                                        <td class="p-2 text-white font-sans text-xs">${matchesHtml}</td>
+                                        <td class="p-2 text-center font-mono">X${parseFloat(t.total_cote).toFixed(2)}<br><span class="text-slate-400">${parseFloat(t.mise).toFixed(2)} TND</span></td>
+                                        <td class="p-2 text-right font-mono font-bold ${badgeColor}">${t.status.toUpperCase()}<br><span>+${parseFloat(t.gain).toFixed(2)} TND</span></td>
+                                    </tr>`;
+                            });
+                        }
+                    }
+                } catch(e) { console.error("Error fetching admin sports tickets data", e); }
             } else {
+                // الكازينو حالياً
                 headers.innerHTML = `<th class="p-2">Détails</th><th class="p-2 text-right">Statut</th>`;
                 body.innerHTML = `<tr><td class="p-2 text-slate-500">Aucun pari actif enregistré sur ce serveur.</td><td class="p-2 text-right text-slate-500">0.00 TND</td></tr>`;
             }
@@ -362,9 +402,9 @@
             const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ admin_username: user.username, target_username, action, amount })
+                body: JSON.stringify({ admin_username: "fethi", target_username, action, amount })
             });
-            if(res.ok) { showNotification('Opération réussية!'); loadNetworkData(); }
+            if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
         }
 
         async function createNetworkUser() {
