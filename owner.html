@@ -9,7 +9,7 @@
 <body class="bg-[#0f172a] text-slate-200 min-h-screen p-4 relative">
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- [الجزء العلوي وباقي التصميم يبقى كما هو دون تغيير] -->
+    <!-- الجزء الخاص بالهيدر والقوائم يبقى كما هو[cite: 8] -->
     <header class="bg-slate-900 border-b border-slate-800 p-4 rounded-xl flex justify-between items-center mb-6 shadow-xl">
         <h1 class="text-xl font-black text-rose-500 tracking-wider">ALPHA <span class="text-white font-light">OWNER CONTROL</span></h1>
         <div class="flex items-center gap-4">
@@ -18,69 +18,66 @@
         </div>
     </header>
 
-    <!-- [نفس هيكل الجدول والقوائم السابق] -->
-    <!-- [تم دمج التعديل داخل سكربت الجافاسكريبت أدناه] -->
+    <!-- ... (نفس هيكل القوائم والجدول السابق) ... -->
+    <!-- (يرجى الاحتفاظ بهيكل الجدول والقوائم من الكود القديم لضمان التصميم) -->
 
     <script>
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
-        // ... (بقية دوال اللوحة كما هي)
+        // ... (بقية الدوال كما هي)
 
-        // 🚀 هذا هو التعديل الجوهري المصلح لجلب وعرض الأوراق
+        // 🚀 الإصلاح الجذري لدالة الجلب (تأكد من استخدام هذا الجزء تحديداً)
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
             const title = document.getElementById('modal-title');
             const headers = document.getElementById('modal-table-headers');
             const body = document.getElementById('modal-table-body');
             
+            // التأكد من جلب اسم اللاعب بوضوح وبدون مسافات
             const target_username = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
             
             title.innerText = "Historique de " + type.toUpperCase();
             body.innerHTML = '';
 
-            // عند اختيار قسم Sport، نقوم بجلب الأوراق الحية من السيرفر
             if (type === 'sport') {
-                if(!target_username) {
-                    showNotification("Veuillez sélectionner un joueur d'abord", "error");
+                if(!target_username || target_username === "sélectionnez...") {
+                    showNotification("Veuillez sélectionner un joueur !", "error");
                     return;
                 }
                 
-                headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
+                headers.innerHTML = `<th class="p-2">Ref</th><th class="p-2">Matchs</th><th class="p-2">Mise</th><th class="p-2">Statut</th>`;
                 
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${target_username}`);
-                    if (res.ok) {
-                        const tickets = await res.json();
-                        if (tickets && tickets.length > 0) {
-                            tickets.forEach(t => {
-                                let statusClass = "text-cyan-400";
-                                if (t.status === "gagne") statusClass = "text-emerald-400 font-bold";
-                                if (t.status === "perdu") statusClass = "text-rose-400";
-                                if (t.status === "cashout") statusClass = "text-purple-400";
-
-                                // بناء نصوص المباريات
-                                let games = Array.isArray(t.details_list) ? t.details_list.map(g => g.matchName).join(', ') : "Match";
-
-                                body.innerHTML += `
-                                    <tr class="border-b border-slate-800">
-                                        <td class="p-2 text-[10px] text-slate-500">#${t.ticket_id}<br>${t.date}</td>
-                                        <td class="p-2 text-white">${games}</td>
-                                        <td class="p-2 text-center">X${parseFloat(t.total_cote).toFixed(2)}<br>${parseFloat(t.mise).toFixed(2)} TND</td>
-                                        <td class="p-2 text-right ${statusClass}">${t.status.toUpperCase()}<br>+${parseFloat(t.gain).toFixed(2)} TND</td>
-                                    </tr>`;
-                            });
-                        } else {
-                            body.innerHTML = `<tr><td class="p-4 text-center" colspan="4">Aucun pari enregistré pour ce joueur.</td></tr>`;
-                        }
+                    // الربط المباشر مع المسار المحدث في السيرفر
+                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}`);
+                    const tickets = await res.json();
+                    
+                    if (Array.isArray(tickets) && tickets.length > 0) {
+                        tickets.forEach(t => {
+                            let matches = "Sport Game";
+                            if(t.details_list && t.details_list.length > 0) {
+                                matches = t.details_list.map(g => g.matchName).join(' / ');
+                            }
+                            body.innerHTML += `
+                                <tr class="border-b border-slate-800">
+                                    <td class="p-2">${t.ticket_id}</td>
+                                    <td class="p-2">${matches}</td>
+                                    <td class="p-2">${t.mise} TND</td>
+                                    <td class="p-2 font-bold">${t.status.toUpperCase()}</td>
+                                </tr>`;
+                        });
+                    } else {
+                        body.innerHTML = `<tr><td colspan="4" class="p-4 text-center">Aucune feuille trouvée pour ${target_username}</td></tr>`;
                     }
-                } catch(e) { showNotification("Erreur serveur lors du chargement", "error"); }
+                } catch(e) {
+                    body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-rose-500">Erreur serveur: ${e.message}</td></tr>`;
+                }
             } else {
-                // بقية الأقسام (Casino, Transfert, Compte) كما كانت
-                body.innerHTML = `<tr><td class="p-4 text-center">Section en cours de développement...</td></tr>`;
+                body.innerHTML = `<tr><td class="p-4 text-center">Section en attente...</td></tr>`;
             }
             modal.style.display = 'flex';
         }
-
-        // ... (بقية السكربت)
+        
+        // ... (بقية الدوال)
     </script>
 </body>
 </html>
