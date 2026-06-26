@@ -503,64 +503,64 @@
             document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
         }
 
-        async function submitSportTicket() {
-            if(!playerSession) { return openLoginModal(); }
-            if(comboTicketMatchesList.length === 0) return;
+       async function submitSportTicket() {
+    if(!playerSession) { return openLoginModal(); }
+    if(comboTicketMatchesList.length === 0) return;
+    
+    await refreshPlayerBalance(); 
+    const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+    if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
+
+    const btn = document.getElementById('ticket-submit-btn');
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stake })
+        });
+
+        if(res.ok) {
+            const data = await res.json();
+            playerSession.balance = data.balance;
+            document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
             
-            await refreshPlayerBalance(); 
-            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
+            const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
+            
+            const betTicketObject = {
+                id: Math.floor(100000 + Math.random() * 900000),
+                status: "encours", 
+                gamesCount: comboTicketMatchesList.length,
+                detailsList: comboTicketMatchesList.map(m => ({ matchName: m.matchName, outcome: m.outcome, odds: m.odds })),
+                totalCote: totalOdds,
+                mise: stake,
+                gain: stake * totalOdds,
+                date: new Date().toLocaleTimeString('fr-FR')
+            };
 
-            const btn = document.getElementById('ticket-submit-btn');
-            btn.disabled = true;
+            const saveRes = await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: playerSession.username,
+                    ticket_data: betTicketObject
+                })
+            });
 
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stake })
-                });
-
-                if(res.ok) {
-                    const data = await res.json();
-                    playerSession.balance = data.balance;
-                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                    
-                    const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
-                    const calculatedGain = stake * totalOdds;
-                    const cashOutValueCalculated = stake * 0.90;
-
-                    const betTicketObject = {
-                        id: Math.floor(100000 + Math.random() * 900000),
-                        status: "encours", 
-                        gamesCount: comboTicketMatchesList.length,
-                        detailsList: [...comboTicketMatchesList],
-                        totalCote: totalOdds,
-                        mise: stake,
-                        gain: calculatedGain,
-                        cashOutAmount: cashOutValueCalculated, 
-                        date: new Date().toLocaleTimeString('fr-FR')
-                    };
-
-                    // إرسال الكوبون وحفظه في السيرفر لضمان الأمان
-                    await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            username: playerSession.username,
-                            ticket_data: betTicketObject
-                        })
-                    }).catch(err => console.error("Sync backup server ticket error"));
-
-                    myActiveBetsList.push(betTicketObject);
-                    updateActiveBetsBadgeCount();
-
-                    showNotification(dictionary_translations[currentLangCode].ticket_success);
-                    clearTicket();
-                    maximizeTicket();
-                } else { showNotification('خطأ في معالجة رصيد السيرفر', 'error'); }
-            } catch(e) { showNotification('خطأ شبكة مالي', 'error'); }
-            btn.disabled = false;
+            if (saveRes.ok) {
+                showNotification('Ticket synced with server database successfully');
+                myActiveBetsList.push(betTicketObject);
+                updateActiveBetsBadgeCount();
+                clearTicket();
+                maximizeTicket();
+            } else {
+                showNotification('Error syncing ticket to server', 'error');
+            }
+        }
+    } catch(e) { showNotification('خطأ شبكة مالي', 'error'); }
+    btn.disabled = false;
+}
         }
 
         async function executeTicketCashOut(ticketId, cashOutAmount) {
