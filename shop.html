@@ -19,10 +19,9 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 1️⃣ الشريط الجانبي المستوحى حرفياً من Capture1.PNG وتطبيقه للـ Shop -->
+    <!-- 1️⃣ الشريط الجانبي المطور للـ Shop -->
     <aside class="w-full md:w-72 bg-[#090d1a] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
-            <!-- اختيار اللغة المبرمج المماثل للصورة المرجعية -->
             <div class="bg-[#0b101f] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-400 flex items-center gap-2">🌐 Langue:</span>
                 <select id="shop-lang-select" onchange="changeShopLanguage(this.value)" class="bg-[#04060c] border border-slate-800 rounded-lg text-xs font-bold text-white px-2 py-1 focus:outline-none cursor-pointer font-mono">
@@ -35,25 +34,21 @@
                 <p class="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-3 px-1">MENU DE GESTION</p>
                 <nav class="space-y-2 text-xs font-bold text-slate-300" id="shop-sidebar-nav">
                     <button onclick="switchShopPanelSection('compte')" id="btn-shop-compte" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left active-shop-btn">
-                        👤 Historique de compte
+                        👤 Gestion des Joueurs (اللاعبين)
                     </button>
                     <button onclick="switchShopPanelSection('sport')" id="btn-shop-sport" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        ⚽ Historique de sport
+                        ⚽ Tickets en cours
                     </button>
                     <button onclick="switchShopSectionMock('casino')" id="btn-shop-casino" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        🎰 Historique de casino
-                    </button>
-                    <button onclick="switchShopSectionMock('transfert')" id="btn-shop-transfert" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        💸 Historique de transfert
+                        🎰 Casino Logs Hub88
                     </button>
                     <button onclick="switchShopPanelSection('security')" id="btn-shop-security" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        🔑 Changement de mot de passe
+                        🔑 Sécurité du magasin
                     </button>
                 </nav>
             </div>
         </div>
 
-        <!-- زر الخروج السفلي الفاخر المتطابق مع لقطة الشاشة المرجعية -->
         <div class="pt-4 border-t border-slate-800/60">
             <button onclick="logoutShop()" class="w-full bg-rose-950/40 hover:bg-rose-900/60 border border-rose-500/30 text-rose-400 font-black p-3 rounded-xl transition-all text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg">
                 🚪 Déconnexion
@@ -96,9 +91,9 @@
                 <!-- لوحة إدارة الحسابات التابعة للمحل والشحن والسحب -->
                 <section class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl overflow-hidden shadow-xl">
                     <div class="bg-gradient-to-r from-emerald-500/10 to-transparent p-4 border-b border-slate-800/60 flex justify-between items-center flex-wrap gap-2">
-                        <h3 class="text-xs font-black text-white flex items-center gap-2">📋 إدارة المحلات واللاعبين التابعين لك</h3>
+                        <h3 class="text-xs font-black text-white flex items-center gap-2">📋 إدارة الحسابات المالية التابعة لمتجرك</h3>
                         <div class="flex gap-1.5 flex-wrap">
-                            <input type="text" id="target-player-name" placeholder="لاعبك المحدد" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1 rounded-lg text-amber-400 font-mono w-28 focus:outline-none">
+                            <input type="text" id="target-player-name" placeholder="لاعبك المحدد" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1 rounded-lg text-amber-400 font-mono w-28 focus:outline-none" readonly>
                             <input type="number" id="finance-amount" placeholder="المبلغ (TND)" class="bg-[#04060c] border border-slate-800 text-xs px-2 py-1 rounded-lg text-emerald-400 font-mono w-24 focus:outline-none">
                             <button onclick="executeShopFinance('charge')" class="bg-emerald-500 text-slate-950 font-black text-[10px] px-3 py-1 rounded-lg cursor-pointer hover:bg-emerald-600 transition-all shadow">شحن من رصيدك</button>
                             <button onclick="executeShopFinance('withdraw')" class="bg-rose-600 text-white font-black text-[10px] px-3 py-1 rounded-lg cursor-pointer hover:bg-rose-700 transition-all shadow">سحب لرصيدك</button>
@@ -147,7 +142,7 @@
 
     <script>
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
-        let shopSessionUser = null;
+        let shopSessionUser = { username: "shop_test", balance: 0.00 };
         let createdPlayersList = [];
 
         function showNotification(message, type = 'success') {
@@ -174,101 +169,142 @@
             showNotification(`Section ${name} Active ! Logs Hub88 synchronisés.`);
         }
 
+        // جلب شبكة اللاعبين التابعين لهذا المتجر حصرياً من السيرفر
+        async function loadShopPlayersData() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/users`);
+                if(res.ok) {
+                    const allUsers = await res.json();
+                    // فلترة وعرض الحسابات التي أنشأها هذا المتجر فقط ومن نوع player
+                    createdPlayersList = allUsers.filter(u => u.created_by === shopSessionUser.username);
+                    renderPlayersTable();
+                    
+                    // تحديث رصيد المتجر الحالي من قاعدة البيانات ليكون دقيقاً ومباشراً
+                    const me = allUsers.find(u => u.username === shopSessionUser.username);
+                    if(me) {
+                        shopSessionUser.balance = me.balance;
+                        document.getElementById('shop-balance-val').innerText = `${parseFloat(shopSessionUser.balance).toFixed(2)} TND`;
+                        localStorage.setItem('alpha_user', JSON.stringify(shopSessionUser));
+                    }
+                }
+            } catch(e) { console.error(e); }
+        }
+
         async function createPlayerAccount() {
-            const username = document.getElementById('player-username').value.trim();
+            const username = document.getElementById('player-username').value.trim().toLowerCase();
             const password = document.getElementById('player-password').value;
             
             if(!username || !password) return showNotification('جميع الحقول مطلوبة', 'error');
             
             try {
+                // إصلاح: إرسال الـ Payload كاملاً ومتوافقاً 100% مع الـ RegisterRequest الخاص بالسيرفر
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: username, 
+                        password: password, 
+                        role: "player", 
+                        created_by: shopSessionUser.username 
+                    })
                 });
+                
                 if(res.ok) {
-                    showNotification(`تم تفريع الحساب بنجاح!`);
-                    createdPlayersList.push({ username: username.toLowerCase(), balance: 0.0 });
-                    renderPlayersTable();
+                    showNotification(`تم تفريع حساب اللاعب بنجاح تحت متجرك!`);
                     document.getElementById('player-username').value = "";
                     document.getElementById('player-password').value = "";
+                    await loadShopPlayersData();
                 } else {
-                    showNotification('الاسم محجوز مسبقاً', 'error');
+                    showNotification('الاسم محجوز مسبقاً أو رُفض الطلب', 'error');
                 }
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
-        async function executeShopFinance(type) {
+        async function executeShopFinance(action) {
             const targetPlayer = document.getElementById('target-player-name').value.trim().toLowerCase();
             let amount = parseFloat(document.getElementById('finance-amount').value);
             
-            if(!targetPlayer || isNaN(amount) || amount <= 0) return showNotification('بيانات المعاملة غير صحيحة', 'error');
+            if(!targetPlayer || isNaN(amount) || amount <= 0) return showNotification('بيانات المعاملة غير صحيحة أو لم تختر لاعباً', 'error');
 
-            if(type === 'charge' && shopSessionUser.balance < amount) {
-                return showNotification('رصيد متجرك الحالي غير كافٍ!', 'error');
+            // فحص رصيد المتجر محلياً قبل الخصم كحماية إضافية للشبكة الكازينو
+            if(action === 'charge' && shopSessionUser.balance < amount) {
+                return showNotification('رصيد متجرك الحالي غير كافٍ للشحن!', 'error');
             }
 
-            const finalAmount = type === 'withdraw' ? -amount : amount;
-
             try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/bets/settle`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ adminUsername: shopSessionUser.username, betId: "RECHARGE", newStatus: `${targetPlayer}:${finalAmount}` })
+                // إصلاح جذري: توجيه الطلب للمسار المالي الموحد المتوافق مع الـ UpdateBalanceRequest في السيرفر
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        admin_username: shopSessionUser.username, 
+                        target_username: targetPlayer, 
+                        action: action, 
+                        amount: amount 
+                    })
                 });
                 
                 if(res.ok) {
-                    if (type === 'withdraw') {
+                    // شحن أو خصم رصيد متجرك موازياً في السيرفر لضمان دقة الدينار التونسي
+                    const updateMeRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            admin_username: "System",
+                            target_username: shopSessionUser.username,
+                            action: action === 'charge' ? 'withdraw' : 'charge', // عكس العملية للمحل
+                            amount: amount
+                        })
+                    });
+
+                    if (action === 'withdraw') {
                         showNotification(`تم سحب ${amount.toFixed(2)} د.ت بنجاح لرصيد متجرك`);
-                        shopSessionUser.balance += amount;
                     } else {
                         showNotification(`تم شحن اللاعب بمبلغ ${amount.toFixed(2)} د.ت خصماً من رصيدك`);
-                        shopSessionUser.balance -= amount;
                     }
                     
-                    const playerObj = createdPlayersList.find(p => p.username === targetPlayer);
-                    if(playerObj) {
-                        playerObj.balance = type === 'withdraw' ? playerObj.balance - amount : playerObj.balance + amount;
-                    } else {
-                        createdPlayersList.push({ username: targetPlayer, balance: finalAmount > 0 ? finalAmount : 0 });
-                    }
-                    
-                    localStorage.setItem('alpha_user', JSON.stringify(shopSessionUser));
-                    document.getElementById('shop-balance-val').innerText = `${shopSessionUser.balance.toFixed(2)} TND`;
-                    renderPlayersTable();
                     document.getElementById('finance-amount').value = "";
+                    document.getElementById('target-player-name').value = "";
+                    await loadShopPlayersData();
                 } else {
-                    showNotification('فشلت العملية، تأكد من صحة الحساب', 'error');
+                    const errData = await res.json();
+                    showNotification(errData.detail || 'فشلت العملية الموالية، تأكد من رصيد اللاعب', 'error');
                 }
-            } catch(e) { showNotification('خطأ في معالجة الشبكة المالية', 'error'); }
+            } catch(e) { showNotification('خطأ في معالجة الشبكة المالية للمحلات', 'error'); }
         }
 
         function renderPlayersTable() {
             const tbody = document.getElementById('players-table-body');
             if (createdPlayersList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Aucun joueur trouvé</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Aucun joueur trouvé تحت هذا المتجر</td></tr>`;
                 return;
             }
             tbody.innerHTML = createdPlayersList.map(p => `
-                <tr class="hover:bg-slate-900/40">
-                    <td class="p-3 text-white">${p.username}</td>
-                    <td class="p-3 text-emerald-400">${parseFloat(p.balance).toFixed(2)} TND</td>
-                    <td class="p-3 text-cyan-400 text-[10px]">ACTIVE PLAYER</td>
-                    <td class="p-3"><button onclick="selectPlayerForAction('${p.username}')" class="text-[10px] text-slate-400 hover:text-white bg-slate-800 px-2 py-0.5 rounded cursor-pointer">Sélectionner</button></td>
+                <tr class="hover:bg-slate-900/40 border-b border-slate-900/50">
+                    <td class="p-3 text-white font-bold">${p.username}</td>
+                    <td class="p-3 text-emerald-400 font-bold">${parseFloat(p.balance).toFixed(2)} TND</td>
+                    <td class="p-3 text-cyan-400 text-[10px] font-bold">
+                        ${p.is_blocked === 1 ? '<span class="text-rose-500">BLOCKED</span>' : 'ACTIVE PLAYER'}
+                    </td>
+                    <td class="p-3"><button onclick="selectPlayerForAction('${p.username}')" class="text-[10px] text-amber-400 hover:text-slate-950 hover:bg-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1 rounded-lg cursor-pointer font-bold transition-all">Sélectionner</button></td>
                 </tr>
             `).join('');
         }
 
         function selectPlayerForAction(name) { document.getElementById('target-player-name').value = name; }
         function changeShopLanguage(lang) { document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; }
-        function logoutShop() { window.location.href = 'index.html'; }
+        function logoutShop() { localStorage.clear(); window.location.href = 'index.html'; }
 
-        window.onload = function() {
+        window.onload = async function() {
             const saved = localStorage.getItem('alpha_user');
             if(saved) {
                 shopSessionUser = JSON.parse(saved);
                 document.getElementById('shop-username-display').innerText = `Boutique: ${shopSessionUser.username}`;
                 document.getElementById('shop-balance-val').innerText = `${parseFloat(shopSessionUser.balance).toFixed(2)} TND`;
+                await loadShopPlayersData();
+            } else {
+                window.location.href = 'index.html';
             }
-            renderPlayersTable();
         }
     </script>
 </body>
