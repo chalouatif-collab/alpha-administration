@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alphabet - Player Dashboard</title>
+    <title>Alphabet - Player Control Center</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -18,13 +18,17 @@
             background-color: rgba(20, 184, 166, 0.15) !important;
             color: #14b8a6 !important;
         }
+        .active-filter-btn {
+            background-color: #14b8a6 !important;
+            color: #050814 !important;
+        }
     </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 1️⃣ شاشة تسجيل دخول اللاعبين (تفتح بشكل مستقل) -->
+    <!-- 1️⃣ شاشة تسجيل دخول اللاعب -->
     <div id="player-login-card" class="fixed inset-0 z-50 bg-[#050814] flex items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
             <div class="text-center">
@@ -44,13 +48,13 @@
                     <input type="password" id="p-auth-password" placeholder="••••••••" class="w-full p-3.5 rounded-xl bg-[#050814] border border-slate-800 text-white font-mono focus:outline-none focus:border-teal-500">
                 </div>
                 <button onclick="handlePlayerAuth()" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black p-4 rounded-xl transition-all cursor-pointer shadow-lg text-sm uppercase tracking-wider">
-                    دخول اللعبة والرهان
+                    Connexion
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- 2️⃣ القائمة الجانبية الأصلية (Sidebar) المطابقة لتصميم Alphabet الفخم -->
+    <!-- 2️⃣ القائمة الجانبية المنسقة لـ Alphabet -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#090f24] border-b md:border-b-0 md:border-r border-slate-800/60 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl hidden">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2">
@@ -66,10 +70,10 @@
                     🏆 Sport
                 </button>
                 <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    🎰 Le casino
+                    栏 Le casino
                 </button>
                 <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    🚀 Casino en direct
+                    👤 Casino en direct
                 </button>
                 <button class="w-full flex items-center gap-3 hover:bg-slate-800/50 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     🚀 Jeux de crash
@@ -92,10 +96,9 @@
         </div>
     </aside>
 
-    <!-- 3️⃣ الهيدر الاحترافي الأصلي ومنطقة الألعاب والمباريات -->
+    <!-- 3️⃣ منطقة الهيدر والإنتاج الرئيسي وعرض صالة الألعاب الأصلية -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative hidden">
         
-        <!-- الهيدر الاحترافي العلوي المنسق -->
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-2">
                 <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg font-mono font-bold" id="player-name-display">Joueur</span>
@@ -111,18 +114,17 @@
             </div>
         </header>
 
-        <!-- مساحة تبديل المشاهد -->
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar">
 
             <!-- أ) واجهة الترحيب (Accueil) -->
             <div id="pane-accueil" class="player-view-section space-y-4">
                 <div class="bg-gradient-to-r from-teal-500/10 to-transparent border border-slate-800 p-6 rounded-2xl">
                     <h2 class="text-xl font-black text-white mb-2">Bienvenue sur Alphabet 👑</h2>
-                    <p class="text-xs text-slate-400 max-w-xl">مرحباً بك في لوحة تحكم اللاعبين. تصفح المباريات الحية أو استمتع بألعاب الكازينو برصيدك المشترك والمحدث فورياً بالتعاون مع الفروع المعتمدة.</p>
+                    <p class="text-xs text-slate-400 max-w-xl">مرحباً بك في المنصة الرسمية. تصفح الرهانات الرياضية أو انتقل لقسم الكازينو لتجربة صالة الألعاب الاحترافية التابعة لشبكتك المزامنة بالكامل.</p>
                 </div>
             </div>
 
-            <!-- ب) واجهة الرياضة والمباريات (Sport) -->
+            <!-- ب) واجهة الرياضة والمباريات المزامنة (Sport) -->
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">⚽ MATCHES EN DIRECT & À VENIR</h3>
@@ -132,7 +134,6 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
-                    <!-- كوبون الرهان المطور والمربوط مالياً لتلافي خطأ الرصيد غير كافي -->
                     <div class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider">📋 TICKET DE PARI</span>
@@ -147,42 +148,135 @@
                                 <span class="text-cyan-400" id="ticket-total-odds">1.00</span>
                             </div>
                             <div>
-                                <label class="text-slate-400 block mb-1">Mise TND (مبلغ اللعب):</label>
-                                <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#050814] border border-slate-800 rounded-xl p-2.5 text-teal-400 font-mono focus:outline-none focus:border-teal-500">
+                                <label class="text-slate-400 block mb-1">Mise TND:</label>
+                                <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#050814] border border-slate-800 rounded-xl p-2.5 text-teal-400 font-mono focus:outline-none">
                             </div>
                             <div class="flex justify-between items-center bg-[#050814] p-2.5 rounded-xl border border-slate-800 font-mono">
-                                <span class="text-slate-400 font-sans">Gain possible (الربح):</span>
+                                <span class="text-slate-400 font-sans">Gain possible:</span>
                                 <span class="text-teal-400" id="ticket-potential-gain">5.00 TND</span>
                             </div>
                             <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black py-3 rounded-xl transition-all cursor-pointer tracking-wider text-[11px] uppercase">
-                                تأكيد وإرسال الورقة ⚽🔥
+                                تأكيد وإرسال الورقة ⚽
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ج) واجهة الكازينو والسلوتس (Le casino) -->
-            <div id="pane-casino" class="player-view-section space-y-4 hidden">
-                <section class="bg-[#090f24] border border-slate-800 rounded-2xl p-6 text-center space-y-6 shadow-xl max-w-2xl mx-auto">
-                    <h2 class="text-xs font-black text-teal-400 tracking-widest uppercase">🎰 ALPHA GATES OF OLYMPUS SLOTS</h2>
-                    <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800 rounded-2xl max-w-sm mx-auto shadow-md">
+            <!-- ج) صالة ألعاب الكازينو الاحترافية المطابقة تماماً للصورة الأخيرة -->
+            <div id="pane-casino" class="player-view-section space-y-6 hidden">
+                
+                <!-- بار فلاتر مزودي الألعاب الملونة -->
+                <div class="space-y-2">
+                    <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1">🎮 مزودي الألعاب العالميين</span>
+                    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold">
+                        <button class="px-4 py-2 rounded-xl active-filter-btn border border-teal-500/20 shadow transition-all cursor-pointer">Tout</button>
+                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Pragmatic</button>
+                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Evolution</button>
+                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Hacksaw</button>
+                    </div>
+                </div>
+
+                <!-- شبكة صالة ألعاب الكازينو الرقمية الفخمة -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2">🎰 صالة ألعاب الكازينو الرقمية</h3>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        
+                        <!-- كرت 1: Gates of Olympus -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                            <div class="h-28 bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-4xl shadow-inner relative">
+                                ⚡<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-amber-400 px-1.5 py-0.5 rounded font-bold">SLOT</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Gates of Olympus</div>
+                                <button onclick="openLiveGame('Gates of Olympus')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                        <!-- كرت 2: Sweet Bonanza -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                            <div class="h-28 bg-gradient-to-br from-pink-500 to-rose-500 flex items-center justify-center text-4xl shadow-inner relative">
+                                🍭<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-pink-400 px-1.5 py-0.5 rounded font-bold">SLOT</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Sweet Bonanza</div>
+                                <button onclick="openLiveGame('Sweet Bonanza')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                        <!-- كرت 3: Lightning Roulette -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                            <div class="h-28 bg-gradient-to-br from-red-600 to-slate-900 flex items-center justify-center text-4xl shadow-inner relative">
+                                🎡<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-red-400 px-1.5 py-0.5 rounded font-bold">LIVE</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Lightning Roulette</div>
+                                <button onclick="openLiveGame('Lightning Roulette')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                        <!-- كرت 4: Infinite Blackjack -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                            <div class="h-28 bg-gradient-to-br from-teal-800 to-slate-900 flex items-center justify-center text-4xl shadow-inner relative">
+                                🃏<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-teal-400 px-1.5 py-0.5 rounded font-bold">CARDS</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Infinite Blackjack</div>
+                                <button onclick="openLiveGame('Infinite Blackjack')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                        <!-- كرت 5: Wanted Dead or a Wild -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                            <div class="h-28 bg-gradient-to-br from-amber-800 to-orange-950 flex items-center justify-center text-4xl shadow-inner relative">
+                                🤠<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-orange-400 px-1.5 py-0.5 rounded font-bold">HACKSAW</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Wanted Dead or a Wild</div>
+                                <button onclick="openLiveGame('Wanted Dead or a Wild')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                        <!-- كرت 6: Alphabet Aviator المخصصة للشبكة -->
+                        <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group border-teal-500/30">
+                            <div class="h-28 bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center text-4xl shadow-inner relative">
+                                🚀<span class="absolute top-2 right-2 text-[10px] bg-slate-950 text-white px-1.5 py-0.5 rounded font-bold">CRASH</span>
+                            </div>
+                            <div class="p-3 space-y-2">
+                                <div class="text-[11px] font-black text-white truncate">Alphabet Aviator</div>
+                                <button onclick="openLiveGame('Alphabet Aviator')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- د) الماكينة المنبثقة للعب السلوتس والمزامنة المالية (Modal Game View) -->
+            <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+                <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
+                    <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+                    <h3 class="text-xs font-black text-teal-400 tracking-wider uppercase" id="modal-game-title">GATES OF OLYMPUS</h3>
+                    
+                    <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800 rounded-2xl shadow-inner">
                         <div id="slot-reel-1" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
                         <div id="slot-reel-2" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
                         <div id="slot-reel-3" class="bg-[#090f24] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
                     </div>
-                    <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-bold pt-2">
+
+                    <div class="flex items-center justify-center gap-4 text-xs font-bold">
                         <div class="flex items-center gap-2 bg-[#050814] border border-slate-800 px-3 py-2 rounded-xl">
-                            <span class="text-slate-400">BET (الرهان):</span>
-                            <select id="player-bet-select" class="bg-[#090f24] border border-slate-700 rounded px-2 py-0.5 text-teal-400 font-mono">
-                                <option value="1">1.00 TND</option>
-                                <option value="5">5.00 TND</option>
-                                <option value="10">10.00 TND</option>
+                            <span>BET TND:</span>
+                            <select id="player-bet-select" class="bg-[#090f24] border border-slate-700 rounded text-teal-400 font-mono">
+                                <option value="1">1.00</option>
+                                <option value="5">5.00</option>
+                                <option value="10">10.00</option>
                             </select>
                         </div>
-                        <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black text-xs px-8 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
+                        <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
                     </div>
-                </section>
+                </div>
             </div>
 
         </main>
@@ -216,7 +310,6 @@
             if(sectionId === 'sport') loadLiveMatchesData();
         }
 
-        // كسر الكاش لضمان سحب الرصيد وتحديث لوحة التحكم والمحل فورياً
         async function refreshPlayerBalance() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -262,9 +355,18 @@
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
+        function openLiveGame(gameName) {
+            document.getElementById('modal-game-title').innerText = gameName;
+            document.getElementById('modal-slot-machine').style.display = 'flex';
+        }
+
+        function closeGameMachine() {
+            document.getElementById('modal-slot-machine').style.display = 'none';
+        }
+
         async function loadLiveMatchesData() {
             const container = document.getElementById('matches-list-container');
-            container.innerHTML = '<div class="text-center py-4 text-slate-500">Chargement des matchs...</div>';
+            container.innerHTML = '<div class="text-center py-4 text-slate-500">Chargement...</div>';
             try {
                 const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
                 if(res.ok) {
@@ -286,20 +388,20 @@
                 const awayOdds = h2h.find(o => o.name === m.away_team)?.price || 2.10;
                 const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.20;
 
-                return `
+                return m ? `
                     <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
                         <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
                             <span>🏆 ${m.sport_title}</span>
                             <span class="text-teal-400 font-mono">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
                         </div>
-                        <div class="text-xs text-white">⚽ ${m.home_team} <span class="text-slate-500 font-normal">vs</span> ${m.away_team}</div>
+                        <div class="text-xs text-white">⚽ ${m.home_team} vs ${m.away_team}</div>
                         <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
                             <button onclick="selectBetOutcome('${m.home_team}', ${homeOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">1<br>${homeOdds.toFixed(2)}</button>
                             <button onclick="selectBetOutcome('Nul', ${drawOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
                             <button onclick="selectBetOutcome('${m.away_team}', ${awayOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">2<br>${awayOdds.toFixed(2)}</button>
                         </div>
                     </div>
-                `;
+                ` : '';
             }).join('');
         }
 
@@ -307,8 +409,7 @@
             const container = document.getElementById('matches-list-container');
             const backups = [
                 { title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
-                { title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
-                { title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
+                { title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 }
             ];
             container.innerHTML = backups.map(m => `
                 <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
@@ -382,7 +483,7 @@
         async function spinPragmaticSlot() {
             await refreshPlayerBalance();
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
-            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ للف البكرة !', 'error');
+            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ لف البكرة !', 'error');
 
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
