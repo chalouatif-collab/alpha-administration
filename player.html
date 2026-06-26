@@ -116,7 +116,7 @@
         </div>
     </aside>
 
-    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي للشبكة -->
+    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
@@ -146,7 +146,7 @@
                 </div>
             </div>
 
-            <!-- ب) واجهة الرياضة والمباريات المزامنة (Sport) -->
+            <!-- ب) واجهة الرياضة والمباريات المزامنة والرهان المتعدد (Sport) -->
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
@@ -156,22 +156,25 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
-                    <!-- كوبون الرهان الأساسي (يختفي ويظهر ديناميكياً) -->
+                    <!-- كوبون الرهان المشترك المتعدد الجبار -->
                     <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold transition-all duration-300">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider" id="trans-ticket-title">📋 TICKET DE PARI</span>
                             <div class="flex items-center gap-2">
-                                <button onclick="minimizeTicket()" class="text-teal-400 hover:text-teal-500 font-bold text-sm px-1">─</button>
-                                <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px]" id="trans-ticket-clear">Vider 🗑️</button>
+                                <button onclick="minimizeTicket()" class="text-teal-400 hover:text-teal-500 font-bold text-sm px-1 cursor-pointer">─</button>
+                                <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px] cursor-pointer" id="trans-ticket-clear">Vider 🗑️</button>
                             </div>
                         </div>
-                        <div id="ticket-odds-box" class="min-h-[60px] flex flex-col justify-center text-center text-slate-500">
-                            Aucun match sélectionné
+                        
+                        <!-- صندوق تجميع واحتواء عدد لا نهائي من المباريات المختارة -->
+                        <div id="ticket-odds-box" class="max-h-[220px] overflow-y-auto no-scrollbar space-y-2 p-1">
+                            <!-- يمتلئ ديناميكياً بالمباريات بحرية تامة -->
                         </div>
+
                         <div class="pt-2 border-t border-slate-800 space-y-2">
                             <div class="flex justify-between items-center font-mono">
                                 <span class="text-slate-400 font-sans" id="trans-ticket-cote">Cote Total:</span>
-                                <span class="text-cyan-400" id="ticket-total-odds">1.00</span>
+                                <span class="text-cyan-400 font-black text-sm" id="ticket-total-odds">1.00</span>
                             </div>
                             <div>
                                 <label class="text-slate-400 block mb-1" id="trans-ticket-mise">Mise TND:</label>
@@ -179,7 +182,7 @@
                             </div>
                             <div class="flex justify-between items-center bg-[#050814] p-2.5 rounded-xl border border-slate-800 font-mono">
                                 <span class="text-slate-400 font-sans" id="trans-ticket-gain">Gain possible:</span>
-                                <span class="text-teal-400" id="ticket-potential-gain">5.00 TND</span>
+                                <span class="text-teal-400 font-black" id="ticket-potential-gain">5.00 TND</span>
                             </div>
                             <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black py-3 rounded-xl transition-all cursor-pointer tracking-wider text-[11px] uppercase">
                                 Valider le Pari ⚽
@@ -189,12 +192,10 @@
                 </div>
             </div>
 
-            <!-- ج) واجهة الأوراق الملغومة والمنفذة الحية (Mes Paris View) -->
+            <!-- ج) واجهة الأوراق المقبولة (Mes Paris View) -->
             <div id="pane-paris" class="player-view-section space-y-4 hidden">
-                <h3 class="text-sm font-black uppercase tracking-wider text-slate-400" id="trans-myparis-header">📋 رهاناتي المقبولة والجارية (My Active Bets)</h3>
-                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- يمتلئ الكود برهانات الكوبون فور التثبيت المالي الناجح -->
-                </div>
+                <h3 class="text-sm font-black uppercase tracking-wider text-slate-400" id="trans-myparis-header">📋 رهاناتي المقبولة والجارية</h3>
+                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
             </div>
 
             <!-- د) صالة ألعاب الكازينو الرقمية -->
@@ -208,17 +209,16 @@
                         <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Hacksaw</button>
                     </div>
                 </div>
-
                 <div class="space-y-3">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2" id="trans-cas-hall">🎰 صالة ألعاب الكازينو الرقمية</h3>
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="games-grid-container"></div>
                 </div>
             </div>
 
-            <!-- هـ) الكوبون المصغر العائم في الجانب الأيمن السفلي للماوس واللمس -->
+            <!-- هـ) الكوبون المصغر العائم الذكي -->
             <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
                 <span class="text-lg">📋</span>
-                <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">1</span>
+                <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
             </div>
 
             <!-- و) نافذة ماكينة السلوتس -->
@@ -252,16 +252,22 @@
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let playerSession = null;
         let balanceInterval = null;
-        let selectedMatch = null; 
-        let myActiveBetsList = []; // مصفوفة لتخزين رهانات ورقة العميل محلياً وعرضها في "Mes Paris"
+        let currentLangCode = "fr";
+        
+        // تعديل جوهري: تحويل الكوبون إلى مصفوفة تجميعية لاستقبال عدد لا نهائي من المباريات بحرية
+        let comboTicketMatchesList = []; 
+        let myActiveBetsList = []; 
+        
         const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
         const dictionary_translations = {
-            fr: { ticket_empty: "Aucun match sélectionné", my_bets_title: "Mes Paris Active", ticket_success: "Pari validé avec succès !" },
-            ar: { ticket_empty: "لم تقم باختيار أي مباراة بعد", my_bets_title: "أوراقي النشطة الجارية", ticket_success: "تم قبول وتثبيت الكوبون المالي بنجاح !" },
-            en: { ticket_empty: "No match selected yet", my_bets_title: "My Active Bets", ticket_success: "Ticket submitted successfully!" }
+            fr: { ticket_empty: "Aucun match sélectionné", my_bets_title: "Mes Paris Active", ticket_success: "Pari combos validé avec succès !" },
+            ar: { ticket_empty: "لم تقم باختيار أي مباراة بعد", my_bets_title: "أوراقي النشطة الجارية", ticket_success: "تم قبول وتثبيت ورقة الرهان المتعددة بنجاح !" },
+            en: { ticket_empty: "No match selected yet", my_bets_title: "My Active Bets", ticket_success: "Combo ticket submitted successfully!" }
         };
-        let currentLangCode = "fr";
+
+        function openLoginModal() { document.getElementById('player-login-modal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('player-login-modal').style.display = 'none'; }
 
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
@@ -283,16 +289,16 @@
         }
 
         function minimizeTicket() {
-            if(!selectedMatch) return;
-            document.getElementById('main-ticket-slip').classList.add('hidden', 'lg:hidden');
+            if(comboTicketMatchesList.length === 0) return;
+            document.getElementById('main-ticket-slip').classList.add('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-0');
             floater.classList.add('scale-100');
-            document.getElementById('mini-ticket-badge').innerText = "1";
+            document.getElementById('mini-ticket-badge').innerText = comboTicketMatchesList.length;
         }
 
         function maximizeTicket() {
-            document.getElementById('main-ticket-slip').classList.remove('hidden', 'lg:hidden');
+            document.getElementById('main-ticket-slip').classList.remove('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-100');
             floater.classList.add('scale-0');
@@ -313,10 +319,15 @@
             } catch (e) { console.error("Error updating balance"); }
         }
 
+        // إصلاح الدخول: حماية وتأمين قراءة المدخلات بشكل مستقل عن كتل الترجمة
         async function handlePlayerAuth() {
-            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
-            const password = document.getElementById('p-auth-password').value;
-            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+            const usernameInput = document.getElementById('p-auth-username');
+            const passwordInput = document.getElementById('p-auth-password');
+            if(!usernameInput || !passwordInput) return;
+
+            const username = usernameInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
+            if(!username || !password) return showNotification('الرجاء تعبئة البيانات', 'error');
 
             try {
                 const res = await fetch(`${BACKEND_URL}/api/login`, {
@@ -328,10 +339,15 @@
 
                 if(res.ok) {
                     playerSession = data;
-                    document.getElementById('player-login-card').classList.add('hidden');
-                    document.getElementById('main-sidebar').classList.remove('hidden');
-                    document.getElementById('main-content-area').classList.remove('hidden');
+                    closeLoginModal();
+                    
+                    document.getElementById('sidebar-login-btn').classList.add('hidden');
+                    document.getElementById('top-login-btn').classList.add('hidden');
+                    document.getElementById('sidebar-logout-btn').classList.remove('hidden');
+                    document.getElementById('top-logout-btn').classList.remove('hidden');
+
                     document.getElementById('player-name-display').innerText = `${playerSession.username}`;
+                    document.getElementById('trans-badge-real').innerText = "Compte Réel 🇹🇳";
                     
                     await refreshPlayerBalance();
                     balanceInterval = setInterval(refreshPlayerBalance, 4000);
@@ -340,110 +356,71 @@
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
         }
 
-        function openLiveGame(gameName) {
-            document.getElementById('modal-game-title').innerText = gameName;
-            document.getElementById('modal-slot-machine').style.display = 'flex';
-        }
-
-        function closeGameMachine() { document.getElementById('modal-slot-machine').style.display = 'none'; }
-
-        async function loadLiveMatchesData() {
-            const container = document.getElementById('matches-list-container');
-            container.innerHTML = '<div class="text-center py-4 text-slate-500">Chargement...</div>';
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
-                if(res.ok) {
-                    const matches = await res.json();
-                    if(matches && matches.length > 0) { return renderMatchesList(matches); }
-                }
-                injectBackupMatches();
-            } catch(e) { injectBackupMatches(); }
-        }
-
-        function renderMatchesList(matches) {
-            const container = document.getElementById('matches-list-container');
-            container.innerHTML = matches.map(m => {
-                const h2h = m.bookmakers?.[0]?.markets?.[0]?.outcomes || [];
-                const homeOdds = h2h.find(o => o.name === m.home_team)?.price || 1.85;
-                const awayOdds = h2h.find(o => o.name === m.away_team)?.price || 2.10;
-                const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.20;
-
-                return `
-                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
-                        <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
-                            <span>🏆 ${m.sport_title}</span>
-                            <span class="text-teal-400 font-mono">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
-                        </div>
-                        <div class="text-xs text-white">⚽ ${m.home_team} vs ${m.away_team}</div>
-                        <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
-                            <button onclick="selectBetOutcome('${m.home_team}', ${homeOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">1<br>${homeOdds.toFixed(2)}</button>
-                            <button onclick="selectBetOutcome('Nul', ${drawOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
-                            <button onclick="selectBetOutcome('${m.away_team}', ${awayOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">2<br>${awayOdds.toFixed(2)}</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function injectBackupMatches() {
-            const container = document.getElementById('matches-list-container');
-            const backups = [
-                { title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
-                { title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
-                { title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
-            ];
-            container.innerHTML = backups.map(m => `
-                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
-                    <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
-                        <span>🏆 ${m.title}</span><span class="text-teal-400">🔴 LIVE</span>
-                    </div>
-                    <div class="text-xs text-white">⚽ ${m.home} vs ${m.away}</div>
-                    <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
-                        <button onclick="selectBetOutcome('${m.home}', ${m.c1}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">1<br>${m.c1.toFixed(2)}</button>
-                        <button onclick="selectBetOutcome('Nul', ${m.cx}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">X<br>${m.cx.toFixed(2)}</button>
-                        <button onclick="selectBetOutcome('${m.away}', ${m.c2}, '${m.home} vs ${m.away}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">2<br>${m.c2.toFixed(2)}</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function selectBetOutcome(outcome, odds, matchName) {
-            selectedMatch = { outcome, odds, matchName };
-            document.getElementById('ticket-odds-box').innerHTML = `
-                <div class="bg-[#050814] border border-slate-800 p-2.5 rounded-xl space-y-1 text-left">
-                    <div class="text-slate-400 text-[10px]">${matchName}</div>
-                    <div class="text-white text-[11px]">Option: <span class="text-teal-400">${outcome}</span></div>
-                    <div class="text-right text-cyan-400 font-mono font-black">Cote: ${odds.toFixed(2)}</div>
-                </div>
-            `;
-            document.getElementById('ticket-total-odds').innerText = odds.toFixed(2);
-            calculatePotentialGain();
+        // دالة تجميع وإضافة عدد لا نهائي من المباريات والخيارات للكوبون بحرية
+        function selectBetOutcome(outcome, odds, matchName, matchId) {
+            // منع تكرار نفس المباراة في نفس الورقة لتفادي الأخطاء الرياضية
+            comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
             
-            // تصغير الكوبون تلقائياً ليتحول إلى أيقونة صغيرة طافية على اليمين للسماح بإضافة مباريات أخرى بسهولة
+            comboTicketMatchesList.push({ matchId, matchName, outcome, odds });
+            renderComboTicketUI();
+            
+            // تصغير الكوبون تلقائياً ليتحول إلى أيقونة صغيرة طافية لراحة التصفح
             setTimeout(minimizeTicket, 600);
         }
 
-        function clearTicket() {
-            selectedMatch = null;
-            document.getElementById('ticket-odds-box').innerHTML = dictionary_translations[currentLangCode].ticket_empty;
-            document.getElementById('ticket-total-odds').innerText = "1.00";
+        function removeMatchFromCombo(matchId) {
+            comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
+            renderComboTicketUI();
+            if(comboTicketMatchesList.length === 0) maximizeTicket();
+        }
+
+        // إعادة بناء وتوليد مباريات الكوبون المتعدد
+        function renderComboTicketUI() {
+            const box = document.getElementById('ticket-odds-box');
+            if(comboTicketMatchesList.length === 0) {
+                box.innerHTML = `<div class="text-center text-slate-500 py-4">${dictionary_translations[currentLangCode].ticket_empty}</div>`;
+                document.getElementById('ticket-total-odds').innerText = "1.00";
+                calculatePotentialGain();
+                return;
+            }
+
+            let totalCoteCalculated = 1.00;
+            box.innerHTML = comboTicketMatchesList.map(item => {
+                totalCoteCalculated *= item.odds;
+                return `
+                    <div class="bg-[#050814] border border-slate-800 p-2.5 rounded-xl relative text-left font-sans">
+                        <button onclick="removeMatchFromCombo('${item.matchId}')" class="absolute top-1 right-2 text-rose-400 hover:text-rose-500 font-bold text-xs cursor-pointer">&times;</button>
+                        <div class="text-slate-400 text-[10px] truncate max-w-[90%]">${item.matchName}</div>
+                        <div class="text-white text-[11px] font-bold">Option: <span class="text-teal-400">${item.outcome}</span></div>
+                        <div class="text-right text-cyan-400 font-mono font-black text-[11px]">Cote: ${item.odds.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('ticket-total-odds').innerText = totalCoteCalculated.toFixed(2);
             calculatePotentialGain();
+        }
+
+        function clearTicket() {
+            comboTicketMatchesList = [];
+            renderComboTicketUI();
             document.getElementById('floating-mini-ticket').classList.add('scale-0');
         }
 
         function calculatePotentialGain() {
             const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            const odds = selectedMatch ? selectedMatch.odds : 1.00;
-            document.getElementById('ticket-potential-gain').innerText = `${(stake * odds).toFixed(2)} TND`;
+            const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText) || 1.00;
+            document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
         }
 
+        // إرسال الكوبون المتعدد وخصم قيمته الإجمالية ومزامنته في "Mes Paris"
         async function submitSportTicket() {
             if(!playerSession) { return openLoginModal(); }
-            if(!selectedMatch) return;
+            if(comboTicketMatchesList.length === 0) return showNotification('الرجاء اختيار مباراة واحدة على الأقل لتعمير الكوبون', 'error');
             
             await refreshPlayerBalance(); 
             const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
+            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ لتثبيت الورقة !', 'error');
 
             const btn = document.getElementById('ticket-submit-btn');
             btn.disabled = true;
@@ -460,19 +437,18 @@
                     playerSession.balance = data.balance;
                     document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
                     
-                    // حفظ الورقة بنجاح داخل الذاكرة وإدراجها في شاشة رهاناتي لضمان بقائها
+                    // حفظ الكوبون بكافة مبارياته المتعددة داخل مصفوفة "Mes Paris"
+                    const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
                     const betTicketObject = {
                         id: Math.floor(100000 + Math.random() * 900000),
-                        match: selectedMatch.matchName,
-                        choice: selectedMatch.outcome,
-                        cote: selectedMatch.odds,
+                        gamesCount: comboTicketMatchesList.length,
+                        detailsList: [...comboTicketMatchesList],
+                        totalCote: totalOdds,
                         mise: stake,
-                        gain: stake * selectedMatch.odds,
+                        gain: stake * totalOdds,
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
                     myActiveBetsList.push(betTicketObject);
-                    
-                    // تحديث شارات العداد باللون الأصفر في القائمة الجانبية
                     document.getElementById('my-bets-badge-count').innerText = myActiveBetsList.length;
 
                     showNotification(dictionary_translations[currentLangCode].ticket_success);
@@ -490,39 +466,118 @@
                 return;
             }
             container.innerHTML = myActiveBetsList.map(b => `
-                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-2 font-mono text-xs shadow-md">
-                    <div class="flex justify-between items-center text-[10px] text-slate-500 border-b border-slate-800/60 pb-1.5">
-                        <span>Ref ID: #${b.id}</span><span>⏱️ ${b.date}</span>
+                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 font-mono text-xs shadow-md">
+                    <div class="flex justify-between items-center text-[10px] text-slate-500 border-b border-slate-800/60 pb-2">
+                        <span>Ref Combo: #${b.id} (${b.gamesCount} Matchs)</span><span>⏱️ ${b.date}</span>
                     </div>
-                    <div class="text-white font-sans font-bold text-xs">${b.match}</div>
-                    <div class="text-slate-400">الخيار المستهدف: <span class="text-amber-400 font-bold">${b.choice}</span></div>
-                    <div class="flex justify-between items-center pt-1 text-[11px]">
-                        <span>Cote: <span class="text-cyan-400 font-bold">${b.cote.toFixed(2)}</span></span>
+                    <div class="space-y-2">
+                        ${b.detailsList.map(g => `
+                            <div class="border-l-2 border-teal-500 pl-2 py-0.5">
+                                <div class="text-white font-sans font-bold text-[11px]">${g.matchName}</div>
+                                <div class="text-slate-400 text-[10px]">Choix: <span class="text-teal-400">${g.outcome}</span> | Cote: ${g.odds.toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="flex justify-between items-center pt-1 text-[11px] border-t border-slate-800/40">
+                        <span>Total Cote: <span class="text-cyan-400 font-bold">${b.totalCote.toFixed(2)}</span></span>
                         <span>Mise: <span class="text-white font-bold">${b.mise.toFixed(2)} TND</span></span>
                     </div>
-                    <div class="bg-[#050814] p-2 rounded-xl text-center text-emerald-400 font-bold border border-slate-800/80">
+                    <div class="bg-[#050814] p-2 rounded-xl text-center text-emerald-400 font-bold border border-slate-800/80 text-[11px]">
                         Gain Potentiel: +${b.gain.toFixed(2)} TND
                     </div>
                 </div>
             `).join('');
         }
 
-        function changePlayerLanguage(lang) {
-            currentLangCode = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-            changePlayerLanguageLabels(lang);
+        async function loadLiveMatchesData() {
+            const container = document.getElementById('matches-list-container');
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
+                if(res.ok) {
+                    const matches = await res.json();
+                    if(matches && matches.length > 0) { return renderMatchesList(matches); }
+                }
+                injectBackupMatches();
+            } catch(e) { injectBackupMatches(); }
         }
 
-        function changePlayerLanguageLabels(lang) {
-            const t = dictionary_translations[lang];
-            if(!selectedMatch) document.getElementById('ticket-odds-box').innerText = t.ticket_empty;
+        function renderMatchesList(matches) {
+            const container = document.getElementById('matches-list-container');
+            container.innerHTML = matches.map((m, index) => {
+                const matchId = m.id || `m_${index}`;
+                const h2h = m.bookmakers?.[0]?.markets?.[0]?.outcomes || [];
+                const homeOdds = h2h.find(o => o.name === m.home_team)?.price || 1.85;
+                const awayOdds = h2h.find(o => o.name === m.away_team)?.price || 2.10;
+                const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.20;
+
+                return `
+                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
+                            <span>🏆 ${m.sport_title}</span>
+                            <span class="text-teal-400 font-mono">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                        <div class="text-xs text-white">⚽ ${m.home_team} vs ${m.away_team}</div>
+                        <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
+                            <button onclick="selectBetOutcome('1', ${homeOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">1<br>${homeOdds.toFixed(2)}</button>
+                            <button onclick="selectBetOutcome('X', ${drawOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
+                            <button onclick="selectBetOutcome('2', ${awayOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">2<br>${awayOdds.toFixed(2)}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function injectBackupMatches() {
+            const container = document.getElementById('matches-list-container');
+            const backups = [
+                { id: "b1", title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
+                { id: "b2", title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
+                { id: "b3", title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
+            ];
+            container.innerHTML = backups.map(m => `
+                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left">
+                    <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
+                        <span>🏆 ${m.title}</span><span class="text-teal-400">🔴 LIVE</span>
+                    </div>
+                    <div class="text-xs text-white">⚽ ${m.home} vs ${m.away}</div>
+                    <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
+                        <button onclick="selectBetOutcome('1', ${m.c1}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">1<br>${m.c1.toFixed(2)}</button>
+                        <button onclick="selectBetOutcome('X', ${m.cx}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">X<br>${m.cx.toFixed(2)}</button>
+                        <button onclick="selectBetOutcome('2', ${m.c2}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">2<br>${m.c2.toFixed(2)}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCasinoGames() {
+            const container = document.getElementById('games-grid-container');
+            const games = [
+                { name: "Gates of Olympus", icon: "⚡", style: "from-amber-500 to-amber-600", tag: "SLOT" },
+                { name: "Sweet Bonanza", icon: "🍭", style: "from-pink-500 to-rose-500", tag: "SLOT" },
+                { name: "Lightning Roulette", icon: "🎡", style: "from-red-600 to-slate-900", tag: "LIVE" },
+                { name: "Infinite Blackjack", icon: "🃏", style: "from-teal-800 to-slate-900", tag: "CARDS" },
+                { name: "Wanted Dead or a Wild", icon: "🤠", style: "from-amber-800 to-orange-950", tag: "HACKSAW" },
+                { name: "Alphabet Aviator", icon: "🚀", style: "from-teal-500 to-teal-600", tag: "CRASH" }
+            ];
+
+            container.innerHTML = games.map(g => `
+                <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                    <div class="h-28 bg-gradient-to-br ${g.style} flex items-center justify-center text-4xl shadow-inner relative">
+                        ${g.icon}<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-teal-400 px-1.5 py-0.5 rounded font-bold">${g.tag}</span>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="text-[11px] font-black text-white truncate">${g.name}</div>
+                        <button onclick="openLiveGame('${g.name}')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         async function spinPragmaticSlot() {
             if(!playerSession) return;
             await refreshPlayerBalance();
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
-            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ للف البكرة !', 'error');
+            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ !', 'error');
 
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
@@ -544,9 +599,11 @@
 
                 setTimeout(async () => {
                     r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
+
                     const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
+
                     r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
 
                     if(res1 === res2 && res2 === res3) {
@@ -559,7 +616,7 @@
                         const winData = await winRes.json();
                         playerSession.balance = winData.balance;
                         document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                        showNotification(`تبروك الربح العظيم! لقد كسبت ${winAmount.toFixed(2)} TND 🔥`);
+                        showNotification(`لقد ربحت ${winAmount.toFixed(2)} TND 🔥`);
                     }
                     spinBtn.disabled = false;
                 }, 400);
@@ -580,7 +637,7 @@
             switchSection('accueil');
         }
 
-        window.onload = function() { renderCasinoGames(); };
+        window.onload = function() { renderCasinoGames(); changePlayerLanguage('fr'); };
     </script>
 </body>
 </html>
