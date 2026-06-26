@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALPHA CASINO - بوابة اللاعبين</title>
+    <title>ALPHA CASINO & SPORT - بوابة اللاعبين</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         @keyframes spin-slot {
             0% { transform: translateY(0); }
             50% { transform: translateY(-50px); }
@@ -14,7 +16,7 @@
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
     </style>
 </head>
-<body class="bg-[#04060c] text-slate-200 min-h-screen font-sans flex flex-col items-center justify-center p-4 relative">
+<body class="bg-[#04060c] text-slate-200 min-h-screen font-sans flex flex-col items-center justify-center p-2 md:p-4 relative">
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
@@ -25,66 +27,112 @@
                 <span class="text-slate-950 font-black text-xl transform -rotate-45">🎰</span>
             </div>
             <h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-red-400 tracking-widest">ALPHA PLAYER</h1>
-            <p class="text-xs text-slate-400 mt-2">دخول اللاعبين المباشر - Espace Joueur Secure</p>
+            <p class="text-xs text-slate-400 mt-2">دخول اللاعبين المباشر - Espace Secure</p>
         </div>
 
         <div class="space-y-4 text-xs font-bold">
             <div>
                 <label class="text-slate-400 block mb-1.5 text-left">اسم اللاعب (Username)</label>
-                <input type="text" id="p-auth-username" placeholder="مثال: samir110" class="w-full p-3.5 rounded-xl bg-[#04060c] border border-slate-800 text-amber-400 font-mono focus:outline-none focus:border-amber-500">
+                <input type="text" id="p-auth-username" placeholder="Username" class="w-full p-3.5 rounded-xl bg-[#04060c] border border-slate-800 text-amber-400 font-mono focus:outline-none focus:border-amber-500">
             </div>
             <div>
                 <label class="text-slate-400 block mb-1.5 text-left">كلمة المرور (Password)</label>
                 <input type="password" id="p-auth-password" placeholder="••••••••" class="w-full p-3.5 rounded-xl bg-[#04060c] border border-slate-800 text-white font-mono focus:outline-none focus:border-amber-500">
             </div>
             <button onclick="handlePlayerAuth()" class="w-full bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-slate-950 font-black p-4 rounded-xl transition-all cursor-pointer shadow-lg text-sm uppercase tracking-wider">
-                دخول اللعبة 🕹️
+                دخول اللعبة والرهان 🕹️
             </button>
         </div>
     </div>
 
-    <!-- 2️⃣ شاشة ألعاب الكازينو والسلوتس (تفتح بعد تسجيل الدخول بنجاح) -->
-    <div id="player-casino-dashboard" class="w-full max-w-2xl bg-[#0b101f] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6 hidden">
+    <!-- 2️⃣ شاشة ألعاب الكازينو والرهان الرياضي المدمجة والموحدة -->
+    <div id="player-casino-dashboard" class="w-full max-w-6xl bg-[#0b101f] border border-slate-800 rounded-3xl p-4 md:p-6 shadow-2xl space-y-6 hidden flex flex-col">
         
-        <header class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
+        <header class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2 shrink-0">
             <div class="flex items-center gap-2">
                 <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="player-name-display">Joueur: </span>
-                <span class="text-[10px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2 py-0.5 rounded">الحساب حقيقي 🇹🇳</span>
+                <span class="text-[10px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2 py-0.5 rounded">🇹🇳 TND</span>
             </div>
-            <div class="bg-[#04060c] border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 font-mono text-xs">
-                <span class="text-slate-400 font-sans">رصيدك الحالي:</span>
-                <span class="text-emerald-400 font-black text-base" id="player-balance-val">0.00 TND</span>
-                <!-- زر تحديث يدوي مضاف للاعب لتحديث الرصيد فوراً في أي وقت -->
-                <button onclick="refreshPlayerBalance()" class="text-amber-400 hover:text-amber-500 ml-1 p-1 bg-slate-900 border border-slate-800 rounded-md font-sans text-[10px]">🔄 تحديث</button>
+            
+            <!-- أزرار التنقل السريع بين الكازينو والمباريات لراحة اللاعب -->
+            <div class="flex gap-2">
+                <button onclick="toggleTab('casino')" id="tab-btn-casino" class="bg-amber-500 text-slate-950 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer">🎰 Casino Slots</button>
+                <button onclick="toggleTab('sport')" id="tab-btn-sport" class="bg-slate-800 text-slate-300 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer hover:bg-slate-700">⚽ Paris Sportifs</button>
+            </div>
+
+            <div class="bg-[#04060c] border border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
+                <span class="text-slate-400 font-sans">رصيدك:</span>
+                <span class="text-emerald-400 font-black text-sm" id="player-balance-val">0.00 TND</span>
+                <button onclick="refreshPlayerBalance()" class="text-amber-400 hover:text-amber-500 ml-1 font-sans text-[10px] bg-slate-900 border border-slate-800 px-1 py-0.5 rounded">🔄</button>
             </div>
         </header>
 
-        <section class="bg-[#04060c] border border-slate-800 rounded-2xl p-6 text-center space-y-6 shadow-inner">
-            <h2 class="text-xs font-black text-amber-400 tracking-widest uppercase">🍒 ALPHA GATES OF OLYMPUS SLOTS 👑</h2>
-            
-            <div class="flex justify-center gap-4 text-4xl p-6 bg-[#0b101f] border border-slate-800/80 rounded-2xl max-w-sm mx-auto shadow-md">
-                <div id="slot-reel-1" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
-                <div id="slot-reel-2" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
-                <div id="slot-reel-3" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
-            </div>
-
-            <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-bold pt-2">
-                <div class="flex items-center gap-2 bg-[#0b101f] border border-slate-800 px-3 py-2 rounded-xl">
-                    <span class="text-slate-400">الرهان (BET):</span>
-                    <select id="player-bet-select" class="bg-[#04060c] border border-slate-700 rounded px-2 py-0.5 text-amber-400 font-mono">
-                        <option value="1">1.00 TND</option>
-                        <option value="5">5.00 TND</option>
-                        <option value="10">10.00 TND</option>
-                        <option value="50">50.00 TND</option>
-                    </select>
+        <!-- القسم الأول: ماكينة السلوتس -->
+        <div id="section-casino" class="player-tab-view space-y-6">
+            <section class="bg-[#04060c] border border-slate-800 rounded-2xl p-6 text-center space-y-6 shadow-inner">
+                <h2 class="text-xs font-black text-amber-400 tracking-widest uppercase">🍒 ALPHA GATES OF OLYMPUS SLOTS 👑</h2>
+                <div class="flex justify-center gap-4 text-4xl p-6 bg-[#0b101f] border border-slate-800/80 rounded-2xl max-w-sm mx-auto shadow-md">
+                    <div id="slot-reel-1" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
+                    <div id="slot-reel-2" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
+                    <div id="slot-reel-3" class="bg-[#04060c] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
                 </div>
-                <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-sm px-8 py-3 rounded-xl transition-all cursor-pointer shadow-md shadow-amber-500/10 uppercase tracking-wider">
-                    SPIN 🎰
-                </button>
-            </div>
-        </section>
+                <div class="flex items-center justify-center gap-4 flex-wrap text-xs font-bold pt-2">
+                    <div class="flex items-center gap-2 bg-[#0b101f] border border-slate-800 px-3 py-2 rounded-xl">
+                        <span class="text-slate-400">الرهان (BET):</span>
+                        <select id="player-bet-select" class="bg-[#04060c] border border-slate-700 rounded px-2 py-0.5 text-amber-400 font-mono">
+                            <option value="1">1.00 TND</option>
+                            <option value="5">5.00 TND</option>
+                            <option value="10">10.00 TND</option>
+                        </select>
+                    </div>
+                    <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-xs px-8 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
+                </div>
+            </section>
+        </div>
 
-        <footer class="text-center">
+        <!-- القسم الثاني: الرهان الرياضي المطور المتصل بالسيرفر مباشرة والـ API الحقيقي -->
+        <div id="section-sport" class="player-tab-view space-y-4 hidden flex-1 overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 h-full items-start">
+                
+                <!-- بار قائمة المباريات الجارية المجلوبة حياً من السيرفر -->
+                <div class="lg:col-span-2 space-y-3 max-h-[450px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container">
+                    <div class="text-center py-8 text-slate-500 font-bold text-xs uppercase">Chargement des matchs en direct...</div>
+                </div>
+
+                <!-- ورقة الكوبون المدمجة والمصلحة بالربط المالي الوثيق لمنع خطأ "الرصيد غير كافي" -->
+                <div class="bg-[#04060c] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs">
+                    <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                        <span class="font-black text-amber-400 uppercase tracking-wider flex items-center gap-1">📋 Ticket de Pari</span>
+                        <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px] font-bold">Vider 🗑️</button>
+                    </div>
+                    
+                    <div id="ticket-odds-box" class="space-y-2 min-h-[60px] flex flex-col justify-center">
+                        <div class="text-center text-slate-500 font-bold py-2">لم تقم باختيار أي مباراة بعد</div>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-800 space-y-2 font-bold">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">الضارب الإجمالي (Cote Total):</span>
+                            <span class="text-cyan-400 font-mono text-sm" id="ticket-total-odds">1.00</span>
+                        </div>
+                        <div>
+                            <label class="text-slate-400 block mb-1">مبلغ اللعب (Mise TND):</label>
+                            <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#0b101f] border border-slate-800 rounded-xl p-2.5 text-emerald-400 font-mono font-bold focus:outline-none focus:border-emerald-500" placeholder="5.00">
+                        </div>
+                        <div class="flex justify-between items-center bg-[#0b101f] p-2.5 rounded-xl border border-slate-800">
+                            <span class="text-slate-400">الربح المتوقع (Gain):</span>
+                            <span class="text-emerald-400 font-mono text-sm" id="ticket-potential-gain">5.00 TND</span>
+                        </div>
+                        <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-3 rounded-xl transition-all cursor-pointer uppercase tracking-wider text-[11px]">
+                            تأكيد وإرسال الورقة ⚽🔥
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="text-center pt-2 shrink-0">
             <button onclick="logoutPlayer()" class="text-slate-500 hover:text-rose-400 text-[11px] font-bold transition-all cursor-pointer">🚪 تسجيل الخروج والعودة</button>
         </footer>
     </div>
@@ -93,6 +141,7 @@
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let playerSession = null;
         let balanceInterval = null;
+        let selectedMatch = null; // الاحتفاظ بالمباراة المختارة حالياً بالكوبون
         const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
         function showNotification(message, type = 'success') {
@@ -105,7 +154,16 @@
             setTimeout(() => toast.remove(), 2500);
         }
 
-        // دالة جديدة كلياً لجلب الرصيد المحدث مباشرة من السيرفر في أي لحظة
+        function toggleTab(tab) {
+            document.querySelectorAll('.player-tab-view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            
+            document.getElementById('tab-btn-casino').className = tab === 'casino' ? 'bg-amber-500 text-slate-950 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer' : 'bg-slate-800 text-slate-300 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer hover:bg-slate-700';
+            document.getElementById('tab-btn-sport').className = tab === 'sport' ? 'bg-amber-500 text-slate-950 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer' : 'bg-slate-800 text-slate-300 text-xs font-black px-4 py-1.5 rounded-xl cursor-pointer hover:bg-slate-700';
+            
+            if(tab === 'sport') loadLiveMatchesData();
+        }
+
         async function refreshPlayerBalance() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -118,7 +176,7 @@
                         document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
                     }
                 }
-            } catch (e) { console.error("Error checking balance synchronization"); }
+            } catch (e) { console.error("Error updating balance"); }
         }
 
         async function handlePlayerAuth() {
@@ -141,10 +199,7 @@
                     document.getElementById('player-casino-dashboard').classList.remove('hidden');
                     document.getElementById('player-name-display').innerText = `Joueur: ${playerSession.username}`;
                     
-                    // قراءة الرصيد فور الدخول مباشرة لمنع ظهور الرصيد القديم
                     await refreshPlayerBalance();
-
-                    // تشغيل مؤقت تلقائي يقوم بتحديث رصيد اللاعب من السيرفر كل 4 ثوانٍ بدون تدخل منه
                     balanceInterval = setInterval(refreshPlayerBalance, 4000);
                 } else {
                     showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error');
@@ -152,10 +207,123 @@
             } catch(e) { showNotification('عطل اتصال بالسيرفر المالي', 'error'); }
         }
 
-        async function spinPragmaticSlot() {
-            // عمل تحديث سريع للرصيد قبل اللف للتأكد من وصول أي شحنات جديدة
-            await refreshPlayerBalance();
+        // جلب المباريات الحية والرهانات حقيقية من مسار السيرفر
+        async function loadLiveMatchesData() {
+            const container = document.getElementById('matches-list-container');
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/sports/live`);
+                if(res.ok) {
+                    const matches = await res.json();
+                    if(matches.length === 0) {
+                        container.innerHTML = `<div class="text-center py-8 text-slate-500 font-bold uppercase">Aucun match en direct disponible حالياً</div>`;
+                        return;
+                    }
+                    container.innerHTML = matches.map(m => {
+                        const h2h = m.bookmakers?.[0]?.markets?.[0]?.outcomes || [];
+                        const homeOdds = h2h.find(o => o.name === m.home_team)?.price || 1.80;
+                        const awayOdds = h2h.find(o => o.name === m.away_team)?.price || 2.20;
+                        const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.10;
 
+                        return `
+                            <div class="bg-[#04060c] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md">
+                                <div class="flex justify-between items-center border-b border-slate-900 pb-2 text-[10px] text-slate-400 font-bold">
+                                    <span>🏆 ${m.sport_title}</span>
+                                    <span class="font-mono text-cyan-400">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
+                                </div>
+                                <div class="text-xs font-black text-white flex justify-between items-center">
+                                    <span>⚽ ${m.home_team} <span class="text-slate-500 font-normal">vs</span> ${m.away_team}</span>
+                                </div>
+                                <div class="grid grid-cols-3 gap-2 text-[11px] font-mono font-black">
+                                    <button onclick="selectBetOutcome('${m.home_team} - Win', ${homeOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#0b101f] border border-slate-800 p-2 rounded-xl text-center text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all flex flex-col items-center">
+                                        <span class="text-[9px] font-sans text-slate-500 font-bold">1 (Home)</span>
+                                        <span>${homeOdds.toFixed(2)}</span>
+                                    </button>
+                                    <button onclick="selectBetOutcome('Match Nul (Draw)', ${drawOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#0b101f] border border-slate-800 p-2 rounded-xl text-center text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all flex flex-col items-center">
+                                        <span class="text-[9px] font-sans text-slate-500 font-bold">X (Draw)</span>
+                                        <span>${drawOdds.toFixed(2)}</span>
+                                    </button>
+                                    <button onclick="selectBetOutcome('${m.away_team} - Win', ${awayOdds}, '${m.home_team} vs ${m.away_team}')" class="bg-[#0b101f] border border-slate-800 p-2 rounded-xl text-center text-slate-300 hover:border-amber-400 hover:text-amber-400 transition-all flex flex-col items-center">
+                                        <span class="text-[9px] font-sans text-slate-500 font-bold">2 (Away)</span>
+                                        <span>${awayOdds.toFixed(2)}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch(e) { container.innerHTML = `<div class="text-center py-8 text-rose-500 font-bold">Erreur de connexion aux flux sportifs</div>`; }
+        }
+
+        function selectBetOutcome(outcome, odds, matchName) {
+            selectedMatch = { outcome, odds, matchName };
+            const box = document.getElementById('ticket-odds-box');
+            box.innerHTML = `
+                <div class="bg-[#0b101f] border border-slate-800 p-2.5 rounded-xl space-y-1 font-bold">
+                    <div class="text-slate-400 text-[10px]">${matchName}</div>
+                    <div class="text-white text-[11px]">الخيار: <span class="text-amber-400">${outcome}</span></div>
+                    <div class="text-right text-cyan-400 font-mono font-black">Cote: ${odds.toFixed(2)}</div>
+                </div>
+            `;
+            document.getElementById('ticket-total-odds').innerText = odds.toFixed(2);
+            calculatePotentialGain();
+        }
+
+        function clearTicket() {
+            selectedMatch = null;
+            document.getElementById('ticket-odds-box').innerHTML = `<div class="text-center text-slate-500 font-bold py-2">لم تقم باختيار أي مباراة بعد</div>`;
+            document.getElementById('ticket-total-odds').innerText = "1.00";
+            calculatePotentialGain();
+        }
+
+        function calculatePotentialGain() {
+            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+            const odds = selectedMatch ? selectedMatch.odds : 1.00;
+            const gain = stake * odds;
+            document.getElementById('ticket-potential-gain').innerText = `${gain.toFixed(2)} TND`;
+        }
+
+        // إصلاح الخلل المالي وإرسال طلب الرهان الرياضي وتحديث رصيد اللاعب فوراً في السيرفر
+        async function submitSportTicket() {
+            if(!selectedMatch) return showNotification('الرجاء اختيار مباراة وخيار مراهنة أولاً للتعمير !', 'error');
+            
+            await refreshPlayerBalance(); // تحديث الرصيد للتأكد من وصول أي شحنة
+            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+            
+            if(stake <= 0) return showNotification('مبلغ الرهان غير صالح', 'error');
+            if(playerSession.balance < stake) return showNotification('عذراً، رصيدك الحالي غير كافٍ لتثبيت ورقة الرهان الرياضي !', 'error');
+
+            const btn = document.getElementById('ticket-submit-btn');
+            btn.disabled = true;
+
+            try {
+                // الخصم الفوري والموثق من رصيد اللاعب في السيرفر
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        admin_username: "System",
+                        target_username: playerSession.username,
+                        action: "withdraw",
+                        amount: stake
+                    })
+                });
+
+                if(res.ok) {
+                    const data = await res.json();
+                    playerSession.balance = data.balance;
+                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                    
+                    showNotification(`تم قبول الكوبون وتثبيت الرهان بنجاح بمبلغ ${stake.toFixed(2)} TND! ⚽🚀`);
+                    clearTicket();
+                } else {
+                    showNotification('فشل في إرسال تذكرة المباراة للسيرفر المالي', 'error');
+                }
+            } catch(e) { showNotification('خطأ شبكة مالي أثناء معالجة الكوبون', 'error'); }
+            btn.disabled = false;
+        }
+
+        async function spinPragmaticSlot() {
+            await refreshPlayerBalance();
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
             if(playerSession.balance < betAmount) return showNotification('عذراً رصيدك الحالي غير كافٍ لإجراء هذه اللفة!', 'error');
 
