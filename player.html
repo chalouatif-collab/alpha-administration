@@ -18,6 +18,7 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
+    <!-- 1️⃣ شاشة تسجيل دخول اللاعب -->
     <div id="player-login-card" class="w-full max-w-md bg-[#0b101f] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6">
         <div class="text-center">
             <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-red-500 flex items-center justify-center transform rotate-45 mx-auto mb-4 shadow-lg shadow-amber-500/20">
@@ -42,6 +43,7 @@
         </div>
     </div>
 
+    <!-- 2️⃣ شاشة ألعاب الكازينو والسلوتس (تفتح بعد تسجيل الدخول بنجاح) -->
     <div id="player-casino-dashboard" class="w-full max-w-2xl bg-[#0b101f] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6 hidden">
         
         <header class="flex justify-between items-center border-b border-slate-800 pb-4 flex-wrap gap-2">
@@ -52,6 +54,8 @@
             <div class="bg-[#04060c] border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3 font-mono text-xs">
                 <span class="text-slate-400 font-sans">رصيدك الحالي:</span>
                 <span class="text-emerald-400 font-black text-base" id="player-balance-val">0.00 TND</span>
+                <!-- زر تحديث يدوي مضاف للاعب لتحديث الرصيد فوراً في أي وقت -->
+                <button onclick="refreshPlayerBalance()" class="text-amber-400 hover:text-amber-500 ml-1 p-1 bg-slate-900 border border-slate-800 rounded-md font-sans text-[10px]">🔄 تحديث</button>
             </div>
         </header>
 
@@ -88,6 +92,7 @@
     <script>
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let playerSession = null;
+        let balanceInterval = null;
         const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
         function showNotification(message, type = 'success') {
@@ -98,6 +103,22 @@
             toast.innerHTML = type === 'success' ? `✅ ${message}` : `❌ ${message}`;
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
+        }
+
+        // دالة جديدة كلياً لجلب الرصيد المحدث مباشرة من السيرفر في أي لحظة
+        async function refreshPlayerBalance() {
+            if (!playerSession || !playerSession.username) return;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/users`);
+                if (res.ok) {
+                    const users = await res.json();
+                    const currentMe = users.find(u => u.username === playerSession.username);
+                    if (currentMe) {
+                        playerSession.balance = currentMe.balance;
+                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                    }
+                }
+            } catch (e) { console.error("Error checking balance synchronization"); }
         }
 
         async function handlePlayerAuth() {
@@ -119,7 +140,12 @@
                     document.getElementById('player-login-card').classList.add('hidden');
                     document.getElementById('player-casino-dashboard').classList.remove('hidden');
                     document.getElementById('player-name-display').innerText = `Joueur: ${playerSession.username}`;
-                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                    
+                    // قراءة الرصيد فور الدخول مباشرة لمنع ظهور الرصيد القديم
+                    await refreshPlayerBalance();
+
+                    // تشغيل مؤقت تلقائي يقوم بتحديث رصيد اللاعب من السيرفر كل 4 ثوانٍ بدون تدخل منه
+                    balanceInterval = setInterval(refreshPlayerBalance, 4000);
                 } else {
                     showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error');
                 }
@@ -127,13 +153,15 @@
         }
 
         async function spinPragmaticSlot() {
+            // عمل تحديث سريع للرصيد قبل اللف للتأكد من وصول أي شحنات جديدة
+            await refreshPlayerBalance();
+
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
             if(playerSession.balance < betAmount) return showNotification('عذراً رصيدك الحالي غير كافٍ لإجراء هذه اللفة!', 'error');
 
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
 
-            // 1. خصم مبلغ الرهان فوراً من رصيد اللاعب في السيرفر الرئيسي
             try {
                 const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
@@ -155,7 +183,6 @@
                 playerSession.balance = deductData.balance;
                 document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
 
-                // إضافة أنيميشن الدوران للبكرات
                 const r1 = document.getElementById('slot-reel-1');
                 const r2 = document.getElementById('slot-reel-2');
                 const r3 = document.getElementById('slot-reel-3');
@@ -164,19 +191,16 @@
                 setTimeout(async () => {
                     r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
 
-                    // توليد نتيجة عشوائية للبكرات
                     const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
                     const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
 
                     r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
 
-                    // التحقق من حالة الفوز (إذا تطابقت الرموز الثلاثة)
                     if(res1 === res2 && res2 === res3) {
                         const winMultiplier = res1 === "👑" ? 10 : 5; 
                         const winAmount = betAmount * winMultiplier;
 
-                        // 2. إيداع مبلغ الفوز والربح في حساب اللاعب على السيرفر
                         const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -203,6 +227,7 @@
         }
 
         function logoutPlayer() {
+            if(balanceInterval) clearInterval(balanceInterval);
             playerSession = null;
             document.getElementById('p-auth-username').value = '';
             document.getElementById('p-auth-password').value = '';
