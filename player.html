@@ -250,7 +250,7 @@
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
                     <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold">
-                        <button class="px-4 py-2 rounded-xl active-filter-btn border border-teal-500/20 shadow transition-all cursor-pointer">Tout</button>
+                        <button class="px-4 py-2 rounded-xl active-filter-btn border border-teal-500/20 shadow transition-all cursor-pointer" id="trans-cas-all">Tout</button>
                         <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Pragmatic</button>
                         <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Evolution</button>
                         <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Hacksaw</button>
@@ -365,7 +365,7 @@
             document.getElementById('main-ticket-slip').classList.remove('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-100');
-            floater.classList.add('scale-0');
+            document.getElementById('floating-mini-ticket').classList.add('scale-0');
         }
 
         async function refreshPlayerBalance() {
@@ -383,6 +383,36 @@
             } catch (e) { console.error("Error updating balance"); }
         }
 
+        // 🚀 دالة جلب كافة التذاكر السحابية المخزنة في السيرفر للاعب المزامنة
+        async function fetchPlayerTicketsFromServer() {
+            if (!playerSession || !playerSession.username) return;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${playerSession.username}`);
+                if (res.ok) {
+                    const tickets = await res.json();
+                    if (tickets) {
+                        // إعادة تهيئة وتعبئة المصفوفة الحية من قاعدة البيانات مباشرة
+                        myActiveBetsList = tickets.map(t => ({
+                            id: t.ticket_id,
+                            status: t.status,
+                            gamesCount: t.games_count,
+                            detailsList: t.details_list,
+                            totalCote: t.total_cote,
+                            mise: t.mise,
+                            gain: t.gain,
+                            cashOutAmount: t.mise * 0.90, 
+                            finalCashoutPaid: t.final_cashout_paid || 0,
+                            date: t.date
+                        }));
+                        updateActiveBetsBadgeCount();
+                        if (!document.getElementById('pane-paris').classList.contains('hidden')) {
+                            renderMyBetsHistoryPane();
+                        }
+                    }
+                }
+            } catch (e) { console.error("Error syncing tickets from database", e); }
+        }
+
         async function handlePlayerAuth() {
             const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
             const password = document.getElementById('p-auth-password').value;
@@ -398,21 +428,28 @@
 
                 if(res.ok) {
                     playerSession = data;
-                    closeLoginModal();
                     
-                    document.getElementById('sidebar-login-btn').classList.add('hidden');
-                    document.getElementById('top-login-btn').classList.add('hidden');
-                    document.getElementById('sidebar-logout-btn').classList.remove('hidden');
-                    document.getElementById('top-logout-btn').classList.remove('hidden');
-
-                    document.getElementById('player-name-display').innerText = `${playerSession.username}`;
-                    document.getElementById('trans-badge-real').innerText = "Compte Réel 🇹🇳";
+                    // 🛡️ حفظ الجلسة داخل localStorage لعدم الخروج عند عمل ريفرش
+                    localStorage.setItem('alpha_player_session', JSON.stringify(data));
                     
-                    await refreshPlayerBalance();
-                    balanceInterval = setInterval(refreshPlayerBalance, 4000);
-                    switchSection('accueil');
+                    setupLoggedInUI();
+                    await fetchPlayerTicketsFromServer();
                 } else { showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); }
             } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
+        }
+
+        function setupLoggedInUI() {
+            closeLoginModal();
+            document.getElementById('sidebar-login-btn').classList.add('hidden');
+            document.getElementById('top-login-btn').classList.add('hidden');
+            document.getElementById('sidebar-logout-btn').classList.remove('hidden');
+            document.getElementById('top-logout-btn').classList.remove('hidden');
+
+            document.getElementById('player-name-display').innerText = `${playerSession.username}`;
+            document.getElementById('trans-badge-real').innerText = "Compte Réel 🇹🇳";
+            
+            document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+            if(!balanceInterval) balanceInterval = setInterval(refreshPlayerBalance, 4000);
         }
 
         function selectBetOutcome(outcome, odds, matchName, matchId) {
@@ -466,7 +503,6 @@
             document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
         }
 
-        // 🚀 إصلاح: دالة معالجة وحفظ الكوبونات متعددة الخيارات مباشرة إلى قاعدة بيانات السيرفر
         async function submitSportTicket() {
             if(!playerSession) { return openLoginModal(); }
             if(comboTicketMatchesList.length === 0) return;
@@ -479,7 +515,6 @@
             btn.disabled = true;
 
             try {
-                // أولاً: إجراء السحب المالي المعتاد من الرصيد الحقيقي
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -493,7 +528,7 @@
                     
                     const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
                     const calculatedGain = stake * totalOdds;
-                    const cashOutValueCalculated = stake * 0.90; // الكاش أوت المحمي المدروس لـ رأس المال
+                    const cashOutValueCalculated = stake * 0.90;
 
                     const betTicketObject = {
                         id: Math.floor(100000 + Math.random() * 900000),
@@ -507,7 +542,7 @@
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
 
-                    // ثانياً: شحن وإرسال محتوى ورقة الرهان كاملة إلى السيرفر الخارجي ليتم ربطها مباشرة بلوحة تحكم السوبر أونر
+                    // إرسال الكوبون وحفظه في السيرفر لضمان الأمان
                     await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -528,7 +563,6 @@
             btn.disabled = false;
         }
 
-        // 🚀 إصلاح: دالة مزامنة حالة الكاش أوت كلياً إلى السيرفر المربوط بحساب السوبر أونر
         async function executeTicketCashOut(ticketId, cashOutAmount) {
             if(!playerSession) return;
             try {
@@ -549,7 +583,7 @@
                         targetTicket.finalCashoutPaid = cashOutAmount; 
                     }
 
-                    // بث تحديث إغلاق الحالة فوراً إلى السيرفر لتنعكس في لوحة السوبر أونر في نفس الثانية
+                    // بث تحديث إغلاق الحالة فوراً إلى السيرفر
                     await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -905,6 +939,7 @@
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
+            localStorage.removeItem('alpha_player_session'); // تنظيف التخزين عند تسجيل الخروج العمد
             playerSession = null; myActiveBetsList = [];
             document.getElementById('my-bets-badge-count').innerText = "0";
             document.getElementById('player-name-display').innerText = "Visitor";
@@ -916,7 +951,18 @@
             switchSection('accueil');
         }
 
-        window.onload = function() { renderCasinoGames(); clearTicket(); };
+        // 🛡️ فحص وجود جلسة محفوظة للمستخدم تلقائياً عند تحميل الصفحة لمنع الخروج المفاجئ
+        window.onload = function() { 
+            renderCasinoGames(); 
+            clearTicket(); 
+            
+            const savedSession = localStorage.getItem('alpha_player_session');
+            if (savedSession) {
+                playerSession = JSON.parse(savedSession);
+                setupLoggedInUI();
+                fetchPlayerTicketsFromServer(); // استدعاء فوري للأوراق من السيرفر لتبقي محفوظة دائماً
+            }
+        };
     </script>
 </body>
 </html>
