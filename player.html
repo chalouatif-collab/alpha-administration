@@ -123,7 +123,7 @@
         </div>
     </aside>
 
-    <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative hidden">
+    <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-2">
@@ -137,7 +137,8 @@
                     <span class="text-[#14b8a6] font-black text-sm" id="player-balance-val">0.00</span>
                     <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 ml-1.5 font-sans text-[11px]">🔄</button>
                 </div>
-                <button onclick="logoutPlayer()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-black px-3 py-1.5 rounded-xl cursor-pointer transition-all">Sortir</button>
+                <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-xs font-black px-4 py-2 rounded-xl cursor-pointer transition-all">Connexion</button>
+                <button onclick="logoutPlayer()" id="top-logout-btn" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-black px-4 py-2 rounded-xl cursor-pointer transition-all hidden">Sortir</button>
             </div>
         </header>
 
@@ -351,6 +352,7 @@
             document.getElementById('main-ticket-slip').classList.remove('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-100');
+            floater.刻度 = "scale-0";
             floater.classList.add('scale-0');
         }
 
@@ -477,6 +479,8 @@
                     
                     const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
                     const calculatedGain = stake * totalOdds;
+                    
+                    // كاش أوت آمن ومدروس: 90% من رأس المال لمنع التلاعب قبل بدء المباريات
                     const cashOutValueCalculated = stake * 0.90;
 
                     const betTicketObject = {
@@ -528,34 +532,11 @@
             } catch(e) { showNotification('خطأ اتصال مالي', 'error'); }
         }
 
-        async function adminSimulateBetResult(ticketId, targetResult) {
-            const ticket = myActiveBetsList.find(b => b.id === ticketId);
-            if(!ticket) return;
-
-            ticket.status = targetResult;
-
-            if(targetResult === 'gagne') {
-                try {
-                    await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: ticket.gain })
-                    });
-                    await refreshPlayerBalance();
-                } catch(e) { console.error("Simulated charge error"); }
-            }
-
-            updateActiveBetsBadgeCount();
-            showNotification(`تم تحديث حالة التذكرة #${ticketId}`);
-            renderMyBetsHistoryPane();
-        }
-
         function updateActiveBetsBadgeCount() {
             const activeCount = myActiveBetsList.filter(b => b.status === 'encours').length;
             document.getElementById('my-bets-badge-count').innerText = activeCount;
         }
 
-        /* 🛠️ تعديل: إزالة أزرار المحاكاة القديمة والغير نافعة نهائياً من العرض */
         function renderMyBetsHistoryPane() {
             const container = document.getElementById('my-bets-history-list');
             const filteredTickets = myActiveBetsList.filter(b => b.status === currentBetsSubTab);
@@ -732,7 +713,6 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
                 });
-
                 if(!deductRes.ok) {
                     isCrashRoundRunning = false;
                     stakeInput.disabled = false;
@@ -763,7 +743,9 @@
                 planeIcon.style.left = `${6 + progressPercent}%`;
                 planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
 
-                if(crashMultiplier >= luckyCrashPointTarget) { triggerAirplaneCrashBlast(); }
+                if(crashMultiplier >= luckyCrashPointTarget) {
+                    triggerAirplaneCrashBlast();
+                }
             }, 80);
         }
 
