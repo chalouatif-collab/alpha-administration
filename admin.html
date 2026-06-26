@@ -64,10 +64,13 @@
 
     <div class="flex-1 flex flex-col h-auto md:h-[calc(100vh-2rem)] overflow-hidden relative">
         <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center mb-4 shadow-xl shrink-0">
-            <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
-            <div class="flex items-center gap-4">
-                <span class="text-sm bg-amber-500/10 text-amber-400 px-3 py-1 rounded-lg border border-amber-500/20 font-bold" id="badge-role">Admin</span>
-                <span class="font-bold text-slate-300" id="owner-username">En attente...</span>
+            <div class="flex items-center gap-3">
+                <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
+                <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="owner-username">En attente...</span>
+            </div>
+            <div class="bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
+                <span class="text-[10px] text-slate-400 font-sans">رصيدك المتاح للتوزيع:</span>
+                <span class="text-amber-500 font-black text-sm" id="admin-balance-val">0.00 TND</span>
             </div>
         </header>
 
@@ -274,6 +277,15 @@
                 const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
                 if(uRes.ok){
                     const users = await uRes.json();
+                    
+                    // تحديث رصيد الأدمن تلقائياً في الواجهة عند القراءة من السيرفر
+                    const me = users.find(u => u.username === user.username);
+                    if(me) {
+                        user.balance = me.balance;
+                        document.getElementById('admin-balance-val').innerText = `${parseFloat(user.balance).toFixed(2)} TND`;
+                        localStorage.setItem('alpha_user', JSON.stringify(user));
+                    }
+
                     const tbody = document.getElementById('owner-network-tbody'); 
                     if(!tbody) return;
                     tbody.innerHTML = '';
