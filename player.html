@@ -609,7 +609,7 @@ function maximizeTicket() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: parseFloat(cashOutAmount) })
                 });
 
@@ -626,7 +626,7 @@ function maximizeTicket() {
 
                     await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: getAuthHeaders(),
                         body: JSON.stringify({
                             ticket_id: ticketId,
                             status: "cashout",
