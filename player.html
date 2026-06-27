@@ -396,11 +396,20 @@
             document.getElementById('mini-ticket-badge').innerText = comboTicketMatchesList.length;
         }
 
-        function maximizeTicket() {
+function maximizeTicket() {
+            // 1. الانتقال فوراً لقسم الرياضة (لأن الورقة موجودة هناك)
+            switchSection('sport');
+            
+            // 2. إظهار الورقة وإخفاء الأيقونة العائمة
             document.getElementById('main-ticket-slip').classList.remove('hidden');
             const floater = document.getElementById('floating-mini-ticket');
             floater.classList.remove('scale-100');
-            document.getElementById('floating-mini-ticket').classList.add('scale-0');
+            floater.classList.add('scale-0');
+            
+            // 3. النزول بالشاشة تلقائياً للأسفل ليجد اللاعب الورقة أمامه مباشرة
+            setTimeout(() => {
+                document.getElementById('main-ticket-slip').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 300);
         }
 
         async function refreshPlayerBalance() {
