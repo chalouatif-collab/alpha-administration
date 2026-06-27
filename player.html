@@ -62,7 +62,11 @@
         }
 
         /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي) 🔥 */
-        @media (max-width: 768px) {
+    @media (max-width: 768px) {
+            /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
+            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 9999 !important; }
+
+            body { display: block !important; }
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
             
@@ -116,7 +120,7 @@
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
         }
   </style>
-  
+
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
 
@@ -237,6 +241,12 @@
                     <h2 class="text-xl font-black text-white mb-2" id="trans-acc-welcome">Bienvenue sur Alphabet 👑</h2>
                     <p class="text-xs text-slate-400 max-w-xl" id="trans-acc-desc">Accédez aux meilleurs paris sportifs en direct et aux machines à sous casino synchronisés directement with your balance.</p>
                 </div>
+                <div class="mt-6">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">🔥 Matchs Populaires (مباريات اليوم)</h3>
+            </div>
+            <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+        </div>
             </div>
 
             <!-- ب) واجهة الرياضة والمباريات المزامنة والرهان المتعدد السلس -->
@@ -1047,6 +1057,24 @@
                 fetchPlayerTicketsFromServer(); // استدعاء فوري للأوراق من السيرفر لتبقي محفوظة دائماً
             }
         };
-    </script>
+    
+    <script>
+    // هذا السكريبت يقوم بجلب المباريات من السيرفر ونسخها للواجهة الرئيسية تلقائياً
+    setTimeout(() => {
+        if(typeof loadLiveMatchesData === 'function') {
+            loadLiveMatchesData(); // جلب المباريات فور فتح الموقع
+            
+            // مزامنة المباريات بين قسم الرياضة والواجهة الرئيسية
+            setInterval(() => {
+                const sportMatches = document.getElementById('matches-list-container');
+                const homeMatches = document.getElementById('home-matches-container');
+                
+                if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
+                    homeMatches.innerHTML = sportMatches.innerHTML;
+                }
+            }, 1000); 
+        }
+    }, 1000);
+</script>
 </body>
 </html>
