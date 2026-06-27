@@ -415,7 +415,10 @@ function maximizeTicket() {
         async function refreshPlayerBalance() {
             if (!playerSession || !playerSession.username) return;
             try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`);
+               const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
+    method: 'GET',
+    headers: getAuthHeaders()
+});
                 if (res.ok) {
                     const users = await res.json();
                     const currentMe = users.find(u => u.username === playerSession.username);
@@ -965,6 +968,14 @@ function maximizeTicket() {
             document.getElementById('top-login-btn').classList.remove('hidden');
             switchSection('accueil');
         }
+         // دالة مساعدة لإضافة التوكن في كل طلبات الـ API
+function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+}
 
         // 🚀 التشغيل الموحد والآمن عند فتح الصفحة 🚀
         window.onload = function() { 
