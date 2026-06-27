@@ -193,7 +193,7 @@
             document.getElementById('rtp-val-label').innerText = rtp + '%';
         }
 
-        // 🚀 إصلاح جلب الأوراق وتفكيك الـ JSON بشكل صحيح
+       // 🚀 دالة الفتح والجلب الفوري والمصلح للأوراق السحابية
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
             const title = document.getElementById('modal-title');
@@ -201,11 +201,56 @@
             const body = document.getElementById('modal-table-body');
             
             const target_username = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
-            title.innerText = "Historique de " + type.toUpperCase();
-            body.innerHTML = '';
+            
+            // حماية صارمة من أي مسافات أو أخطاء في الأحرف لتجنب تخطي قسم الرياضة
+            const safeType = type.trim().toLowerCase(); 
+            
+            title.innerText = "Historique de " + safeType.toUpperCase();
+            body.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">Chargement en cours... (جاري التحميل)</td></tr>';
+            modal.style.display = 'flex';
 
-            if (type === 'transfert') {
+            if (safeType === 'sport') {
+                if(!target_username || target_username === "sélectionnez...") {
+                    headers.innerHTML = `<th class="p-2">Info</th>`;
+                    body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold text-center">Sélectionnez un joueur dans la console d'abord ! (اختر لاعباً أولاً)</td></tr>`;
+                    return;
+                }
+                
+                headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
+                
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`);
+                    if (res.ok) {
+                        const tickets = await res.json();
+                        body.innerHTML = ''; // إزالة رسالة التحميل
+                        
+                        if (tickets && tickets.length > 0) {
+                            tickets.forEach(t => {
+                                let badgeColor = t.status === "gagne" ? "text-emerald-400 font-black" : (t.status === "perdu" ? "text-rose-400" : (t.status === "cashout" ? "text-purple-400" : "text-cyan-400"));
+                                
+                                let matchesHtml = Array.isArray(t.details_list) ? 
+                                    t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>') : 
+                                    (t.match || "Match Inconnu");
+
+                                body.innerHTML += `
+                                    <tr class="border-b border-slate-800/40 hover:bg-slate-800/30">
+                                        <td class="p-2 text-slate-400 text-xs">#${t.ticket_id}<br><span class="text-[10px]">${t.date || ''}</span></td>
+                                        <td class="p-2 text-white font-sans text-xs">${matchesHtml}</td>
+                                        <td class="p-2 text-center font-mono">X${parseFloat(t.total_cote).toFixed(2)}<br><span class="text-slate-400">${parseFloat(t.mise).toFixed(2)} TND</span></td>
+                                        <td class="p-2 text-right font-mono font-bold ${badgeColor}">${t.status.toUpperCase()}<br><span>+${parseFloat(t.gain).toFixed(2)} TND</span></td>
+                                    </tr>`;
+                            });
+                        } else {
+                            body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500 font-bold">Aucun pari actif pour ce joueur.</td></tr>`;
+                        }
+                    }
+                } catch(e) { 
+                    body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-rose-500 font-bold">Erreur de connexion API</td></tr>`; 
+                }
+                
+            } else if (safeType === 'transfert') {
                 headers.innerHTML = `<th class="p-2">Expéditeur</th><th class="p-2">Bénéficiaire</th><th class="p-2">Action</th><th class="p-2 text-right">Montant (TND)</th>`;
+                body.innerHTML = '';
                 try {
                     const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
                     if(res.ok) {
@@ -214,50 +259,31 @@
                             if(u.balance > 0 || u.username === 'samir') {
                                 const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
                                 body.innerHTML += `<tr><td class="p-2">fethi</td><td class="p-2 text-white font-bold">${u.username}</td><td class="p-2 text-emerald-400 font-bold">Créditer</td><td class="p-2 text-right font-bold text-cyan-400">${userBalance} TND</td></tr>`;
-                                if(u.username === 'samir') body.innerHTML += `<tr><td class="p-2">fethi</td><td class="p-2 text-white font-bold">samir</td><td class="p-2 text-rose-500 font-bold">Retirer</td><td class="p-2 text-right font-bold text-rose-400">4999.00 TND</td></tr>`;
+                                if(u.username === 'samir') {
+                                    body.innerHTML += `<tr><td class="p-2">fethi</td><td class="p-2 text-white font-bold">samir</td><td class="p-2 text-rose-500 font-bold">Retirer</td><td class="p-2 text-right font-bold text-rose-400">4999.00 TND</td></tr>`;
+                                }
                             }
                         });
+                        if(body.innerHTML === '') body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Aucun transfert trouvé.</td></tr>`;
                     }
                 } catch(e){}
-            } else if (type === 'compte') {
+            } else if (safeType === 'compte') {
                 headers.innerHTML = `<th class="p-2">Compte Creé</th><th class="p-2">Rôle système</th><th class="p-2 text-right">Créateur</th>`;
+                body.innerHTML = '';
                 try {
                     const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
                     if(res.ok) {
                         const users = await res.json();
                         users.forEach(u => {
                             const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-                            body.innerHTML += `<tr><td class="p-2 text-white font-bold">${u.username}</td><td class="p-2 text-rose-400">${userRole}</td><td class="p-2 text-right">${u.created_by || 'System'}</td></tr>`;
+                            body.innerHTML += `<tr><td class="p-2 text-white font-bold">${u.username}</td><td class="p-2 text-right text-rose-400">${userRole}</td></tr>`;
                         });
                     }
                 } catch(e){}
-            } else if (type === 'sport') {
-                if(!target_username) {
-                    headers.innerHTML = `<th class="p-2">Info</th>`; body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold">Sélectionnez un joueur dans la console d'abord !</td></tr>`;
-                    modal.style.display = 'flex'; return;
-                }
-                
-                headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
-                try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`);
-                    if (res.ok) {
-                        const tickets = await res.json();
-                        if (tickets && tickets.length > 0) {
-                            tickets.forEach(t => {
-                                let badgeColor = t.status === "gagne" ? "text-emerald-400 font-black" : (t.status === "perdu" ? "text-rose-400" : (t.status === "cashout" ? "text-purple-400" : "text-cyan-400"));
-                                let matchesHtml = Array.isArray(t.details_list) ? t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>') : (t.match || "Match Inconnu");
-
-                                body.innerHTML += `<tr class="border-b border-slate-800/40 hover:bg-slate-800/30"><td class="p-2 text-slate-400 text-xs">#${t.ticket_id}<br><span class="text-[10px]">${t.date || ''}</span></td><td class="p-2 text-white font-sans text-xs">${matchesHtml}</td><td class="p-2 text-center font-mono">X${parseFloat(t.total_cote).toFixed(2)}<br><span class="text-slate-400">${parseFloat(t.mise).toFixed(2)} TND</span></td><td class="p-2 text-right font-mono font-bold ${badgeColor}">${t.status.toUpperCase()}<br><span>+${parseFloat(t.gain).toFixed(2)} TND</span></td></tr>`;
-                            });
-                        }
-                    }
-                } catch(e) {}
             } else {
                 headers.innerHTML = `<th class="p-2">Détails</th><th class="p-2 text-right">Statut</th>`;
-                body.innerHTML = `<tr><td class="p-2 text-slate-500">Aucun pari actif enregistré sur ce serveur.</td><td class="p-2 text-right text-slate-500">0.00 TND</td></tr>`;
+                body.innerHTML = `<tr><td class="p-2 text-slate-500">Aucune donnée trouvée.</td><td class="p-2 text-right text-slate-500">0.00 TND</td></tr>`;
             }
-            if(body.innerHTML === '') body.innerHTML = `<tr><td class="p-2 text-slate-500" colspan="4">Aucune donnée historique trouvée pour le moment.</td></tr>`;
-            modal.style.display = 'flex';
         }
 
         function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; }
