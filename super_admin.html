@@ -63,7 +63,6 @@
     </aside>
 
     <div class="flex-1 flex flex-col h-auto md:h-[calc(100vh-2rem)] overflow-hidden relative">
-        <!-- تحديث الهيدر لإبراز رصيد التوزيع الحالي للسوبر أدمن المأخوذ من الأونر -->
         <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center mb-4 shadow-xl shrink-0">
             <div class="flex items-center gap-3">
                 <h1 class="text-xl font-black text-cyan-400 tracking-wider">ALPHA <span class="text-white font-light">SUPER ADMIN PANEL</span></h1>
@@ -251,7 +250,7 @@
             }, 2500);
         }
 
-    function switchSadminPanelSection(sectionId) {
+        function switchSadminPanelSection(sectionId) {
             document.querySelectorAll('.sadmin-main-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('sadmin-sidebar-nav').querySelectorAll('button').forEach(btn => btn.classList.remove('active-sadmin-btn'));
             
@@ -264,6 +263,8 @@
             if (sectionId === 'sport') {
                 loadSportTickets();
             }
+        }
+
         async function loadSportTickets() {
             const container = document.getElementById('panel-sadmin-sport');
             container.innerHTML = '<div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets en cours :</div><div class="text-center p-6 text-cyan-400 font-bold text-xs animate-pulse">جاري جلب الأوراق من السيرفر...</div>';
@@ -307,14 +308,10 @@
                 } else {
                     container.innerHTML = '<div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1 mb-4">⚽ Tickets en cours :</div><div class="space-y-3">' + allTicketsHtml + '</div>';
                 }
-            } catch(e) 
-            
-            {
-                
+            } catch(e) {
                 container.innerHTML = '<div class="text-center p-6 text-rose-500 font-bold text-xs">خطأ في الاتصال بالسيرفر ❌</div>';
-            
             }
-            
+        }
 
         async function loadNetworkData() {
             try {
