@@ -251,7 +251,7 @@
             }, 2500);
         }
 
-        function switchSadminPanelSection(sectionId) {
+    function switchSadminPanelSection(sectionId) {
             document.querySelectorAll('.sadmin-main-view').forEach(el => el.classList.add('hidden'));
             document.getElementById('sadmin-sidebar-nav').querySelectorAll('button').forEach(btn => btn.classList.remove('active-sadmin-btn'));
             
@@ -259,7 +259,62 @@
             const targetBtn = document.getElementById(`btn-sadmin-${sectionId}`);
             if (targetSection) targetSection.classList.remove('hidden');
             if (targetBtn) targetBtn.classList.add('active-sadmin-btn');
-        }
+
+            // تفعيل جلب الأوراق فور الضغط على القسم
+            if (sectionId === 'sport') {
+                loadSportTickets();
+            }
+        async function loadSportTickets() {
+            const container = document.getElementById('panel-sadmin-sport');
+            container.innerHTML = '<div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets en cours :</div><div class="text-center p-6 text-cyan-400 font-bold text-xs animate-pulse">جاري جلب الأوراق من السيرفر...</div>';
+            
+            try {
+                // جلب جميع المستخدمين التابعين لهذا السوبر أدمن أولاً
+                const usersRes = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
+                if (!usersRes.ok) return;
+                const users = await usersRes.json();
+                const myUsers = users.filter(u => u.created_by === user.username).map(u => u.username);
+
+                let allTicketsHtml = '';
+                
+                // جلب أوراق كل مستخدم
+                for (const target of myUsers) {
+                    const ticketsRes = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target)}&t=${Date.now()}`);
+                    if (ticketsRes.ok) {
+                        const tickets = await ticketsRes.json();
+                        tickets.forEach(t => {
+                            let badgeColor = t.status === "gagne" ? "text-emerald-400" : (t.status === "perdu" ? "text-rose-400" : (t.status === "cashout" ? "text-purple-400" : "text-cyan-400"));
+                            let matchesHtml = Array.isArray(t.details_list) ? 
+                                t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>') : 
+                                (t.match || "Match Inconnu");
+
+                            allTicketsHtml += `
+                                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 shadow flex flex-col md:flex-row justify-between gap-4">
+                                    <div class="text-xs text-white font-sans leading-relaxed flex-1">${matchesHtml}</div>
+                                    <div class="text-right font-mono text-xs space-y-1">
+                                        <div class="text-slate-400">Joueur: <span class="text-white font-bold">${target}</span></div>
+                                        <div>Mise: ${parseFloat(t.mise).toFixed(2)} TND | Cote: X${parseFloat(t.total_cote).toFixed(2)}</div>
+                                        <div class="font-bold ${badgeColor}">Gain Potentiel: +${parseFloat(t.gain).toFixed(2)} TND</div>
+                                        <div class="mt-2 inline-block px-2 py-1 bg-slate-900 border border-slate-700 rounded text-[10px] uppercase font-bold ${badgeColor}">${t.status}</div>
+                                    </div>
+                                </div>`;
+                        });
+                    }
+                }
+
+                if (allTicketsHtml === '') {
+                    container.innerHTML = '<div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets en cours :</div><div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">Aucun ticket actif en attente de traitement pour vos joueurs.</div>';
+                } else {
+                    container.innerHTML = '<div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1 mb-4">⚽ Tickets en cours :</div><div class="space-y-3">' + allTicketsHtml + '</div>';
+                }
+            } catch(e) 
+            
+            {
+                
+                container.innerHTML = '<div class="text-center p-6 text-rose-500 font-bold text-xs">خطأ في الاتصال بالسيرفر ❌</div>';
+            
+            }
+            
 
         async function loadNetworkData() {
             try {
