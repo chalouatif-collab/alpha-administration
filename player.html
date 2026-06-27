@@ -2,7 +2,7 @@
 <html lang="fr" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Alphabet - Player Control Center</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -32,57 +32,20 @@
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-    </style>
-<style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @keyframes spin-slot {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); }
-        }
-        .slot-anim { animation: spin-slot 0.4s ease-in-out; }
-        .active-menu-btn {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border-radius: 12px;
-        }
-        .active-filter-btn {
-            background-color: #14b8a6 !important;
-            color: #050814 !important;
-        }
-        .active-sub-tab {
-            border-color: #14b8a6 !important;
-            color: #14b8a6 !important;
-            background-color: rgba(20, 184, 166, 0.05);
-        }
-        .crash-graph-grid {
-            background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
 
         /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي) 🔥 */
-    @media (max-width: 768px) {
-            /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
-            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 9999 !important; }
-
-            body { display: block !important; }
+        @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
             
-            /* تحويل القائمة الجانبية بالكامل لشريط سفلي */
             #main-sidebar {
                 position: fixed !important; bottom: 0 !important; left: 0 !important;
                 width: 100% !important; height: 70px !important; padding: 0 !important;
                 background-color: #090f24 !important; border-top: 1px solid #1e293b !important;
                 z-index: 9999 !important; display: flex !important; flex-direction: column !important; justify-content: center !important;
             }
-
-            /* إخفاء اللوجو والأزرار السفلية في الهاتف فقط */
             #main-sidebar .space-y-6 > div.flex, 
             #main-sidebar .pt-4 { display: none !important; }
-
-            /* إعادة ضبط الحاوية */
             #main-sidebar .space-y-6 { width: 100% !important; margin: 0 !important; height: 100% !important; display: flex; align-items: center; }
             
             #main-sidebar nav {
@@ -90,43 +53,32 @@
                 justify-content: space-between !important; align-items: center !important;
                 width: 100% !important; height: 100% !important; margin: 0 !important;
             }
-
-            /* تصميم الأزرار الـ 4 الأساسية فقط (الرئيسية، الرياضة، رهاناتي، الكازينو) */
             #main-sidebar nav > button {
                 display: flex !important; flex-direction: column !important;
                 align-items: center !important; justify-content: center !important;
                 width: 25% !important; height: 100% !important; padding: 5px !important;
                 background: transparent !important; gap: 4px !important; border: none !important;
             }
-            
-            /* ضبط أيقونة ونص زر "Mes Paris" ليتناسق مع البقية */
             #main-sidebar nav > button > div {
                 display: flex !important; flex-direction: column !important;
                 align-items: center !important; gap: 4px !important; width: 100% !important;
             }
-
-            /* تكبير الأيقونات وتصغير النصوص */
             #main-sidebar nav span { font-size: 10px !important; margin: 0 !important; font-weight: bold !important; text-align: center !important; }
             #main-sidebar nav span:first-child { font-size: 22px !important; } 
-            
-            /* إخفاء باقي الأزرار (الكراش، اللايف، اللغة) من الشريط السفلي للحفاظ على جماله */
             #main-sidebar nav > button:nth-child(n+5),
             #main-sidebar nav > div { display: none !important; }
-            
-            /* ضبط شارة الإشعارات (رقم 0 الأصفر) */
             #my-bets-badge-count { position: absolute !important; top: 8px !important; right: 28% !important; }
-            
-            /* جعل الزر المختار يضيء باللون الأخضر المميز */
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
-        }
-  </style>
 
+            /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
+            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 9999 !important; }
+        }
+    </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 1️⃣ نافذة تسجيل الدخول المنبثقة المحمية (Modal) -->
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -153,7 +105,6 @@
         </div>
     </div>
 
-    <!-- 2️⃣ القائمة الجانبية (Sidebar) -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -213,7 +164,6 @@
         </div>
     </aside>
 
-    <!-- 3️⃣ منطقة الهيدر والمحتوى الرئيسي للشبكة -->
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
@@ -235,21 +185,20 @@
 
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
-            <!-- أ) واجهة الترحيب (Accueil) -->
             <div id="pane-accueil" class="player-view-section space-y-4">
                 <div class="bg-gradient-to-r from-teal-500/10 to-transparent border border-slate-800 p-6 rounded-2xl">
                     <h2 class="text-xl font-black text-white mb-2" id="trans-acc-welcome">Bienvenue sur Alphabet 👑</h2>
                     <p class="text-xs text-slate-400 max-w-xl" id="trans-acc-desc">Accédez aux meilleurs paris sportifs en direct et aux machines à sous casino synchronisés directement with your balance.</p>
                 </div>
+
                 <div class="mt-6">
-            <div class="flex justify-between items-center mb-3">
-                <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">🔥 Matchs Populaires (مباريات اليوم)</h3>
-            </div>
-            <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-        </div>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">🔥 Matchs Populaires (مباريات اليوم)</h3>
+                    </div>
+                    <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                </div>
             </div>
 
-            <!-- ب) واجهة الرياضة والمباريات المزامنة والرهان المتعدد السلس -->
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
@@ -259,7 +208,6 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
-                    <!-- كوبون الرهان المشترك -->
                     <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 space-y-4 shadow-xl text-xs font-bold transition-all duration-300">
                         <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                             <span class="text-teal-400 uppercase tracking-wider" id="trans-ticket-title">📋 TICKET DE PARI</span>
@@ -292,7 +240,6 @@
                 </div>
             </div>
 
-            <!-- ج) واجهة الأوراق المقسمة إلى 4 تبويبات داخل Mes Paris -->
             <div id="pane-paris" class="player-view-section space-y-4 hidden">
                 <div class="flex border-b border-slate-800/80 gap-1 overflow-x-auto no-scrollbar">
                     <button onclick="switchBetsSubTab('encours')" id="sub-tab-encours" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer active-sub-tab">⏳ En cours</button>
@@ -303,7 +250,6 @@
                 <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
             </div>
 
-            <!-- د) واجهة لعبة الكراش الطيارة الحقيقية (Alphabet Aviator الحية) -->
             <div id="pane-crash" class="player-view-section space-y-6 hidden">
                 <div class="max-w-2xl mx-auto bg-[#090f24] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
                     <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
@@ -314,7 +260,6 @@
                         <span id="crash-status-badge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase">Waiting</span>
                     </div>
 
-                    <!-- شاشة شبكة الرسم البياني التفاعلي للطيارة -->
                     <div class="h-64 bg-[#050814] border border-slate-800 rounded-2xl relative overflow-hidden crash-graph-grid flex items-center justify-center">
                         <div id="crash-multiplier-display" class="text-5xl md:text-6xl font-black text-white font-mono tracking-tight z-10 drop-shadow-md">1.00x</div>
                         <div id="crash-airplane-icon" class="absolute bottom-6 left-6 text-4xl opacity-0 transition-all duration-100 ease-out z-20">🚀</div>
@@ -324,7 +269,6 @@
                         </div>
                     </div>
 
-                    <!-- أزرار التحكم بالرهان والسحب الفوري -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-[#050814]/60 p-4 rounded-xl border border-slate-800/80 font-bold text-xs">
                         <div class="space-y-1.5">
                             <label class="text-slate-400 block">Mise du Crash (رهان الطيارة):</label>
@@ -339,7 +283,6 @@
                 </div>
             </div>
 
-            <!-- هـ) صالة ألعاب الكازينو -->
             <div id="pane-casino" class="player-view-section space-y-6 hidden">
                 <div class="space-y-2">
                     <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
@@ -356,13 +299,11 @@
                 </div>
             </div>
 
-            <!-- و) الكوبون المصغر العائم -->
-            <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
+            <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
                 <span class="text-lg">📋</span>
                 <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
             </div>
 
-            <!-- ز) نافذة ماكينة السلوتس -->
             <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
                 <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
                     <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -477,7 +418,6 @@
             } catch (e) { console.error("Error updating balance"); }
         }
 
-        // 🚀 دالة جلب كافة التذاكر السحابية المخزنة في السيرفر للاعب المزامنة
         async function fetchPlayerTicketsFromServer() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -485,7 +425,6 @@
                 if (res.ok) {
                     const tickets = await res.json();
                     if (tickets) {
-                        // إعادة تهيئة وتعبئة المصفوفة الحية من قاعدة البيانات مباشرة
                         myActiveBetsList = tickets.map(t => ({
                             id: t.ticket_id,
                             status: t.status,
@@ -522,10 +461,7 @@
 
                 if(res.ok) {
                     playerSession = data;
-                    
-                    // 🛡️ حفظ الجلسة داخل localStorage لعدم الخروج عند عمل ريفرش
                     localStorage.setItem('alpha_player_session', JSON.stringify(data));
-                    
                     setupLoggedInUI();
                     await fetchPlayerTicketsFromServer();
                 } else { showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); }
@@ -636,7 +572,6 @@
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
 
-                    // إرسال الكوبون وحفظه في السيرفر لضمان الأمان
                     await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -677,7 +612,6 @@
                         targetTicket.finalCashoutPaid = cashOutAmount; 
                     }
 
-                    // بث تحديث إغلاق الحالة فوراً إلى السيرفر
                     await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -693,28 +627,6 @@
                     renderMyBetsHistoryPane();
                 } else { showNotification('فشل تنفيذ الكاش أوت', 'error'); }
             } catch(e) { showNotification('خطأ اتصال مالي', 'error'); }
-        }
-
-        async function adminSimulateBetResult(ticketId, targetResult) {
-            const ticket = myActiveBetsList.find(b => b.id === ticketId);
-            if(!ticket) return;
-
-            ticket.status = targetResult;
-
-            if(targetResult === 'gagne') {
-                try {
-                    await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: ticket.gain })
-                    });
-                    await refreshPlayerBalance();
-                } catch(e) { console.error("Simulated charge error"); }
-            }
-
-            updateActiveBetsBadgeCount();
-            showNotification(`تم تحديث حالة التذكرة #${ticketId}`);
-            renderMyBetsHistoryPane();
         }
 
         function updateActiveBetsBadgeCount() {
@@ -1033,7 +945,7 @@
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
-            localStorage.removeItem('alpha_player_session'); // تنظيف التخزين عند تسجيل الخروج العمد
+            localStorage.removeItem('alpha_player_session');
             playerSession = null; myActiveBetsList = [];
             document.getElementById('my-bets-badge-count').innerText = "0";
             document.getElementById('player-name-display').innerText = "Visitor";
@@ -1045,36 +957,34 @@
             switchSection('accueil');
         }
 
-        // 🛡️ فحص وجود جلسة محفوظة للمستخدم تلقائياً عند تحميل الصفحة لمنع الخروج المفاجئ
+        // 🚀 التشغيل الموحد والآمن عند فتح الصفحة 🚀
         window.onload = function() { 
             renderCasinoGames(); 
             clearTicket(); 
             
+            // 1. تسجيل الدخول التلقائي
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
                 playerSession = JSON.parse(savedSession);
                 setupLoggedInUI();
-                fetchPlayerTicketsFromServer(); // استدعاء فوري للأوراق من السيرفر لتبقي محفوظة دائماً
+                fetchPlayerTicketsFromServer(); 
+            }
+
+            // 2. جلب المباريات ووضعها في الواجهة فوراً
+            if(typeof loadLiveMatchesData === 'function') {
+                loadLiveMatchesData(); 
+                
+                // 3. مزامنة البيانات بين قسم الرياضة والواجهة كل ثانية بدون أخطاء
+                setInterval(() => {
+                    const sportMatches = document.getElementById('matches-list-container');
+                    const homeMatches = document.getElementById('home-matches-container');
+                    
+                    if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
+                        homeMatches.innerHTML = sportMatches.innerHTML;
+                    }
+                }, 1000); 
             }
         };
-    
-    <script>
-    // هذا السكريبت يقوم بجلب المباريات من السيرفر ونسخها للواجهة الرئيسية تلقائياً
-    setTimeout(() => {
-        if(typeof loadLiveMatchesData === 'function') {
-            loadLiveMatchesData(); // جلب المباريات فور فتح الموقع
-            
-            // مزامنة المباريات بين قسم الرياضة والواجهة الرئيسية
-            setInterval(() => {
-                const sportMatches = document.getElementById('matches-list-container');
-                const homeMatches = document.getElementById('home-matches-container');
-                
-                if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
-                    homeMatches.innerHTML = sportMatches.innerHTML;
-                }
-            }, 1000); 
-        }
-    }, 1000);
-</script>
+    </script>
 </body>
 </html>
