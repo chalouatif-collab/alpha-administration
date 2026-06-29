@@ -547,4 +547,38 @@ window.onload = function() {
         }, 1000);
     }
 };
+async function handlePlayerAuth() {
+    const username = document.getElementById('p-auth-username').value;
+    const password = document.getElementById('p-auth-password').value;
+
+    if (!username || !password) {
+        alert("الرجاء إدخال اسم المستخدم وكلمة المرور");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            // حفظ الجلسة في المتصفح
+            localStorage.setItem('alpha_player_session', JSON.stringify(data.player));
+            localStorage.setItem('token', data.token); // إذا كنت تستخدم التوكن
+            
+            // إغلاق النافذة وتحديث الواجهة
+            closeLoginModal();
+            window.location.reload(); // تحديث الصفحة ليعمل كل شيء
+        } else {
+            alert(data.message || "خطأ في تسجيل الدخول");
+        }
+    } catch (e) {
+        console.error("خطأ في الاتصال بالسيرفر:", e);
+        alert("حدث خطأ أثناء الاتصال بالسيرفر");
+    }
+}
 </script>
