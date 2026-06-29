@@ -1053,6 +1053,7 @@ function getAuthHeaders() {
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
                 playerSession = JSON.parse(savedSession);
+                refreshPlayerBalance();
                 setupLoggedInUI();
                 fetchPlayerTicketsFromServer(); 
             }
