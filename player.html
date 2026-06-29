@@ -105,64 +105,104 @@
         </div>
     </div>
 
-    <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
-        <div class="space-y-6">
-            <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
-                <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
-                <span class="text-base font-black tracking-wider text-white">Alphabet</span>
-            </div>
+    " class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
+      <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
+    <div class="space-y-6">
+        <!-- Logo Section -->
+        <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
+            <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
+            <span class="text-base font-black tracking-wider text-white">Alphabet</span>
+        </div>
 
-            <nav class="space-y-1 text-sm font-bold text-slate-300">
-                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
-                    <span>🏠</span> <span id="menu-accueil">Accueil</span>
-                </button>
-                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <span>🏆</span> <span id="menu-sport">Sport</span>
-                </button>
-                <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <div class="flex items-center gap-4"><span>📋</span> <span id="menu-paris">Mes Paris</span></div>
-                    <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
-                </button>
-                <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <span>🎰</span> <span id="menu-casino">Le casino</span>
-                </button>
-                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    <span>👤</span> <span id="menu-live">Casino en direct</span>
-                </button>
-                <button onclick="switchSection('crash')" id="btn-menu-crash" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
-                </button>
-                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
-                </button>
-                <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                    <span>🎁</span> <span id="menu-promotions">Promotions</span>
+        <nav class="space-y-1 text-sm font-bold text-slate-300">
+            
+            <!-- Accueil -->
+            <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
+                <span>🏠</span> <span id="menu-accueil">Accueil</span>
+            </button>
+
+            <!-- Sport (القائمة المنسدلة الذكية) -->
+            <div>
+                <button onclick="document.getElementById('sport-submenu').classList.toggle('hidden'); document.getElementById('sport-arrow').classList.toggle('rotate-180');" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <div class="flex items-center gap-4">
+                        <span>🏆</span> <span id="menu-sport">Sport</span>
+                    </div>
+                    <!-- سهم القائمة -->
+                    <svg id="sport-arrow" class="w-4 h-4 transition-transform duration-200 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 
-                <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2">
-                    <div class="flex items-center gap-4 text-slate-400">
-                        <span>💬</span> <span id="menu-langue">Langue</span>
-                    </div>
-                    <select id="player-lang-select" onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer font-sans">
-                        <option value="fr">Français</option>
-                        <option value="ar">العربية</option>
-                        <option value="en">English</option>
-                    </select>
+                <!-- الخيارات الفرعية للرياضة -->
+                <div id="sport-submenu" class="hidden flex-col pl-11 pr-2 py-2 space-y-1 bg-slate-900/20 rounded-xl mt-1">
+                    <button onclick="switchSection('sport-live')" class="w-full flex items-center gap-3 hover:text-teal-400 p-2 rounded-lg transition-all cursor-pointer text-left text-xs">
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                        <span>Sport en directe</span>
+                    </button>
+                    <button onclick="switchSection('sport-all')" class="w-full flex items-center gap-3 hover:text-teal-400 p-2 rounded-lg transition-all cursor-pointer text-left text-xs">
+                        <span>🌍</span>
+                        <span>Tous les sports</span>
+                    </button>
                 </div>
-            </nav>
-        </div>
+            </div>
 
-        <div class="pt-4 border-t border-slate-900 space-y-2 text-[11px] text-slate-500 font-bold text-center">
-            <button onclick="logoutPlayer()" id="sidebar-logout-btn" class="w-full bg-rose-950/10 hover:bg-rose-900/30 border border-rose-500/10 text-rose-400 font-black p-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mb-2 hidden">
-                <span id="trans-btn-exit">Sortir</span>
+            <!-- Mes Paris -->
+            <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
+                <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
             </button>
-            <button onclick="openLoginModal()" id="sidebar-login-btn" class="w-full bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/30 text-teal-400 font-black p-2.5 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer mb-2">
-                <span id="trans-btn-navlogin">Connexion</span>
+
+            <!-- Le Casino -->
+            <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                <span>🎰</span> <span id="menu-casino">Le casino</span>
             </button>
-            <div class="text-slate-400" id="trans-footer-resp">Jouez De Façon Responsable</div>
-            <div class="uppercase text-[10px] text-slate-500" id="trans-footer-terms">GENERAL TERMS AND CONDITIONS</div>
-        </div>
-    </aside>
+
+            <!-- Casino en direct (Disabled) -->
+            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                <span>🤵</span> <span id="menu-live">Casino en direct</span>
+            </button>
+
+            <!-- Jeux de crash -->
+            <button onclick="switchSection('crash')" id="btn-menu-crash" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
+            </button>
+
+            <!-- Meilleurs games (Disabled) -->
+            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
+            </button>
+
+            <!-- Promotions (Disabled) -->
+            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                <span>🎁</span> <span id="menu-promotions">Promotions</span>
+            </button>
+
+            <!-- 📜 قسم السجلات (Historiques) -->
+            <div class="pt-4 mt-4 border-t border-slate-800/50">
+                <span class="text-[10px] uppercase tracking-widest text-slate-500 pl-3 mb-2 block">Historiques</span>
+                
+                <button onclick="switchSection('history-casino')" id="btn-menu-hist-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>📜</span> <span>Historique de Casino</span>
+                </button>
+                
+                <button onclick="switchSection('history-transfer')" id="btn-menu-hist-transfer" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>💸</span> <span>Historique de Transfére</span>
+                </button>
+            </div>
+
+            <!-- Langue -->
+            <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2">
+                <div class="flex items-center gap-4 text-slate-400">
+                    <span>💬</span> <span id="menu-langue">Langue</span>
+                </div>
+                <select id="player-lang-select" onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
+                    <option value="fr">Français</option>
+                    <option value="ar">العربية</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+            
+        </nav>
+    </div>
+</aside>
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
