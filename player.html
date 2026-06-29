@@ -914,16 +914,18 @@ function maximizeTicket() {
             }, 80);
         }
 
-        async function triggerCrashCashOutEarly() {
-            if(!isCrashRoundRunning || hasPlayerCashedOutFromCrash) return;
-            hasPlayerCashedOutFromCrash = true;
-            clearInterval(crashLoopInterval);
+       async function triggerCrashCashOutEarly() {
+    if (!isCrashRoundRunning || hasPlayerCashedOutFromCrash) return;
 
-            const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
+    hasPlayerCashedOutFromCrash = true;
+    clearInterval(crashLoopInterval);
 
-         const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+    const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
+
+    try {
+        const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
             method: 'POST',
-            headers: getAuthHeaders(), // 🚀 هنا السر: إضافة مفتاح الأمان ضرورية
+            headers: getAuthHeaders(),
             body: JSON.stringify({ 
                 admin_username: "System", 
                 target_username: playerSession.username, 
@@ -931,16 +933,21 @@ function maximizeTicket() {
                 amount: totalWinCalculated 
             })
         });
-                if(winRes.ok) {
-                    const winData = await winRes.json();
-                    playerSession.balance = winData.balance;
-                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                    showNotification(`Félicitations! Gagne +${totalWinCalculated.toFixed(2)} TND 🚀🔥`);
-                }
-            } catch(e) { console.error("Error pushing crash victory money"); }
 
-            resetCrashInterfaceToReady();
-
+        if (winRes.ok) {
+            const winData = await winRes.json();
+            playerSession.balance = winData.balance;
+            document.getElementById('player-balance-val').innerText = parseFloat(playerSession.balance).toFixed(2);
+            showNotification(`Félicitations! Gagne +${totalWinCalculated.toFixed(2)} TND 🚀🔥`, 'success');
+        } else {
+            console.error("Failed to update balance on server");
+        }
+    } catch (e) {
+        console.error("Error pushing crash victory money", e);
+    }
+    
+    resetCrashInterfaceToReady();
+}
 
         function triggerAirplaneCrashBlast() {
             clearInterval(crashLoopInterval);
