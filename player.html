@@ -970,7 +970,21 @@ async function openHistoryPage() {
     // التحقق من وجود بيانات
     if (data.history && data.history.length > 0) {
         data.history.forEach(t => {
-            html += `
+            html += `<tr class="border-b border-teal-900 hover:bg-teal-900/20">
+                <td class="p-3">${t.date}</td>
+                <td class="p-3">${parseFloat(t.mise).toFixed(2)}</td>
+                <td class="p-3">${t.total_cote}</td>
+                <td class="p-3 text-green-400">${parseFloat(t.gain).toFixed(2)}</td>
+                <td class="p-3">${t.status}</td>
+            </tr>`;
+        });
+    } else {
+        html += `<tr><td colspan="5" class="p-4 text-center text-gray-400">Aucune transaction trouvée</td></tr>`;
+    }
+
+    html += `</tbody></table></div>`;
+    document.getElementById('main-content').innerHTML = html;
+}
             <tr class="border-b border-teal-900 hover:bg-teal-900/20">
                 <td class="p-3">${t.date}</td>
                 <td class="p-3">${parseFloat(t.mise).toFixed(2)}</td>
