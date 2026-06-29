@@ -945,7 +945,47 @@ function maximizeTicket() {
     } catch (e) {
         console.error("Error pushing crash victory money", e);
     }
+    // --- دالة عرض سجل التحويلات ---
+async function openHistoryPage() {
+    const res = await fetch(`${BACKEND_URL}/api/admin/get-history?username=${playerSession.username}`, {
+        method: 'GET'
+    });
+    const data = await res.json();
     
+    let html = `
+    <div class="p-6 text-white bg-slate-900 rounded-lg">
+        <h2 class="text-2xl mb-6 font-bold">Historique de Transfére</h2>
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-teal-800 text-teal-400">
+                    <th class="p-3">Date</th>
+                    <th class="p-3">Mise</th>
+                    <th class="p-3">Cote</th>
+                    <th class="p-3">Gain</th>
+                    <th class="p-3">Status</th>
+                </tr>
+            </thead>
+            <tbody>`;
+    
+    // التحقق من وجود بيانات
+    if (data.history && data.history.length > 0) {
+        data.history.forEach(t => {
+            html += `
+            <tr class="border-b border-teal-900 hover:bg-teal-900/20">
+                <td class="p-3">${t.date}</td>
+                <td class="p-3">${parseFloat(t.mise).toFixed(2)}</td>
+                <td class="p-3">${t.total_cote}</td>
+                <td class="p-3 text-green-400">${parseFloat(t.gain).toFixed(2)}</td>
+                <td class="p-3">${t.status}</td>
+            </tr>`;
+        });
+    } else {
+        html += `<tr><td colspan="5" class="p-4 text-center text-gray-400">Aucune transaction trouvée</td></tr>`;
+    }
+    
+    html += `</tbody></table></div>`;
+    document.getElementById('main-content').innerHTML = html;
+}
     resetCrashInterfaceToReady();
 }
 
