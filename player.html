@@ -921,13 +921,16 @@ function maximizeTicket() {
 
             const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
 
-            try {
-                const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: totalWinCalculated })
-                });
-
+         const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+            method: 'POST',
+            headers: getAuthHeaders(), // 🚀 هنا السر: إضافة مفتاح الأمان ضرورية
+            body: JSON.stringify({ 
+                admin_username: "System", 
+                target_username: playerSession.username, 
+                action: "charge", 
+                amount: totalWinCalculated 
+            })
+        });
                 if(winRes.ok) {
                     const winData = await winRes.json();
                     playerSession.balance = winData.balance;
