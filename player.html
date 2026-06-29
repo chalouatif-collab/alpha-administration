@@ -874,11 +874,11 @@ function maximizeTicket() {
             document.getElementById('crash-status-badge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
 
             try {
-                const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
-                });
+              const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+            method: 'POST',
+            headers: getAuthHeaders(), // 🚀 هنا السر: أضفنا مفتاح الأمان
+            body: JSON.stringify({ admin_username: "system", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
+        });
 
                 if(!deductRes.ok) {
                     isCrashRoundRunning = false;
