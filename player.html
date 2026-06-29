@@ -466,7 +466,7 @@ function maximizeTicket() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/login`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                 headers: getAuthHeaders(),
                     body: JSON.stringify({ username, password })
                 });
                 const data = await res.json();
@@ -559,7 +559,7 @@ function maximizeTicket() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                   headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stake })
                 });
 
@@ -586,7 +586,7 @@ function maximizeTicket() {
 
                     await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                     headers: getAuthHeaders(),
                         body: JSON.stringify({
                             username: playerSession.username,
                             ticket_data: betTicketObject
