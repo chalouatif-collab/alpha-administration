@@ -371,6 +371,24 @@
     </div>
 
     <script>
+        // --- دوال التحكم في نافذة تسجيل الدخول ---
+function openLoginModal() {
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    } else {
+        console.error("عنصر login-modal غير موجود في HTML");
+    }
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('login-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
       // --- دالة عرض سجل التحويلات ---
 async function openHistoryPage() {
     try {
