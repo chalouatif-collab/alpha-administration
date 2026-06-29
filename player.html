@@ -135,7 +135,7 @@
                 <div id="sport-submenu" class="hidden flex-col pl-11 pr-2 py-2 space-y-1 bg-slate-900/20 rounded-xl mt-1">
                     <button onclick="switchSection('sport-live')" class="w-full flex items-center gap-3 hover:text-teal-400 p-2 rounded-lg transition-all cursor-pointer text-left text-xs">
                         <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
-                        <span>Sport en direct</span>
+                        <span>Sport en directe</span>
                     </button>
                     <button onclick="switchSection('sport-all')" class="w-full flex items-center gap-3 hover:text-teal-400 p-2 rounded-lg transition-all cursor-pointer text-left text-xs">
                         <span>🌍</span>
@@ -536,19 +536,20 @@ function maximizeTicket() {
     }
 }
 
-        function setupLoggedInUI() {
-            closeLoginModal();
-            document.getElementById('sidebar-login-btn').classList.add('hidden');
-            document.getElementById('top-login-btn').classList.add('hidden');
-            document.getElementById('sidebar-logout-btn').classList.remove('hidden');
-            document.getElementById('top-logout-btn').classList.remove('hidden');
+       function setupLoggedInUI() {
+    closeLoginModal();
+    // 🚀 أضفنا علامة ؟ لكي لا ينهار الكود إذا لم يجد الأزرار القديمة
+    document.getElementById('sidebar-login-btn')?.classList.add('hidden');
+    document.getElementById('top-login-btn')?.classList.add('hidden');
+    document.getElementById('sidebar-logout-btn')?.classList.remove('hidden');
+    document.getElementById('top-logout-btn')?.classList.remove('hidden');
 
-            document.getElementById('player-name-display').innerText = `${playerSession.username}`;
-            document.getElementById('trans-badge-real').innerText = "Compte Réel 🇹🇳";
-            
-            document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-            if(!balanceInterval) balanceInterval = setInterval(refreshPlayerBalance, 4000);
-        }
+    document.getElementById('player-name-display').innerText = `${playerSession.username}`;
+    document.getElementById('trans-badge-real').innerText = "Compte Réel TN";
+    
+    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+    if(!balanceInterval) balanceInterval = setInterval(refreshPlayerBalance, 4000);
+}
 
         function selectBetOutcome(outcome, odds, matchName, matchId) {
             comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
