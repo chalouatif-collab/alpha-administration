@@ -127,8 +127,17 @@
     </div>
 
     <script>
-        const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+     const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi' };
+
+        // 🚀 1. إضافة دالة جلب مفتاح الأمان (Token)
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
 
         const translations = {
             fr: { menu: "Menu de Gestion", selected: "Utilisateur Sélectionné", create: "👑 Créer un nouveau compte dans le réseau", user: "Nom d'utilisateur", pass: "Mot de passe", console: "📋 Console de gestion globale des comptes", credit: "Créditer", retirer: "Retirer", th_c: "Compte", th_r: "Rôle", th_cr: "Créateur", th_s: "Solde Actuel (TND)", out: "🚪 Déconnexion" },
@@ -152,10 +161,13 @@
             setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => { toast.remove(); }, 300); }, 2500);
         }
 
-        // 🚀 إصلاح نظام الكاش لجلب الأرصدة فورياً
+        // 🚀 2. تأمين جلب المستخدمين
         async function loadNetworkData() {
             try {
-                const uRes = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
+                const uRes = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, {
+                    method: 'GET',
+                    headers: getAuthHeaders() // إضافة المفتاح هنا
+                });
                 if(uRes.ok){
                     const users = await uRes.json();
                     const tbody = document.getElementById('owner-network-tbody'); 
@@ -193,7 +205,7 @@
             document.getElementById('rtp-val-label').innerText = rtp + '%';
         }
 
-       // 🚀 دالة الفتح والجلب الفوري والمصلح للأوراق السحابية
+       // 🚀 3. تأمين النوافذ المنبثقة للرياضة والتحويلات
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
             const title = document.getElementById('modal-title');
@@ -202,7 +214,6 @@
             
             const target_username = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
             
-            // حماية صارمة من أي مسافات أو أخطاء في الأحرف لتجنب تخطي قسم الرياضة
             const safeType = type.trim().toLowerCase(); 
             
             title.innerText = "Historique de " + safeType.toUpperCase();
@@ -219,10 +230,13 @@
                 headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
                 
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`);
+                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`, {
+                        method: 'GET',
+                        headers: getAuthHeaders() // إضافة المفتاح
+                    });
                     if (res.ok) {
                         const tickets = await res.json();
-                        body.innerHTML = ''; // إزالة رسالة التحميل
+                        body.innerHTML = ''; 
                         
                         if (tickets && tickets.length > 0) {
                             tickets.forEach(t => {
@@ -252,7 +266,7 @@
                 headers.innerHTML = `<th class="p-2">Expéditeur</th><th class="p-2">Bénéficiaire</th><th class="p-2">Action</th><th class="p-2 text-right">Montant (TND)</th>`;
                 body.innerHTML = '';
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
+                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
                     if(res.ok) {
                         const users = await res.json();
                         users.forEach(u => {
@@ -271,7 +285,7 @@
                 headers.innerHTML = `<th class="p-2">Compte Creé</th><th class="p-2">Rôle système</th><th class="p-2 text-right">Créateur</th>`;
                 body.innerHTML = '';
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`);
+                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
                     if(res.ok) {
                         const users = await res.json();
                         users.forEach(u => {
@@ -290,43 +304,67 @@
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function logout() { localStorage.removeItem('alpha_user'); localStorage.clear(); sessionStorage.clear(); showNotification('Déconnexion réussie...'); setTimeout(() => { window.location.href = "index.html"; }, 600); }
 
+        // 🚀 4. تأمين تغيير كلمة المرور
         async function submitNewPassword() {
             const new_password = document.getElementById('new-sys-pass').value;
             if(!new_password) return showNotification('Veuillez introduire un mot de passe!', 'error');
-            const res = await fetch(`${BACKEND_URL}/api/user/change-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: user.username, new_password }) });
+            const res = await fetch(`${BACKEND_URL}/api/user/change-password`, { 
+                method: 'POST', 
+                headers: getAuthHeaders(), // التعديل هنا
+                body: JSON.stringify({ username: user.username, new_password }) 
+            });
             if(res.ok) { showNotification('Mot de passe mis à jour avec succès!'); closeModal('password-modal'); document.getElementById('new-sys-pass').value = ''; }
         }
 
+        // 🚀 5. تأمين حفظ نسبة الـ RTP والحظر
         async function saveRtpAndBlock(blockStatus) {
             const target_username = document.getElementById('ctrl-target-user').value, rtp = parseInt(document.getElementById('ctrl-rtp-range').value);
             if(!target_username) return showNotification('Sélectionnez un compte d\'abord!', 'error');
-            const res = await fetch(`${BACKEND_URL}/api/admin/configure-account`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin_username: user.username, target_username, rtp, is_blocked: blockStatus }) });
+            const res = await fetch(`${BACKEND_URL}/api/admin/configure-account`, { 
+                method: 'POST', 
+                headers: getAuthHeaders(), // التعديل هنا
+                body: JSON.stringify({ admin_username: user.username, target_username, rtp, is_blocked: blockStatus }) 
+            });
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
         }
 
+        // 🚀 6. تأمين حذف الحساب
         async function deleteAccountAction() {
             const target_username = document.getElementById('ctrl-target-user').value;
             if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
-            const res = await fetch(`${BACKEND_URL}/api/admin/delete-account?admin_username=${user.username}&target_username=${target_username}`, { method: 'DELETE' });
+            const res = await fetch(`${BACKEND_URL}/api/admin/delete-account?admin_username=${user.username}&target_username=${target_username}`, { 
+                method: 'DELETE',
+                headers: getAuthHeaders() // التعديل هنا
+            });
             if(res.ok) { showNotification('Compte supprimé!'); setTimeout(() => location.reload(), 800); }
         }
 
+        // 🚀 7. تأمين الدالة الأهم (شحن / سحب الرصيد)
         async function executeAction(action) {
             const target_username = document.getElementById('target-action-user').value, amountInput = document.getElementById('target-action-amount').value;
             if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
             const amount = amountInput ? parseFloat(amountInput) : 0;
             if(amount <= 0) return showNotification('Veuillez introduire un montant valide!', 'error');
-            const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ admin_username: "fethi", target_username, action, amount }) });
+            const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, { 
+                method: 'POST', 
+                headers: getAuthHeaders(), // التعديل هنا 
+                body: JSON.stringify({ admin_username: "fethi", target_username, action, amount }) 
+            });
             if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
         }
 
+        // 🚀 8. تأمين إنشاء حساب جديد
         async function createNetworkUser() {
             const usernameInput = document.getElementById('new-user-name'), passwordInput = document.getElementById('new-user-pass'), roleSelect = document.getElementById('new-user-role');
             if(!usernameInput || !passwordInput) return showNotification('عطل في التعرف على خانات الإدخال بالصفحة', 'error');
             const username = usernameInput.value.trim().toLowerCase(), password = passwordInput.value, role = roleSelect ? roleSelect.value : 'player';
             if(!username || !password) return showNotification('Remplir tous les champs!', 'error');
             try {
-                const res = await fetch(`${BACKEND_URL}/api/register`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password, role, created_by: user.username }) });
+                const res = await fetch(`${BACKEND_URL}/api/register`, { 
+                    method: 'POST', 
+                    headers: getAuthHeaders(), // التعديل هنا
+                    body: JSON.stringify({ username, password, role, created_by: user.username }) 
+                });
                 if(res.ok){ showNotification('Compte créé avec succès!'); usernameInput.value = ''; passwordInput.value = ''; await loadNetworkData(); } 
                 else { showNotification('Échec de la création, nom d\'utilisateur déjà pris', 'error'); }
             } catch(e) { showNotification('Erreur de connexion au serveur', 'error'); }
