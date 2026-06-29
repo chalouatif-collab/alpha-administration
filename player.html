@@ -331,6 +331,13 @@
     </div>
 
     <script>
+        function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    };
+}
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let playerSession = null;
         let balanceInterval = null;
