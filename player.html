@@ -465,27 +465,36 @@ function maximizeTicket() {
             } catch (e) { console.error("Error syncing tickets from database", e); }
         }
 
-        async function handlePlayerAuth() {
-            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
-            const password = document.getElementById('p-auth-password').value;
-            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+       async function handlePlayerAuth() {
+    const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
+    const password = document.getElementById('p-auth-password').value;
+    if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/login`, {
-                    method: 'POST',
-                 headers: getAuthHeaders(),
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/login`, {
+            method: 'POST',
+            // 🚀 التعديل الأول: نضع الهيدر العادي لأننا لم نستلم المفتاح بعد
+            headers: { 'Content-Type': 'application/json' }, 
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
 
-                if(res.ok) {
-                    playerSession = data;
-                    localStorage.setItem('alpha_player_session', JSON.stringify(data));
-                    setupLoggedInUI();
-                    await fetchPlayerTicketsFromServer();
-                } else { showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); }
-            } catch(e) { showNotification('عطل اتصال بالسيرفر', 'error'); }
+        if(res.ok) {
+            playerSession = data;
+            localStorage.setItem('alpha_player_session', JSON.stringify(data));
+            
+            // 🚀 التعديل الثاني والأهم: السطر الذهبي لحفظ المفتاح السري!
+            localStorage.setItem('token', data.access_token); 
+
+            setupLoggedInUI();
+            await fetchPlayerTicketsFromServer();
+        } else { 
+            showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); 
         }
+    } catch(e) { 
+        showNotification('عطل اتصال بالسيرفر', 'error'); 
+    }
+}
 
         function setupLoggedInUI() {
             closeLoginModal();
