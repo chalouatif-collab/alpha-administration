@@ -219,18 +219,18 @@
                 <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg font-mono font-bold">Alphabet</span>
             </div>
             
-            <div class="flex items-center gap-1.5 md:gap-2">
-                <div class="bg-[#050814] border border-slate-800 px-2 py-1.5 rounded-xl flex items-center gap-1.5 font-mono text-xs">
-                    <span class="text-[#14b8a6] font-black text-sm transition-all relative" id="player-balance-val">0.00</span>
-                    <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[12px] ml-1 cursor-pointer" id="eye-icon-btn">👁️</button>
-                    <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 font-sans text-[11px] cursor-pointer">🔄</button>
+           <div class="flex items-center gap-1.5 md:gap-2">
+                <div class="bg-[#050814] border border-slate-800 px-1.5 py-1 rounded-lg flex items-center gap-1 font-mono">
+                    <span class="text-[#14b8a6] font-black text-[11px] transition-all relative" id="player-balance-val">0.00</span>
+                    <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px] ml-0.5 cursor-pointer" id="eye-icon-btn">👁️</button>
+                    <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 font-sans text-[10px] cursor-pointer">🔄</button>
                 </div>
                 
-                <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-xs font-black px-4 py-2 rounded-xl cursor-pointer transition-all">Connexion</button>
+                <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg cursor-pointer transition-all">Connexion</button>
                 
-                <div id="top-user-profile" class="hidden items-center bg-slate-800 border border-slate-700 rounded-xl px-2 py-1.5 gap-2">
-                    <span class="text-teal-400 font-bold text-[11px] uppercase tracking-wider" id="header-username-display">User</span>
-                    <button onclick="logoutPlayer()" class="text-rose-400 hover:text-rose-500 font-black text-[10px] cursor-pointer bg-rose-500/10 px-1.5 py-0.5 rounded">✕</button>
+                <div id="top-user-profile" class="hidden items-center bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1 gap-1.5">
+                    <span class="text-teal-400 font-bold text-[9px] uppercase tracking-wider truncate max-w-[60px]" id="header-username-display">User</span>
+                    <button onclick="logoutPlayer()" class="text-rose-400 hover:text-rose-500 font-black text-[9px] cursor-pointer bg-rose-500/10 px-1 py-0.5 rounded">✕</button>
                 </div>
             </div>
         </header>
