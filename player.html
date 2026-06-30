@@ -34,6 +34,7 @@
         }
 
         /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي) 🔥 */
+       /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي بـ 4 أزرار فقط) 🔥 */
         @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
@@ -42,10 +43,11 @@
                 position: fixed !important; bottom: 0 !important; left: 0 !important;
                 width: 100% !important; height: 70px !important; padding: 0 !important;
                 background-color: #090f24 !important; border-top: 1px solid #1e293b !important;
-                z-index: 9999 !important; display: flex !important; flex-direction: column !important; justify-content: center !important;
+                z-index: 40 !important; display: flex !important; flex-direction: column !important; justify-content: center !important;
             }
             #main-sidebar .space-y-6 > div.flex, 
             #main-sidebar .pt-4 { display: none !important; }
+            
             #main-sidebar .space-y-6 { width: 100% !important; margin: 0 !important; height: 100% !important; display: flex; align-items: center; }
             
             #main-sidebar nav {
@@ -53,24 +55,31 @@
                 justify-content: space-between !important; align-items: center !important;
                 width: 100% !important; height: 100% !important; margin: 0 !important;
             }
-           /* توزيع الـ 4 أزرار المتبقية بالتساوي 25% */
+            
+            /* 🛑 هنا السر: إخفاء أي زر بعد الزر الرابع عن شريط الهاتف 🛑 */
+            #main-sidebar nav > button:nth-child(n+5),
+            #main-sidebar nav .hide-on-mobile-bar {
+                display: none !important;
+            }
+
+            /* توزيع الـ 4 أزرار المتبقية بالتساوي 25% */
             #main-sidebar nav > button {
                 display: flex !important; flex-direction: column !important;
                 align-items: center !important; justify-content: center !important;
                 width: 25% !important; height: 100% !important; padding: 5px !important;
                 background: transparent !important; gap: 4px !important; border: none !important;
-                position: relative !important; /* ضروري لضبط دائرة الإشعارات */
+                position: relative !important; 
             }
             #main-sidebar nav > div { display: none !important; }
             #main-sidebar nav span { font-size: 10px !important; margin: 0 !important; font-weight: bold !important; text-align: center !important; }
             #main-sidebar nav span:first-child { font-size: 20px !important; } 
             
-            /* ضبط مكان الدائرة الصفراء فوق أيقونة Mes Paris */
-            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 20px !important; transform: none !important; }
-            .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; } 
-            
+            /* ضبط الدائرة الصفراء لتكون فوق الأيقونة مباشرة */
+            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 25% !important; transform: none !important; }
+            .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
+
             /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
-            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 9999 !important; }
+            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
     </style>
 </head>
