@@ -474,18 +474,32 @@
             if(sectionId === 'sport') loadLiveMatchesData();
             if(sectionId === 'paris') renderMyBetsHistoryPane();
         }
-// 👁️ دالة إخفاء وإظهار الرصيد
+// // 👁️ دالة إخفاء وإظهار الرصيد (النسخة الذكية)
         function toggleBalanceVisibility() {
             const balSpan = document.getElementById('player-balance-val');
             const eyeBtn = document.getElementById('eye-icon-btn');
+            
+            // 1. حقن التنسيق في الصفحة تلقائياً (لكي لا تحتاج لإضافته يدوياً)
+            if (!document.getElementById('hide-bal-style')) {
+                const style = document.createElement('style');
+                style.id = 'hide-bal-style';
+                style.innerHTML = `
+                    .hide-bal { color: transparent !important; }
+                    .hide-bal::after { content: '***'; position: absolute; left: 0; color: #14b8a6; letter-spacing: 2px; }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // 2. تفعيل الإخفاء والإظهار
             if (balSpan.classList.contains('hide-bal')) {
                 balSpan.classList.remove('hide-bal');
                 eyeBtn.innerText = '👁️';
             } else {
                 balSpan.classList.add('hide-bal');
-                eyeBtn.innerText = '🙈'; // عين مغلقة
+                eyeBtn.innerText = '🙈';
             }
         }
+        
         function switchBetsSubTab(subTabId) {
             currentBetsSubTab = subTabId;
             document.getElementById('pane-paris').querySelectorAll('button').forEach(btn => btn.classList.remove('active-sub-tab'));
