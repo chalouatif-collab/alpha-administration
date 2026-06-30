@@ -236,9 +236,19 @@
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
             <div id="pane-accueil" class="player-view-section space-y-4">
-                <div class="bg-gradient-to-r from-teal-500/10 to-transparent border border-slate-800 p-6 rounded-2xl">
-                    <h2 class="text-xl font-black text-white mb-2" id="trans-acc-welcome">Bienvenue sur Alphabet 👑</h2>
-                    <p class="text-xs text-slate-400 max-w-xl" id="trans-acc-desc">Accédez aux meilleurs paris sportifs en direct et aux machines à sous casino synchronisés directement with your balance.</p>
+              <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
+                    <div class="bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
+                        <div class="text-amber-400 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mega 🥇</div>
+                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mega">124,567.89</div>
+                    </div>
+                    <div class="bg-gradient-to-b from-slate-300/20 to-[#090f24] border border-slate-300/40 rounded-2xl p-3 text-center shadow-lg">
+                        <div class="text-slate-300 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Major 🥈</div>
+                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-major">14,230.50</div>
+                    </div>
+                    <div class="bg-gradient-to-b from-orange-600/20 to-[#090f24] border border-orange-600/40 rounded-2xl p-3 text-center shadow-lg">
+                        <div class="text-orange-500 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mini 🥉</div>
+                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mini">1,850.25</div>
+                    </div>
                 </div>
 
                 <div class="mt-6">
@@ -1080,6 +1090,7 @@
         window.onload = function() { 
             renderCasinoGames(); 
             clearTicket(); 
+            startJackpots();
             
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
@@ -1101,6 +1112,22 @@
                 }, 1000); 
             }
         };
+        // 💰 نظام الجاكبوت الحي
+        function startJackpots() {
+            let megaVal = 124567.89;
+            let majorVal = 14230.50;
+            let miniVal = 1850.25;
+
+            setInterval(() => {
+                megaVal += (Math.random() * 5.5) + 0.5;
+                majorVal += (Math.random() * 2.5) + 0.2;
+                miniVal += (Math.random() * 0.8) + 0.1;
+
+                document.getElementById('jackpot-mega').innerText = megaVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('jackpot-major').innerText = majorVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('jackpot-mini').innerText = miniVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }, 2500);
+        }
     </script>
 </body>
 </html>
