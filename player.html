@@ -108,7 +108,6 @@
 
       <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
     <div class="space-y-6">
-        <!-- Logo Section -->
         <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
             <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
             <span class="text-base font-black tracking-wider text-white">Alphabet</span>
@@ -116,22 +115,18 @@
 
         <nav class="space-y-1 text-sm font-bold text-slate-300">
             
-            <!-- Accueil -->
             <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
                 <span>🏠</span> <span id="menu-accueil">Accueil</span>
             </button>
 
-            <!-- Sport (القائمة المنسدلة الذكية) -->
             <div>
                 <button onclick="document.getElementById('sport-submenu').classList.toggle('hidden'); document.getElementById('sport-arrow').classList.toggle('rotate-180');" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <div class="flex items-center gap-4">
                         <span>🏆</span> <span id="menu-sport">Sport</span>
                     </div>
-                    <!-- سهم القائمة -->
                     <svg id="sport-arrow" class="w-4 h-4 transition-transform duration-200 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                 </button>
                 
-                <!-- الخيارات الفرعية للرياضة -->
                 <div id="sport-submenu" class="hidden flex-col pl-11 pr-2 py-2 space-y-1 bg-slate-900/20 rounded-xl mt-1">
                     <button onclick="switchSection('sport-live')" class="w-full flex items-center gap-3 hover:text-teal-400 p-2 rounded-lg transition-all cursor-pointer text-left text-xs">
                         <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
@@ -144,38 +139,31 @@
                 </div>
             </div>
 
-            <!-- Mes Paris -->
             <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                 <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
                 <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
             </button>
 
-            <!-- Le Casino -->
             <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                 <span>🎰</span> <span id="menu-casino">Le casino</span>
             </button>
 
-            <!-- Casino en direct (Disabled) -->
             <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                 <span>🤵</span> <span id="menu-live">Casino en direct</span>
             </button>
 
-            <!-- Jeux de crash -->
             <button onclick="switchSection('crash')" id="btn-menu-crash" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                 <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
             </button>
 
-            <!-- Meilleurs games (Disabled) -->
             <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                 <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
             </button>
 
-            <!-- Promotions (Disabled) -->
             <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                 <span>🎁</span> <span id="menu-promotions">Promotions</span>
             </button>
 
-            <!-- 📜 قسم السجلات (Historiques) -->
             <div class="pt-4 mt-4 border-t border-slate-800/50">
                 <span class="text-[10px] uppercase tracking-widest text-slate-500 pl-3 mb-2 block">Historiques</span>
                 
@@ -188,7 +176,6 @@
                 </button>
             </div>
 
-            <!-- Langue -->
             <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2">
                 <div class="flex items-center gap-4 text-slate-400">
                     <span>💬</span> <span id="menu-langue">Langue</span>
@@ -371,216 +358,700 @@
     </div>
 
     <script>
-        // أضف هذا السطر في أعلى السكربت
-const BACKEND_URL = "https://alpha-core.onrender.com";
-  // --- دوال التحكم في نافذة تسجيل الدخول ---
-function openLoginModal() {
-    const modal = document.getElementById('player-login-modal'); // تم التصحيح هنا
-    if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-    } else {
-        console.error("عنصر player-login-modal غير موجود في HTML");
-    }
-}
-
-function closeLoginModal() {
-    const modal = document.getElementById('player-login-modal'); // تم التصحيح هنا
-    if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-    }
-}
-    
-
-      // --- دالة عرض سجل التحويلات ---
-async function openHistoryPage() {
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/admin/get-history?username=${playerSession.username}`, {
-            method: 'GET'
-        });
-        const data = await res.json();
-        
-        let html = `
-        <div class="p-6 text-white bg-slate-900 rounded-lg">
-            <h2 class="text-2xl mb-6 font-bold">Historique de Transfére</h2>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="border-b border-teal-800 text-teal-400">
-                        <th class="p-3">Date</th>
-                        <th class="p-3">Mise</th>
-                        <th class="p-3">Cote</th>
-                        <th class="p-3">Gain</th>
-                        <th class="p-3">Status</th>
-                    </tr>
-                </thead>
-                <tbody>`;
-
-        if (data.history && data.history.length > 0) {
-            data.history.forEach(t => {
-                html += `
-                <tr class="border-b border-teal-900 hover:bg-teal-900/20">
-                    <td class="p-3">${t.date}</td>
-                    <td class="p-3">${parseFloat(t.mise || 0).toFixed(2)}</td>
-                    <td class="p-3">${t.total_cote || 1}</td>
-                    <td class="p-3 text-green-400">${parseFloat(t.gain || 0).toFixed(2)}</td>
-                    <td class="p-3">${t.status}</td>
-                </tr>`;
-            });
-        } else {
-            html += `<tr><td colspan="5" class="p-4 text-center text-gray-400">Aucune transaction trouvée</td></tr>`;
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
         }
         
-        html += `</tbody></table></div>`;
-        document.getElementById('main-content').innerHTML = html;
-    } catch (e) { console.error("Error opening history", e); }
-}
+        const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+        let playerSession = null;
+        let balanceInterval = null;
+        let currentLangCode = "fr";
+        let currentBetsSubTab = "encours"; 
+        
+        let comboTicketMatchesList = []; 
+        let myActiveBetsList = []; 
+        
+        let crashLoopInterval = null;
+        let crashMultiplier = 1.00;
+        let isCrashRoundRunning = false;
+        let currentCrashStakeAmount = 0;
+        let hasPlayerCashedOutFromCrash = false;
 
-// --- دالة تفجير الطائرة ---
-function triggerAirplaneCrashBlast() {
-    clearInterval(crashLoopInterval);
-    isCrashRoundRunning = false;
-    document.getElementById('blast-multiplier-val').innerText = crashMultiplier.toFixed(2);
-    document.getElementById('crash-blast-screen').classList.remove('scale-0');
-    document.getElementById('crash-blast-screen').classList.add('scale-100');
-    showNotification('FLEW AWAY! الرفعة طارت وانفجرت الطائرة', 'error');
-    resetCrashInterfaceToReady();
-}
+        const slotItems = ["👑", "💎", "🍒", "🍀", "🍋", "🍇"];
 
-// --- دالة إعادة تعيين الـ Crash ---
-function resetCrashInterfaceToReady() {
-    isCrashRoundRunning = false;
-    document.getElementById('crash-stake-input').disabled = false;
-    document.getElementById('crash-status-badge').innerText = "Waiting Round";
-    document.getElementById('crash-status-badge').className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
+        const dictionary_translations = {
+            fr: { ticket_empty: "Aucun match sélectionné", ticket_success: "Pari combos validé avec succès !", cashout_success: "Cash Out effectué avec succès !" },
+            ar: { ticket_empty: "لم تقم باختيار أي مباراة بعد", ticket_success: "تم قبول وتثبيت ورقة الرهان المتعددة بنجاح !", cashout_success: "تم سحب كاش أوت وإغلاق الكوبون بنجاح !" },
+            en: { ticket_empty: "No match selected yet", ticket_success: "Combo ticket submitted successfully!", cashout_success: "Cash Out processed successfully!" }
+        };
 
-    const actionBtn = document.getElementById('crash-action-btn');
-    actionBtn.innerText = "Placer le Pari 🚀";
-    actionBtn.className = "w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg";
-    document.getElementById('crash-airplane-icon').style.opacity = "0";
-}
+        function openLoginModal() { document.getElementById('player-login-modal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('player-login-modal').style.display = 'none'; }
 
-// --- دالة الـ Slots ---
-async function spinPragmaticSlot() {
-    if(!playerSession) return;
-    await refreshPlayerBalance();
-    const betAmount = parseFloat(document.getElementById('player-bet-select').value);
-    if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ !', 'error');
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            const toast = document.createElement('div');
+            toast.className = `p-3 rounded-xl shadow-2xl border text-xs font-bold text-slate-950 flex items-center gap-2 ${type === 'success' ? 'bg-teal-400 border-teal-500' : 'bg-rose-400 border-rose-500'}`;
+            toast.innerHTML = type === 'success' ? `✅ ${message}` : `❌ ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
 
-    const spinBtn = document.getElementById('spin-btn');
-    spinBtn.disabled = true;
-
-    try {
-        const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: betAmount })
-        });
-        if(!deductRes.ok) { spinBtn.disabled = false; return; }
-
-        const deductData = await deductRes.json();
-        playerSession.balance = deductData.balance;
-        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-
-        const r1 = document.getElementById('slot-reel-1'); const r2 = document.getElementById('slot-reel-2'); const r3 = document.getElementById('slot-reel-3');
-        r1.classList.add('slot-anim'); r2.classList.add('slot-anim'); r3.classList.add('slot-anim');
-
-        setTimeout(async () => {
-            r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
-            const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
-            const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
-            const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
-            r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
-
-            if(res1 === res2 && res2 === res3) {
-                const winAmount = betAmount * (res1 === "👑" ? 10 : 5);
-                await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: winAmount })
-                });
-                refreshPlayerBalance();
-                showNotification(`لقد ربحت ${winAmount.toFixed(2)} TND 🔥`);
-            }
-            spinBtn.disabled = false;
-        }, 400);
-    } catch(e) { spinBtn.disabled = false; }
-}
-
-// --- دالة تسجيل الخروج ---
-function logoutPlayer() {
-    if(typeof balanceInterval !== 'undefined') clearInterval(balanceInterval);
-    if(typeof crashLoopInterval !== 'undefined') clearInterval(crashLoopInterval);
-    localStorage.removeItem('alpha_player_session');
-    playerSession = null;
-    window.location.reload();
-}
-
-// --- دالة مساعدة ---
-function getAuthHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-    };
-}
-
-// --- التشغيل عند فتح الصفحة ---
-window.onload = function() { 
-    if (typeof renderCasinoGames === 'function') renderCasinoGames();
-    if (typeof clearTicket === 'function') clearTicket();
-    
-    const savedSession = localStorage.getItem('alpha_player_session');
-    if (savedSession) {
-        playerSession = JSON.parse(savedSession);
-        if(typeof refreshPlayerBalance === 'function') refreshPlayerBalance();
-        if(typeof setupLoggedInUI === 'function') setupLoggedInUI();
-        if(typeof fetchPlayerTicketsFromServer === 'function') fetchPlayerTicketsFromServer();
-    }
-
-    if(typeof loadLiveMatchesData === 'function') {
-        loadLiveMatchesData();
-        setInterval(() => {
-            const sportMatches = document.getElementById('matches-list-container');
-            const homeMatches = document.getElementById('home-matches-container');
-            if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
-                homeMatches.innerHTML = sportMatches.innerHTML;
-            }
-        }, 1000);
-    }
-};
-async function handlePlayerAuth() {
-    const username = document.getElementById('p-auth-username').value;
-    const password = document.getElementById('p-auth-password').value;
-
-    if (!username || !password) {
-        alert("الرجاء إدخال اسم المستخدم وكلمة المرور");
-        return;
-    }
-
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-            // حفظ الجلسة في المتصفح
-            localStorage.setItem('alpha_player_session', JSON.stringify(data.player));
-            localStorage.setItem('token', data.token); // إذا كنت تستخدم التوكن
+        function switchSection(sectionId) {
+            document.querySelectorAll('.player-view-section').forEach(el => el.classList.add('hidden'));
+            const panelElement = document.getElementById(`pane-${sectionId}`);
+            if (panelElement) panelElement.classList.remove('hidden');
             
-            // إغلاق النافذة وتحديث الواجهة
-            closeLoginModal();
-            window.location.reload(); // تحديث الصفحة ليعمل كل شيء
-        } else {
-            alert(data.message || "خطأ في تسجيل الدخول");
+            document.getElementById('main-sidebar').querySelectorAll('button').forEach(btn => btn.classList.remove('active-menu-btn'));
+            const targetBtn = document.getElementById(`btn-menu-${sectionId === 'paris' ? 'paris-view' : sectionId}`);
+            if(targetBtn) targetBtn.classList.add('active-menu-btn');
+
+            if(sectionId === 'sport') loadLiveMatchesData();
+            if(sectionId === 'paris') renderMyBetsHistoryPane();
         }
-    } catch (e) {
-        console.error("خطأ في الاتصال بالسيرفر:", e);
-        alert("حدث خطأ أثناء الاتصال بالسيرفر");
-    }
-}
-</script>
+
+        function switchBetsSubTab(subTabId) {
+            currentBetsSubTab = subTabId;
+            document.getElementById('pane-paris').querySelectorAll('button').forEach(btn => btn.classList.remove('active-sub-tab'));
+            document.getElementById(`sub-tab-${subTabId}`).classList.add('active-sub-tab');
+            renderMyBetsHistoryPane();
+        }
+
+        function minimizeTicket() {
+            if(comboTicketMatchesList.length === 0) return;
+            document.getElementById('main-ticket-slip').classList.add('hidden');
+            const floater = document.getElementById('floating-mini-ticket');
+            floater.classList.remove('scale-0');
+            floater.classList.add('scale-100');
+            document.getElementById('mini-ticket-badge').innerText = comboTicketMatchesList.length;
+        }
+
+        function maximizeTicket() {
+            switchSection('sport');
+            document.getElementById('main-ticket-slip').classList.remove('hidden');
+            const floater = document.getElementById('floating-mini-ticket');
+            floater.classList.remove('scale-100');
+            floater.classList.add('scale-0');
+            setTimeout(() => {
+                document.getElementById('main-ticket-slip').scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }, 300);
+        }
+
+        async function refreshPlayerBalance() {
+            if (!playerSession || !playerSession.username) return;
+            try {
+               const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
+                if (res.ok) {
+                    const users = await res.json();
+                    const currentMe = users.find(u => u.username === playerSession.username);
+                    if (currentMe) {
+                        playerSession.balance = currentMe.balance;
+                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                    }
+                }
+            } catch (e) { console.error("Error updating balance"); }
+        }
+
+        async function fetchPlayerTicketsFromServer() {
+            if (!playerSession || !playerSession.username) return;
+            try {
+                // إضافة الهيدر هنا ضرورية لكي لا يتم رفض الطلب
+                const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${playerSession.username}`, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
+                if (res.ok) {
+                    const tickets = await res.json();
+                    if (tickets) {
+                        myActiveBetsList = tickets.map(t => ({
+                            id: t.ticket_id,
+                            status: t.status,
+                            gamesCount: t.games_count,
+                            detailsList: t.details_list,
+                            totalCote: t.total_cote,
+                            mise: t.mise,
+                            gain: t.gain,
+                            cashOutAmount: t.mise * 0.90, 
+                            finalCashoutPaid: t.final_cashout_paid || 0,
+                            date: t.date
+                        }));
+                        updateActiveBetsBadgeCount();
+                        if (!document.getElementById('pane-paris').classList.contains('hidden')) {
+                            renderMyBetsHistoryPane();
+                        }
+                    }
+                }
+            } catch (e) { console.error("Error syncing tickets from database", e); }
+        }
+
+       async function handlePlayerAuth() {
+            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
+            const password = document.getElementById('p-auth-password').value;
+            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+
+                if(res.ok) {
+                    playerSession = data;
+                    localStorage.setItem('alpha_player_session', JSON.stringify(data));
+                    localStorage.setItem('token', data.access_token); 
+
+                    setupLoggedInUI();
+                    await fetchPlayerTicketsFromServer();
+                } else { 
+                    showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); 
+                }
+            } catch(e) { 
+                showNotification('عطل اتصال بالسيرفر', 'error'); 
+            }
+        }
+
+       function setupLoggedInUI() {
+            closeLoginModal();
+            document.getElementById('sidebar-login-btn')?.classList.add('hidden');
+            document.getElementById('top-login-btn')?.classList.add('hidden');
+            document.getElementById('sidebar-logout-btn')?.classList.remove('hidden');
+            document.getElementById('top-logout-btn')?.classList.remove('hidden');
+
+            document.getElementById('player-name-display').innerText = `${playerSession.username}`;
+            document.getElementById('trans-badge-real').innerText = "Compte Réel TN";
+            
+            document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+            if(!balanceInterval) balanceInterval = setInterval(refreshPlayerBalance, 4000);
+        }
+
+        function selectBetOutcome(outcome, odds, matchName, matchId) {
+            comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
+            comboTicketMatchesList.push({ matchId, matchName, outcome, odds });
+            renderComboTicketUI();
+            setTimeout(minimizeTicket, 600);
+        }
+
+        function removeMatchFromCombo(matchId) {
+            comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
+            renderComboTicketUI();
+            if(comboTicketMatchesList.length === 0) maximizeTicket();
+        }
+
+        function renderComboTicketUI() {
+            const box = document.getElementById('ticket-odds-box');
+            if(comboTicketMatchesList.length === 0) {
+                box.innerHTML = `<div class="text-center text-slate-500 py-4">${dictionary_translations[currentLangCode].ticket_empty}</div>`;
+                document.getElementById('ticket-total-odds').innerText = "1.00";
+                calculatePotentialGain();
+                return;
+            }
+
+            let totalCoteCalculated = 1.00;
+            box.innerHTML = comboTicketMatchesList.map(item => {
+                totalCoteCalculated *= item.odds;
+                return `
+                    <div class="bg-[#050814] border border-slate-800 p-2.5 rounded-xl relative text-left font-sans">
+                        <button onclick="removeMatchFromCombo('${item.matchId}')" class="absolute top-1 right-2 text-rose-400 hover:text-rose-500 font-bold text-xs cursor-pointer">&times;</button>
+                        <div class="text-slate-400 text-[10px] truncate max-w-[90%]">${item.matchName}</div>
+                        <div class="text-white text-[11px] font-bold">Option: <span class="text-teal-400">${item.outcome}</span></div>
+                        <div class="text-right text-cyan-400 font-mono font-black text-[11px]">Cote: ${item.odds.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('ticket-total-odds').innerText = totalCoteCalculated.toFixed(2);
+            calculatePotentialGain();
+        }
+
+        function clearTicket() {
+            comboTicketMatchesList = [];
+            renderComboTicketUI();
+            document.getElementById('floating-mini-ticket').classList.add('scale-0');
+        }
+
+        function calculatePotentialGain() {
+            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+            const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText) || 1.00;
+            document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
+        }
+
+        async function submitSportTicket() {
+            if(!playerSession) { return openLoginModal(); }
+            if(comboTicketMatchesList.length === 0) return;
+            
+            await refreshPlayerBalance(); 
+            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
+
+            const btn = document.getElementById('ticket-submit-btn');
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stake })
+                });
+
+                if(res.ok) {
+                    const data = await res.json();
+                    playerSession.balance = data.balance;
+                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                    
+                    const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText);
+                    const calculatedGain = stake * totalOdds;
+                    const cashOutValueCalculated = stake * 0.90;
+
+                    const betTicketObject = {
+                        id: Math.floor(100000 + Math.random() * 900000),
+                        status: "encours", 
+                        gamesCount: comboTicketMatchesList.length,
+                        detailsList: [...comboTicketMatchesList],
+                        totalCote: totalOdds,
+                        mise: stake,
+                        gain: calculatedGain,
+                        cashOutAmount: cashOutValueCalculated, 
+                        date: new Date().toLocaleTimeString('fr-FR')
+                    };
+
+                    await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
+                        method: 'POST',
+                        headers: getAuthHeaders(),
+                        body: JSON.stringify({
+                            username: playerSession.username,
+                            ticket_data: betTicketObject
+                        })
+                    }).catch(err => console.error("Sync backup server ticket error"));
+
+                    myActiveBetsList.push(betTicketObject);
+                    updateActiveBetsBadgeCount();
+
+                    showNotification(dictionary_translations[currentLangCode].ticket_success);
+                    clearTicket();
+                    maximizeTicket();
+                } else { showNotification('خطأ في معالجة رصيد السيرفر', 'error'); }
+            } catch(e) { showNotification('خطأ شبكة مالي', 'error'); }
+            btn.disabled = false;
+        }
+
+        async function executeTicketCashOut(ticketId, cashOutAmount) {
+            if(!playerSession) return;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: parseFloat(cashOutAmount) })
+                });
+
+                if(res.ok) {
+                    const data = await res.json();
+                    playerSession.balance = data.balance;
+                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                    
+                    const targetTicket = myActiveBetsList.find(b => b.id === ticketId);
+                    if(targetTicket) {
+                        targetTicket.status = "cashout";
+                        targetTicket.finalCashoutPaid = cashOutAmount; 
+                    }
+
+                    await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
+                        method: 'POST',
+                        headers: getAuthHeaders(),
+                        body: JSON.stringify({
+                            ticket_id: ticketId,
+                            status: "cashout",
+                            amount_paid: cashOutAmount
+                        })
+                    }).catch(err => console.error("Sync update status error"));
+                    
+                    updateActiveBetsBadgeCount();
+                    showNotification(dictionary_translations[currentLangCode].cashout_success);
+                    renderMyBetsHistoryPane();
+                } else { showNotification('فشل تنفيذ الكاش أوت', 'error'); }
+            } catch(e) { showNotification('خطأ اتصال مالي', 'error'); }
+        }
+
+        function updateActiveBetsBadgeCount() {
+            const activeCount = myActiveBetsList.filter(b => b.status === 'encours').length;
+            document.getElementById('my-bets-badge-count').innerText = activeCount;
+        }
+
+        function renderMyBetsHistoryPane() {
+            const container = document.getElementById('my-bets-history-list');
+            const filteredTickets = myActiveBetsList.filter(b => b.status === currentBetsSubTab);
+
+            if(filteredTickets.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500 font-bold uppercase">Aucun ticket dans cette catégorie</div>`;
+                return;
+            }
+
+            container.innerHTML = filteredTickets.map(b => {
+                let statusBadgeStyle = "bg-amber-500/10 text-amber-400 border-amber-500/20";
+                let bottomBoxContent = "";
+
+                if(b.status === "encours") {
+                    statusBadgeStyle = "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+                    bottomBoxContent = `
+                        <div class="bg-[#050814] p-2 rounded-xl text-center text-cyan-400 font-bold border border-slate-800/80 flex flex-wrap justify-between items-center gap-2">
+                            <span>Gain: +${b.gain.toFixed(2)} TND</span>
+                            <button onclick="executeTicketCashOut(${b.id}, ${b.cashOutAmount.toFixed(2)})" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-sans font-black text-[10px] px-2.5 py-1.5 rounded-xl transition-all cursor-pointer shadow">
+                                Cash Out (${b.cashOutAmount.toFixed(2)} TND)
+                            </button>
+                        </div>
+                    `;
+                } else if(b.status === "gagne") {
+                    statusBadgeStyle = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+                    bottomBoxContent = `<div class="bg-emerald-950/20 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-400 font-bold text-center">🏆 ورقة رابحة: +${b.gain.toFixed(2)} TND شُحنت للرصيد</div>`;
+                } else if(b.status === "perdu") {
+                    statusBadgeStyle = "bg-rose-500/10 text-rose-400 border-rose-500/20";
+                    bottomBoxContent = `<div class="bg-rose-950/20 border border-rose-500/30 p-2.5 rounded-xl text-rose-400 font-bold text-center">❌ ورقة خاسرة</div>`;
+                } else if(b.status === "cashout") {
+                    statusBadgeStyle = "bg-purple-500/10 text-purple-400 border-purple-500/20";
+                    bottomBoxContent = `<div class="bg-purple-950/20 border border-purple-500/30 p-2.5 rounded-xl text-purple-400 font-bold text-center">💸 تم استرجاع كاش أوت: +${parseFloat(b.finalCashoutPaid).toFixed(2)} TND</div>`;
+                }
+
+                return `
+                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold">
+                        <div class="flex justify-between items-center text-[10px] text-slate-500 border-b border-slate-800/60 pb-2">
+                            <span>Ref: #${b.id} (${b.gamesCount} M)</span>
+                            <span class="px-2 py-0.5 rounded border text-[9px] font-bold ${statusBadgeStyle}">${b.status.toUpperCase()}</span>
+                        </div>
+                        <div class="space-y-2">
+                            ${b.detailsList.map(g => `
+                                <div class="border-l-2 border-teal-500 pl-2 py-0.5">
+                                    <div class="text-white font-sans font-bold text-[11px]">${g.matchName}</div>
+                                    <div class="text-slate-400 text-[10px]">Choix: <span class="text-teal-400">${g.outcome}</span> | Cote: ${g.odds.toFixed(2)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="flex justify-between items-center pt-1 text-[11px] border-t border-slate-800/40">
+                            <span>Total Cote: <span class="text-cyan-400 font-bold">${b.totalCote.toFixed(2)}</span></span>
+                            <span>Mise: <span class="text-white font-bold">${b.mise.toFixed(2)} TND</span></span>
+                        </div>
+                        ${bottomBoxContent}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changePlayerLanguage(lang) {
+            currentLangCode = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            if(comboTicketMatchesList.length === 0) document.getElementById('ticket-odds-box').innerText = dictionary_translations[lang].ticket_empty;
+        }
+
+        async function loadLiveMatchesData() {
+            const container = document.getElementById('matches-list-container');
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
+                if(res.ok) {
+                    const matches = await res.json();
+                    if(matches && matches.length > 0) { return renderMatchesList(matches); }
+                }
+                injectBackupMatches();
+            } catch(e) { injectBackupMatches(); }
+        }
+
+        function renderMatchesList(matches) {
+            const container = document.getElementById('matches-list-container');
+            container.innerHTML = matches.map((m, index) => {
+                const matchId = m.id || `m_${index}`;
+                const h2h = m.bookmakers?.[0]?.markets?.[0]?.outcomes || [];
+                const homeOdds = h2h.find(o => o.name === m.home_team)?.price || 1.85;
+                const awayOdds = h2h.find(o => o.name === m.away_team)?.price || 2.10;
+                const drawOdds = h2h.find(o => o.name === "Draw")?.price || 3.20;
+
+                return `
+                    <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left">
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
+                            <span>🏆 ${m.sport_title}</span>
+                            <span class="text-teal-400 font-mono">${new Date(m.commence_time).toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'})}</span>
+                        </div>
+                        <div class="text-xs text-white">⚽ ${m.home_team} vs ${m.away_team}</div>
+                        <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
+                            <button onclick="selectBetOutcome('1', ${homeOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">1<br>${homeOdds.toFixed(2)}</button>
+                            <button onclick="selectBetOutcome('X', ${drawOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">X<br>${drawOdds.toFixed(2)}</button>
+                            <button onclick="selectBetOutcome('2', ${awayOdds}, '${m.home_team} vs ${m.away_team}', '${matchId}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 hover:text-teal-400 text-center cursor-pointer">2<br>${awayOdds.toFixed(2)}</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function injectBackupMatches() {
+            const container = document.getElementById('matches-list-container');
+            const backups = [
+                { id: "b1", title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
+                { id: "b2", title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
+                { id: "b3", title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
+            ];
+            container.innerHTML = backups.map(m => `
+                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left">
+                    <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
+                        <span>🏆 ${m.title}</span><span class="text-teal-400">🔴 LIVE</span>
+                    </div>
+                    <div class="text-xs text-white">⚽ ${m.home} vs ${m.away}</div>
+                    <div class="grid grid-cols-3 gap-2 text-[11px] font-mono">
+                        <button onclick="selectBetOutcome('1', ${m.c1}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">1<br>${m.c1.toFixed(2)}</button>
+                        <button onclick="selectBetOutcome('X', ${m.cx}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">X<br>${m.cx.toFixed(2)}</button>
+                        <button onclick="selectBetOutcome('2', ${m.c2}, '${m.home} vs ${m.away}', '${m.id}')" class="bg-[#050814] border border-slate-800 p-2 rounded-xl text-slate-300 hover:border-teal-500 text-center cursor-pointer">2<br>${m.c2.toFixed(2)}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCasinoGames() {
+            const container = document.getElementById('games-grid-container');
+            const games = [
+                { name: "Gates of Olympus", icon: "⚡", style: "from-amber-500 to-amber-600", tag: "SLOT" },
+                { name: "Sweet Bonanza", icon: "🍭", style: "from-pink-500 to-rose-500", tag: "SLOT" },
+                { name: "Lightning Roulette", icon: "🎡", style: "from-red-600 to-slate-900", tag: "LIVE" },
+                { name: "Infinite Blackjack", icon: "🃏", style: "from-teal-800 to-slate-900", tag: "CARDS" },
+                { name: "Wanted Dead or a Wild", icon: "🤠", style: "from-amber-800 to-orange-950", tag: "HACKSAW" },
+                { name: "Alphabet Aviator", icon: "🚀", style: "from-teal-500 to-teal-600", tag: "CRASH" }
+            ];
+            container.innerHTML = games.map(g => `
+                <div class="bg-[#090f24] border border-slate-800 rounded-2xl overflow-hidden shadow-lg flex flex-col justify-between group">
+                    <div class="h-28 bg-gradient-to-br ${g.style} flex items-center justify-center text-4xl shadow-inner relative">
+                        ${g.icon}<span class="absolute top-2 right-2 text-[10px] bg-slate-950/60 text-teal-400 px-1.5 py-0.5 rounded font-bold">${g.tag}</span>
+                    </div>
+                    <div class="p-3 space-y-2">
+                        <div class="text-[11px] font-black text-white truncate">${g.name}</div>
+                        <button onclick="openLiveGame('${g.name}')" class="w-full bg-[#050814] hover:bg-teal-500 hover:text-slate-950 text-slate-300 text-[10px] font-black py-2 rounded-xl border border-slate-800/80 transition-all cursor-pointer uppercase">Jouer</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function startCrashBetRound() {
+            if(!playerSession) { return openLoginModal(); }
+            if(isCrashRoundRunning) { return triggerCrashCashOutEarly(); }
+
+            await refreshPlayerBalance();
+            const stakeInput = document.getElementById('crash-stake-input');
+            const stakeAmount = parseFloat(stakeInput.value) || 0;
+
+            if(stakeAmount <= 0 || playerSession.balance < stakeAmount) {
+                return showNotification('رصيدك الحالي غير كافٍ لبدء جولة الكراش !', 'error');
+            }
+
+            stakeInput.disabled = true;
+            isCrashRoundRunning = true;
+            hasPlayerCashedOutFromCrash = false;
+            currentCrashStakeAmount = stakeAmount;
+            crashMultiplier = 1.00;
+
+            document.getElementById('crash-blast-screen').classList.add('scale-0');
+            document.getElementById('crash-blast-screen').classList.remove('scale-100');
+            document.getElementById('crash-status-badge').innerText = "LIVE FLYING";
+            document.getElementById('crash-status-badge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
+
+            try {
+              const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "system", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
+                });
+
+                if(!deductRes.ok) {
+                    isCrashRoundRunning = false;
+                    stakeInput.disabled = false;
+                    return showNotification('فشلت المعاملة المالية للجولة', 'error');
+                }
+                const deductData = await deductRes.json();
+                playerSession.balance = deductData.balance;
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+            } catch(e) {
+                isCrashRoundRunning = false;
+                stakeInput.disabled = false;
+                return showNotification('خطأ شبكة مالي', 'error');
+            }
+
+            const actionBtn = document.getElementById('crash-action-btn');
+            actionBtn.innerText = "TAKE CASH OUT 💸";
+            actionBtn.className = "w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg animate-pulse";
+
+            const luckyCrashPointTarget = (Math.random() * 10) + 1.1; 
+            const planeIcon = document.getElementById('crash-airplane-icon');
+            planeIcon.style.opacity = "1";
+
+            crashLoopInterval = setInterval(() => {
+                crashMultiplier += 0.04;
+                document.getElementById('crash-multiplier-display').innerText = `${crashMultiplier.toFixed(2)}x`;
+
+                const progressPercent = Math.min((crashMultiplier - 1) * 20, 85);
+                planeIcon.style.left = `${6 + progressPercent}%`;
+                planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
+
+                if(crashMultiplier >= luckyCrashPointTarget) { triggerAirplaneCrashBlast(); }
+            }, 80);
+        }
+
+       async function triggerCrashCashOutEarly() {
+            if (!isCrashRoundRunning || hasPlayerCashedOutFromCrash) return;
+
+            hasPlayerCashedOutFromCrash = true;
+            clearInterval(crashLoopInterval);
+
+            const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
+
+            try {
+                const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ 
+                        admin_username: "System", 
+                        target_username: playerSession.username, 
+                        action: "charge", 
+                        amount: totalWinCalculated 
+                    })
+                });
+
+                if (winRes.ok) {
+                    const winData = await winRes.json();
+                    playerSession.balance = winData.balance;
+                    document.getElementById('player-balance-val').innerText = parseFloat(playerSession.balance).toFixed(2);
+                    showNotification(`Félicitations! Gagne +${totalWinCalculated.toFixed(2)} TND 🚀🔥`, 'success');
+                } else {
+                    console.error("Failed to update balance on server");
+                }
+            } catch (e) {
+                console.error("Error pushing crash victory money", e);
+            }
+            
+            resetCrashInterfaceToReady();
+        }
+
+        function triggerAirplaneCrashBlast() {
+            clearInterval(crashLoopInterval);
+            isCrashRoundRunning = false;
+
+            document.getElementById('blast-multiplier-val').innerText = crashMultiplier.toFixed(2);
+            document.getElementById('crash-blast-screen').classList.remove('scale-0');
+            document.getElementById('crash-blast-screen').classList.add('scale-100');
+
+            showNotification('FLEW AWAY! الرفعة طارت وانفجرت الطائرة', 'error');
+            resetCrashInterfaceToReady();
+        }
+
+        function resetCrashInterfaceToReady() {
+            isCrashRoundRunning = false;
+            document.getElementById('crash-stake-input').disabled = false;
+            document.getElementById('crash-status-badge').innerText = "Waiting Round";
+            document.getElementById('crash-status-badge').className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
+
+            const actionBtn = document.getElementById('crash-action-btn');
+            actionBtn.innerText = "Placer le Pari 🚀";
+            actionBtn.className = "w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg";
+            document.getElementById('crash-airplane-icon').style.opacity = "0";
+        }
+
+        async function spinPragmaticSlot() {
+            if(!playerSession) return;
+            await refreshPlayerBalance();
+            const betAmount = parseFloat(document.getElementById('player-bet-select').value);
+            if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ !', 'error');
+
+            const spinBtn = document.getElementById('spin-btn');
+            spinBtn.disabled = true;
+
+            try {
+                const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: betAmount })
+                });
+                if(!deductRes.ok) { spinBtn.disabled = false; return; }
+
+                const deductData = await deductRes.json();
+                playerSession.balance = deductData.balance;
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+
+                const r1 = document.getElementById('slot-reel-1'); const r2 = document.getElementById('slot-reel-2'); const r3 = document.getElementById('slot-reel-3');
+                r1.classList.add('slot-anim'); r2.classList.add('slot-anim'); r3.classList.add('slot-anim');
+
+                setTimeout(async () => {
+                    r1.classList.remove('slot-anim'); r2.classList.remove('slot-anim'); r3.classList.remove('slot-anim');
+                    const res1 = slotItems[Math.floor(Math.random() * slotItems.length)];
+                    const res2 = slotItems[Math.floor(Math.random() * slotItems.length)];
+                    const res3 = slotItems[Math.floor(Math.random() * slotItems.length)];
+                    r1.innerText = res1; r2.innerText = res2; r3.innerText = res3;
+
+                    if(res1 === res2 && res2 === res3) {
+                        const winAmount = betAmount * (res1 === "👑" ? 10 : 5);
+                        const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                            method: 'POST',
+                            headers: getAuthHeaders(),
+                            body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: winAmount })
+                        });
+                        const winData = await winRes.json();
+                        playerSession.balance = winData.balance;
+                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                        showNotification(`لقد ربحت ${winAmount.toFixed(2)} TND 🔥`);
+                    }
+                    spinBtn.disabled = false;
+                }, 400);
+            } catch(e) { spinBtn.disabled = false; }
+        }
+
+        function logoutPlayer() {
+            if(balanceInterval) clearInterval(balanceInterval);
+            if(crashLoopInterval) clearInterval(crashLoopInterval);
+            
+            // 🚀 التحديث الأهم: مسح التوكن من الذاكرة لضمان الخروج النهائي
+            localStorage.removeItem('token');
+            localStorage.removeItem('alpha_player_session');
+            
+            playerSession = null; myActiveBetsList = [];
+            document.getElementById('my-bets-badge-count').innerText = "0";
+            document.getElementById('player-name-display').innerText = "Visitor";
+            document.getElementById('player-balance-val').innerText = "0.00";
+            document.getElementById('sidebar-logout-btn')?.classList.add('hidden');
+            document.getElementById('top-logout-btn')?.classList.add('hidden');
+            document.getElementById('sidebar-login-btn')?.classList.remove('hidden');
+            document.getElementById('top-login-btn')?.classList.remove('hidden');
+            switchSection('accueil');
+        }
+
+        // 🚀 التشغيل الموحد والآمن عند فتح الصفحة 🚀
+        window.onload = function() { 
+            renderCasinoGames(); 
+            clearTicket(); 
+            
+            // 1. تسجيل الدخول التلقائي
+            const savedSession = localStorage.getItem('alpha_player_session');
+            if (savedSession) {
+                playerSession = JSON.parse(savedSession);
+                refreshPlayerBalance();
+                setupLoggedInUI();
+                fetchPlayerTicketsFromServer(); 
+            }
+
+            // 2. جلب المباريات ووضعها في الواجهة فوراً
+            if(typeof loadLiveMatchesData === 'function') {
+                loadLiveMatchesData(); 
+                
+                // 3. مزامنة البيانات بين قسم الرياضة والواجهة كل ثانية بدون أخطاء
+                setInterval(() => {
+                    const sportMatches = document.getElementById('matches-list-container');
+                    const homeMatches = document.getElementById('home-matches-container');
+                    
+                    if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
+                        homeMatches.innerHTML = sportMatches.innerHTML;
+                    }
+                }, 1000); 
+            }
+        };
+    </script>
+</body>
+</html>
