@@ -148,7 +148,7 @@
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
                 <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
-                <span class="text-base font-black tracking-wider text-white">Alphabet</span>
+                <span class="text-base font-black tracking-wider text-white" id="player-name-display">Visitor</span>
             </div>
 
             <nav class="space-y-1 text-sm font-bold text-slate-300">
@@ -213,7 +213,7 @@
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
-       <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
+      <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-2">
                 <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
                 
@@ -222,8 +222,6 @@
             </div>
             
             <div class="flex items-center gap-2">
-                <span class="text-xs font-bold text-teal-400 hidden sm:inline-block mr-2" id="player-name-display">Visitor</span>
-                
                 <div class="bg-[#050814] border border-slate-800 px-4 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
                     <span class="text-slate-400 font-sans hidden sm:inline-block" id="trans-lbl-solde">Solde:</span>
                     <span class="text-[#14b8a6] font-black text-sm" id="player-balance-val">0.00</span>
@@ -1138,6 +1136,7 @@
                 document.getElementById('jackpot-mini').innerText = miniVal.toFixed(2);
             }, 1000); 
         }
+        
     </script>
 </body>
 </html>
