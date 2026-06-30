@@ -1112,21 +1112,30 @@
                 }, 1000); 
             }
         };
-        // 💰 نظام الجاكبوت الحي
+       // 💰 نظام الجاكبوت الزمني (يومي، أسبوعي، شهري)
         function startJackpots() {
-            let megaVal = 124567.89;
-            let majorVal = 14230.50;
-            let miniVal = 1850.25;
-
             setInterval(() => {
-                megaVal += (Math.random() * 5.5) + 0.5;
-                majorVal += (Math.random() * 2.5) + 0.2;
-                miniVal += (Math.random() * 0.8) + 0.1;
+                const now = new Date();
+                
+                // 1. الميني (Mini) - 120 د.ت (يومي)
+                let miniProgress = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) / 86400;
+                let miniVal = miniProgress * 120;
 
-                document.getElementById('jackpot-mega').innerText = megaVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('jackpot-major').innerText = majorVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                document.getElementById('jackpot-mini').innerText = miniVal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            }, 2500);
+                // 2. الماجور (Major) - 350 د.ت (أسبوعي)
+                let dayOfWeek = (now.getDay() === 0) ? 7 : now.getDay();
+                let majorProgress = ((dayOfWeek - 1) * 86400 + (now.getHours() * 3600 + now.getMinutes() * 60)) / 604800;
+                let majorVal = majorProgress * 350;
+
+                // 3. الميجا (Mega) - 1000 د.ت (شهري)
+                let dayOfMonth = now.getDate();
+                let megaProgress = ((dayOfMonth - 1) * 86400 + (now.getHours() * 3600)) / 2592000;
+                let megaVal = megaProgress * 1000;
+
+                // عرض القيم
+                document.getElementById('jackpot-mega').innerText = megaVal.toFixed(2);
+                document.getElementById('jackpot-major').innerText = majorVal.toFixed(2);
+                document.getElementById('jackpot-mini').innerText = miniVal.toFixed(2);
+            }, 1000); 
         }
     </script>
 </body>
