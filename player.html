@@ -14,27 +14,15 @@
             100% { transform: translateY(0); }
         }
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
-        .active-menu-btn {
-            background-color: #1e293b !important;
-            color: #ffffff !important;
-            border-radius: 12px;
-        }
-        .active-filter-btn {
-            background-color: #14b8a6 !important;
-            color: #050814 !important;
-        }
-        .active-sub-tab {
-            border-color: #14b8a6 !important;
-            color: #14b8a6 !important;
-            background-color: rgba(20, 184, 166, 0.05);
-        }
+        .active-menu-btn { background-color: #1e293b !important; color: #ffffff !important; border-radius: 12px; }
+        .active-filter-btn { background-color: #14b8a6 !important; color: #050814 !important; }
+        .active-sub-tab { border-color: #14b8a6 !important; color: #14b8a6 !important; background-color: rgba(20, 184, 166, 0.05); }
         .crash-graph-grid {
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
         }
 
-        /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي) 🔥 */
-       /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي بـ 4 أزرار فقط) 🔥 */
+        /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي بـ 4 أزرار فقط) 🔥 */
         @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
@@ -46,7 +34,8 @@
                 z-index: 40 !important; display: flex !important; flex-direction: column !important; justify-content: center !important;
             }
             #main-sidebar .space-y-6 > div.flex, 
-            #main-sidebar .pt-4 { display: none !important; }
+            #main-sidebar .pt-4,
+            #main-sidebar nav .hide-on-mobile-bar { display: none !important; } 
             
             #main-sidebar .space-y-6 { width: 100% !important; margin: 0 !important; height: 100% !important; display: flex; align-items: center; }
             
@@ -55,13 +44,6 @@
                 justify-content: space-between !important; align-items: center !important;
                 width: 100% !important; height: 100% !important; margin: 0 !important;
             }
-            
-            /* 🛑 هنا السر: إخفاء أي زر بعد الزر الرابع عن شريط الهاتف 🛑 */
-            #main-sidebar nav > button:nth-child(n+5),
-            #main-sidebar nav .hide-on-mobile-bar {
-                display: none !important;
-            }
-
             /* توزيع الـ 4 أزرار المتبقية بالتساوي 25% */
             #main-sidebar nav > button {
                 display: flex !important; flex-direction: column !important;
@@ -70,12 +52,10 @@
                 background: transparent !important; gap: 4px !important; border: none !important;
                 position: relative !important; 
             }
-            #main-sidebar nav > div { display: none !important; }
             #main-sidebar nav span { font-size: 10px !important; margin: 0 !important; font-weight: bold !important; text-align: center !important; }
             #main-sidebar nav span:first-child { font-size: 20px !important; } 
             
-            /* ضبط الدائرة الصفراء لتكون فوق الأيقونة مباشرة */
-            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 25% !important; transform: none !important; }
+            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 20px !important; transform: none !important; }
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
 
             /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
@@ -86,6 +66,49 @@
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
+
+    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
+    <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
+        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col justify-between border-r border-slate-900 shadow-2xl overflow-y-auto no-scrollbar">
+            <div class="space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-900 pb-3">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
+                        <span class="text-sm font-black text-white tracking-wider">Menu Alphabet</span>
+                    </div>
+                    <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
+                </div>
+
+                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-300">
+                    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🎰</span> <span>Casino</span></button>
+                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🤵</span> <span>Casino Live</span></button>
+                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🏆</span> <span>Sport</span></button>
+                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-red-400">
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                        <span>Sport en direct</span>
+                    </button>
+                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🔥</span> <span>Meilleur jeux</span></button>
+                    <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-teal-400"><span>🚀</span> <span>Jeux crash</span></button>
+                </nav>
+            </div>
+
+            <div class="pt-4 border-t border-slate-900 space-y-4">
+                <div class="text-[10px] uppercase text-slate-500 tracking-wider">Historiques & Options</div>
+                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-400">
+                    <button onclick="switchSection('history-transfer'); toggleMobileSidebar();" class="w-full flex items-center gap-3 hover:text-white p-2 rounded-lg text-left"><span>💸</span> <span>Historique de transfére</span></button>
+                    <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="w-full flex items-center gap-3 hover:text-white p-2 rounded-lg text-left"><span>📜</span> <span>Historique de casino</span></button>
+                </nav>
+                <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-900 mt-2">
+                    <span class="text-xs font-bold text-slate-400">🌐 Language</span>
+                    <select onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-[11px] font-bold p-1 rounded border border-slate-800 focus:outline-none cursor-pointer">
+                        <option value="fr">Français</option>
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
@@ -113,87 +136,88 @@
         </div>
     </div>
 
-
-      <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
-    <div class="space-y-6">
-        <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
-            <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
-            <span class="text-base font-black tracking-wider text-white">Alphabet</span>
-        </div>
-
-        <nav class="space-y-1 text-sm font-bold text-slate-300">
-            
-            <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
-                <span>🏠</span> <span id="menu-accueil">Accueil</span>
-            </button>
-
-           <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-    <span>🏆</span> <span id="menu-sport">Sport</span>
-</button>
-
-            <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
-                <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
-            </button>
-
-            <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                <span>🎰</span> <span id="menu-casino">Le casino</span>
-            </button>
-
-            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                <span>🤵</span> <span id="menu-live">Casino en direct</span>
-            </button>
-
-            <button onclick="switchSection('crash')" id="btn-menu-crash" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
-            </button>
-
-            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
-            </button>
-
-            <button class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
-                <span>🎁</span> <span id="menu-promotions">Promotions</span>
-            </button>
-
-            <div class="pt-4 mt-4 border-t border-slate-800/50">
-                <span class="text-[10px] uppercase tracking-widest text-slate-500 pl-3 mb-2 block">Historiques</span>
-                
-                <button onclick="switchSection('history-casino')" id="btn-menu-hist-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <span>📜</span> <span>Historique de Casino</span>
-                </button>
-                
-                <button onclick="switchSection('history-transfer')" id="btn-menu-hist-transfer" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
-                    <span>💸</span> <span>Historique de Transfére</span>
-                </button>
+    <!-- السايدبار العادي للكمبيوتر (يتحول لشريط سفلي بـ 4 أزرار على الهاتف) -->
+    <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
+        <div class="space-y-6">
+            <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
+                <div class="w-7 h-7 rounded-lg bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
+                <span class="text-base font-black tracking-wider text-white">Alphabet</span>
             </div>
 
-            <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2">
-                <div class="flex items-center gap-4 text-slate-400">
-                    <span>💬</span> <span id="menu-langue">Langue</span>
+            <nav class="space-y-1 text-sm font-bold text-slate-300">
+                
+                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
+                    <span>🏠</span> <span id="menu-accueil">Accueil</span>
+                </button>
+
+                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🏆</span> <span id="menu-sport">Sport</span>
+                </button>
+
+                <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left relative">
+                    <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
+                    <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
+                </button>
+
+                <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🎰</span> <span id="menu-casino">Le casino</span>
+                </button>
+
+                <!-- أزرار مخفية في شريط الهاتف (تظهر للكمبيوتر بشكل عادي وفي القائمة الجانبية للهاتف) -->
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🤵</span> <span id="menu-live">Casino en direct</span>
+                </button>
+
+                <button onclick="switchSection('crash')" id="btn-menu-crash" class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
+                </button>
+
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
+                </button>
+
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🎁</span> <span id="menu-promotions">Promotions</span>
+                </button>
+
+                <div class="pt-4 mt-4 border-t border-slate-800/50 hide-on-mobile-bar">
+                    <span class="text-[10px] uppercase tracking-widest text-slate-500 pl-3 mb-2 block">Historiques</span>
+                    <button onclick="switchSection('history-casino')" id="btn-menu-hist-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                        <span>📜</span> <span>Historique de Casino</span>
+                    </button>
+                    <button onclick="switchSection('history-transfer')" id="btn-menu-hist-transfer" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                        <span>💸</span> <span>Historique de Transfére</span>
+                    </button>
                 </div>
-                <select id="player-lang-select" onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
-                    <option value="fr">Français</option>
-                    <option value="ar">العربية</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-            
-        </nav>
-    </div>
-</aside>
+
+                <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2 hide-on-mobile-bar">
+                    <div class="flex items-center gap-4 text-slate-400">
+                        <span>💬</span> <span id="menu-langue">Langue</span>
+                    </div>
+                    <select id="player-lang-select" onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
+                        <option value="fr">Français</option>
+                        <option value="ar">العربية</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+            </nav>
+        </div>
+    </aside>
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
         <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-2">
-                <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg font-mono font-bold" id="player-name-display">Visitor</span>
-                <span class="text-[10px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2 py-0.5 rounded" id="trans-badge-real">Mode Invité</span>
+                <!-- ☰ زر فتح القائمة الجانبية مخصص للهاتف فقط -->
+                <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
+                
+                <span class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1 rounded-lg font-mono font-bold hidden sm:inline-block" id="player-name-display">Visitor</span>
+                <span class="text-[10px] text-emerald-400 bg-emerald-500/5 border border-emerald-500/10 px-2 py-0.5 rounded hidden sm:inline-block" id="trans-badge-real">Mode Invité</span>
             </div>
             
             <div class="flex items-center gap-2">
                 <div class="bg-[#050814] border border-slate-800 px-4 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
-                    <span class="text-slate-400 font-sans" id="trans-lbl-solde">Solde:</span>
+                    <span class="text-slate-400 font-sans hidden sm:inline-block" id="trans-lbl-solde">Solde:</span>
                     <span class="text-[#14b8a6] font-black text-sm" id="player-balance-val">0.00</span>
                     <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 ml-1.5 font-sans text-[11px]">🔄</button>
                 </div>
@@ -318,6 +342,22 @@
                 </div>
             </div>
 
+            <div id="pane-history-casino" class="player-view-section space-y-4 hidden">
+                <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">📜 Historique de Casino</h3>
+                <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
+                    <span class="text-4xl block mb-2 opacity-50">📂</span>
+                    <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
+                </div>
+            </div>
+            
+            <div id="pane-history-transfer" class="player-view-section space-y-4 hidden">
+                <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">💸 Historique de Transfére</h3>
+                <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
+                    <span class="text-4xl block mb-2 opacity-50">📂</span>
+                    <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
+                </div>
+            </div>
+
             <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
                 <span class="text-lg">📋</span>
                 <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
@@ -350,6 +390,16 @@
     </div>
 
     <script>
+        // 📱 دالة التحكم في القائمة الجانبية للهاتف (إظهار وإخفاء)
+        function toggleMobileSidebar() {
+            const drawer = document.getElementById('mobile-drawer-menu');
+            if (drawer.classList.contains('hidden')) {
+                drawer.classList.remove('hidden');
+            } else {
+                drawer.classList.add('hidden');
+            }
+        }
+
         function getAuthHeaders() {
             const token = localStorage.getItem('token');
             return {
@@ -455,7 +505,6 @@
         async function fetchPlayerTicketsFromServer() {
             if (!playerSession || !playerSession.username) return;
             try {
-                // إضافة الهيدر هنا ضرورية لكي لا يتم رفض الطلب
                 const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${playerSession.username}`, {
                     method: 'GET',
                     headers: getAuthHeaders()
@@ -519,7 +568,10 @@
             document.getElementById('sidebar-logout-btn')?.classList.remove('hidden');
             document.getElementById('top-logout-btn')?.classList.remove('hidden');
 
-            document.getElementById('player-name-display').innerText = `${playerSession.username}`;
+            const playerDisplay = document.getElementById('player-name-display');
+            playerDisplay.innerText = `${playerSession.username}`;
+            playerDisplay.classList.remove('hidden');
+            
             document.getElementById('trans-badge-real').innerText = "Compte Réel TN";
             
             document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
@@ -1000,13 +1052,16 @@
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
             
-            // 🚀 التحديث الأهم: مسح التوكن من الذاكرة لضمان الخروج النهائي
             localStorage.removeItem('token');
             localStorage.removeItem('alpha_player_session');
             
             playerSession = null; myActiveBetsList = [];
             document.getElementById('my-bets-badge-count').innerText = "0";
-            document.getElementById('player-name-display').innerText = "Visitor";
+            
+            const playerDisplay = document.getElementById('player-name-display');
+            playerDisplay.innerText = "Visitor";
+            playerDisplay.classList.add('hidden'); 
+            
             document.getElementById('player-balance-val').innerText = "0.00";
             document.getElementById('sidebar-logout-btn')?.classList.add('hidden');
             document.getElementById('top-logout-btn')?.classList.add('hidden');
@@ -1015,12 +1070,10 @@
             switchSection('accueil');
         }
 
-        // 🚀 التشغيل الموحد والآمن عند فتح الصفحة 🚀
         window.onload = function() { 
             renderCasinoGames(); 
             clearTicket(); 
             
-            // 1. تسجيل الدخول التلقائي
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
                 playerSession = JSON.parse(savedSession);
@@ -1029,11 +1082,8 @@
                 fetchPlayerTicketsFromServer(); 
             }
 
-            // 2. جلب المباريات ووضعها في الواجهة فوراً
             if(typeof loadLiveMatchesData === 'function') {
                 loadLiveMatchesData(); 
-                
-                // 3. مزامنة البيانات بين قسم الرياضة والواجهة كل ثانية بدون أخطاء
                 setInterval(() => {
                     const sportMatches = document.getElementById('matches-list-container');
                     const homeMatches = document.getElementById('home-matches-container');
