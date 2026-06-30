@@ -209,7 +209,21 @@
                 </div>
             </nav>
         </div>
+
+         <div class="mt-6 p-3 bg-[#090f24] rounded-xl border border-slate-800 mx-2">
+            <h4 class="text-[10px] text-slate-400 mb-2 font-black uppercase tracking-wider">Promo Code</h4>
+            <div class="flex gap-1">
+                <input type="text" id="promo-code-input" placeholder="أدخل الكود..." 
+                       class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-white text-[10px] outline-none focus:border-teal-500">
+                <button onclick="applyPromoCode()" 
+                        class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black px-3 py-1.5 rounded-lg text-[10px] transition-all">
+                    تفعيل
+                </button>
+            </div>
+        </div>
     </aside>
+
+   
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
@@ -608,6 +622,36 @@
                 showNotification('عطل اتصال بالسيرفر', 'error'); 
             }
         }
+        async function applyPromoCode() {
+    const promoCode = document.getElementById('promo-code-input').value;
+    if (!promoCode) {
+        showNotification('الرجاء إدخال كود صحيح!', 'error');
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/promo/apply`, {
+            method: 'POST',
+            headers: {
+                ...getAuthHeaders(),
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: promoCode })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            // نجاح: تحديث الرصيد وإظهار رسالة
+            showNotification(`مبروك! ${data.bonusAmount} تمت إضافتها لرصيدك`, 'success');
+            refreshPlayerBalance(); // تحديث الرصيد فوراً
+        } else {
+            // خطأ: الكود غير موجود أو منتهي
+            showNotification(data.message || 'كود غير صالح', 'error');
+        }
+    } catch (e) {
+        showNotification('حدث خطأ في الاتصال بالسيرفر', 'error');
+    }
 
        function setupLoggedInUI() {
             closeLoginModal();
@@ -1189,5 +1233,6 @@
         }
    
     </script>
+    
 </body>
 </html>
