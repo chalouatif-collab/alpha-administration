@@ -418,19 +418,34 @@
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
         }
 
+       // استبدل دوال `executeAction` و `createAdminUser` بهذا الكود:
+
+     // استبدل دوال `executeAction` و `createAdminUser` بهذا الكود:
+
         async function executeAction(action) {
             const target_username = document.getElementById('target-action-user').value;
             const amountInput = document.getElementById('target-action-amount').value;
-            if(!target_username) return showNotification('Sélectionnez un حساب أدمن!', 'error');
+            if(!target_username) return showNotification('Sélectionnez un compte Admin!', 'error');
             const amount = amountInput ? parseFloat(amountInput) : 0;
             if(amount <= 0) return showNotification('Veuillez introduire un montant valide!', 'error');
 
-            const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                method: 'POST',
-                headers: getAuthHeaders(),
-                body: JSON.stringify({ admin_username: user.username, target_username, action, amount })
-            });
-            if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: user.username, target_username, action, amount })
+                });
+                
+                if(res.ok) { 
+                    showNotification('Opération réussie!'); 
+                    document.getElementById('target-action-amount').value = ''; // تصفير خانة المبلغ
+                    await loadNetworkData(); // تحديث البيانات فوراً
+                } else {
+                    showNotification('Échec de l\'opération', 'error');
+                }
+            } catch(e) {
+                showNotification('Erreur de connexion', 'error');
+            }
         }
 
         async function createAdminUser() {
@@ -450,7 +465,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST',
-                    headers: headers: getAuthHeaders(),
+                    headers: getAuthHeaders(), // تم تصحيح الخطأ هنا
                     body: JSON.stringify({ username, password, role, created_by: user.username })
                 });
                 
@@ -466,7 +481,7 @@
                 showNotification('Erreur de connexion au serveur', 'error');
             }
         }
-
+        
         async function submitNewPassword() {
             const new_password = document.getElementById('new-sys-pass').value;
             if(!new_password) return showNotification('Veuillez introduire un mot de passe!', 'error');
