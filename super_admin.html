@@ -193,6 +193,13 @@
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi_sadmin', role: 'super_admin' };
 
+        function getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
         window.addEventListener('DOMContentLoaded', () => {
             const el = document.getElementById('owner-username');
             if(el) el.innerText = user.username;
@@ -315,7 +322,10 @@
 
         async function loadNetworkData() {
             try {
-                const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
+              const uRes = await fetch(`${BACKEND_URL}/api/admin/users`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
                 if(uRes.ok){
                     const users = await uRes.json();
                     
@@ -379,7 +389,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         admin_username: user.username,
                         target_username: target,
@@ -402,7 +412,7 @@
             if(!target_username) return showNotification('Sélectionnez un compte d\'abord!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/admin/configure-account`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ admin_username: user.username, target_username, rtp, is_blocked: blockStatus })
             });
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
@@ -417,7 +427,7 @@
 
             const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ admin_username: user.username, target_username, action, amount })
             });
             if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
@@ -440,7 +450,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: headers: getAuthHeaders(),
                     body: JSON.stringify({ username, password, role, created_by: user.username })
                 });
                 
@@ -462,7 +472,7 @@
             if(!new_password) return showNotification('Veuillez introduire un mot de passe!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/user/change-password`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ username: user.username, new_password })
             });
             if(res.ok) { 
