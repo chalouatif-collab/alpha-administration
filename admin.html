@@ -201,6 +201,13 @@
         let sessionData = localStorage.getItem('alpha_user');
         let user = sessionData ? JSON.parse(sessionData) : null;
 
+        function getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
         if(!user || !user.username) {
             user = { username: "admin_test", role: "admin" };
         }
@@ -274,7 +281,10 @@
 
         async function loadNetworkData() {
             try {
-                const uRes = await fetch(`${BACKEND_URL}/api/admin/users`);
+                const uRes = await fetch(`${BACKEND_URL}/api/admin/users`, {
+                method: 'GET',
+                headers: getAuthHeaders()
+             });
                 if(uRes.ok){
                     const users = await uRes.json();
                     
@@ -338,7 +348,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         admin_username: user.username,
                         target_username: target,
@@ -361,7 +371,7 @@
             if(!target_username) return showNotification('Sélectionnez un compte d\'abord!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/admin/configure-account`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ admin_username: user.username, target_username, rtp, is_blocked: blockStatus })
             });
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
@@ -377,7 +387,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ 
                         admin_username: user.username, 
                         target_username: target_username, 
@@ -413,7 +423,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ username, password, role, created_by: user.username })
                 });
                 
