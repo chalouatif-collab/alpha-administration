@@ -204,7 +204,13 @@
             document.getElementById('ctrl-rtp-range').value = rtp;
             document.getElementById('rtp-val-label').innerText = rtp + '%';
         }
-
+         function getAuthHeaders() {
+    const token = localStorage.getItem('token');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+}
        // 🚀 3. تأمين النوافذ المنبثقة للرياضة والتحويلات
         async function fetchAndOpenHistory(type) {
             const modal = document.getElementById('history-modal');
