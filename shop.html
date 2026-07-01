@@ -19,7 +19,6 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 1️⃣ القائمة الجانبية المعدلة بالمصطلحات المطلوبة حرفياً -->
     <aside class="w-full md:w-72 bg-[#090d1a] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="bg-[#0b101f] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
@@ -36,17 +35,14 @@
                     <button onclick="switchShopPanelSection('compte')" id="btn-shop-compte" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left active-shop-btn">
                         👤 Gestion des Joueurs (اللاعبين)
                     </button>
-                    <button onclick="switchShopPanelSection('casino')" id="btn-shop-casino" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        🎰 Historique de casino
-                    </button>
                     <button onclick="switchShopPanelSection('transfert')" id="btn-shop-transfert" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        💸 Historique de transfére
+                        💸 Historique de Transfert
                     </button>
-                    <button onclick="switchShopPanelSection('transaction')" id="btn-shop-transaction" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        📊 Historique de transaction
+                    <button onclick="switchShopPanelSection('casino')" id="btn-shop-casino" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
+                        🎰 Historique de Casino (Hub88)
                     </button>
                     <button onclick="switchShopPanelSection('sport')" id="btn-shop-sport" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
-                        ⚽ Tickets en cours
+                        ⚽ Tickets de Sport
                     </button>
                     <button onclick="switchShopPanelSection('security')" id="btn-shop-security" class="w-full flex items-center gap-3 bg-[#0b101f]/60 hover:bg-slate-800 border border-slate-800/60 p-3.5 rounded-xl transition-all cursor-pointer text-left">
                         🔑 Sécurité du magasin
@@ -62,7 +58,6 @@
         </div>
     </aside>
 
-    <!-- 2️⃣ منطقة المحتوى الرئيسية المتكاملة -->
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="bg-[#0b101f]/90 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-3">
@@ -76,7 +71,6 @@
 
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar space-y-6">
 
-            <!-- التبويب الأول: إدارة اللاعبين والشحن وتغيير كلمة السر -->
             <div id="panel-shop-compte" class="shop-main-view space-y-6">
                 <section class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-5 shadow-xl space-y-4">
                     <h3 class="text-xs font-black text-slate-300 flex items-center gap-2">🕹️ إنشاء حساب لاعب جديد تحت متجرك</h3>
@@ -133,31 +127,20 @@
                 </section>
             </div>
 
-            <!-- 🎰 التبويب الثاني: Historique de casino -->
-            <div id="panel-shop-casino" class="shop-main-view space-y-4 hidden">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">🎰 Historique de casino (Hub88 API) :</div>
-                <div class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
-                    Aucun pari de casino enregistré pour vos joueurs.
-                </div>
-            </div>
-
-            <!-- 💸 التبويب الثالث: Historique de transfére -->
             <div id="panel-shop-transfert" class="shop-main-view space-y-4 hidden">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">💸 Historique de transfére :</div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">💸 Historique des Transferts et Transactions :</div>
                 <div class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
-                    Aucun transfert financier trouvé.
+                    Aucune transaction enregistrée pour le moment.
                 </div>
             </div>
 
-            <!-- 📊 التبويب الرابع: Historique de transaction -->
-            <div id="panel-shop-transaction" class="shop-main-view space-y-4 hidden">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">📊 Historique de transaction :</div>
+            <div id="panel-shop-casino" class="shop-main-view space-y-4 hidden">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">🎰 Historique des Sessions Casino (Hub88 API) :</div>
                 <div class="bg-[#0b101f]/40 border border-slate-800/80 rounded-2xl p-6 text-center text-slate-500 font-bold text-xs uppercase tracking-wider">
-                    Aucune transaction comptable enregistrée.
+                    Logs Hub88 synchronisés. Aucun pari de casino trouvé pour vos joueurs.
                 </div>
             </div>
 
-            <!-- ⚽ التبويب الخامس: Tickets en cours (الرياضة) -->
             <div id="panel-shop-sport" class="shop-main-view space-y-4 hidden">
                 <div class="text-xs text-slate-400 font-bold uppercase tracking-wide px-1">⚽ Tickets de sport actifs de vos joueurs :</div>
                 <div id="shop-sport-container" class="grid grid-cols-1 gap-3">
@@ -165,7 +148,6 @@
                 </div>
             </div>
 
-            <!-- 🔑 التبويب السادس: تغيير كلمة مرور المتجر -->
             <div id="panel-shop-security" class="shop-main-view max-w-md mx-auto hidden">
                 <div class="bg-[#0b101f] border border-slate-800 p-6 rounded-2xl space-y-4 shadow-xl">
                     <h4 class="text-xs font-black text-amber-400 uppercase tracking-wider">🔑 Modifier le mot de passe Boutique</h4>
@@ -207,7 +189,10 @@
 
         async function loadShopPlayersData() {
             try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/users`);
+                const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
+                 method: 'GET',
+                 headers: getAuthHeaders()
+            });
                 if(res.ok) {
                     const allUsers = await res.json();
                     createdPlayersList = allUsers.filter(u => u.created_by === shopSessionUser.username);
@@ -232,7 +217,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/register`, {
                     method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ 
                         username: username, 
                         password: password, 
@@ -262,7 +247,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({
                         admin_username: shopSessionUser.username,
                         target_username: targetPlayer,
@@ -292,7 +277,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ 
                         admin_username: shopSessionUser.username, 
                         target_username: targetPlayer, 
@@ -301,31 +286,34 @@
                     })
                 });
                 
-                if(res.ok) {
-                    await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            admin_username: "System",
-                            target_username: shopSessionUser.username,
-                            action: action === 'charge' ? 'withdraw' : 'charge',
-                            amount: amount
-                        })
-                    });
+               if(res.ok) {
+        const secondRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+                admin_username: shopSessionUser.username,
+                target_username: shopSessionUser.username,
+                action: action === 'charge' ? 'withdraw' : 'charge',
+                amount: amount
+            })
+        });
 
-                    if (action === 'withdraw') {
-                        showNotification(`تم سحب ${amount.toFixed(2)} د.ت بنجاح لرصيد متجرك`);
-                    } else {
-                        showNotification(`تم شحن اللاعب بمبلغ ${amount.toFixed(2)} د.ت خصماً من رصيدك`);
-                    }
-                    
-                    document.getElementById('finance-amount').value = "";
-                    document.getElementById('target-player-name').value = "";
-                    await loadShopPlayersData();
-                } else {
-                    const errData = await res.json();
-                    showNotification(errData.detail || 'فشلت العملية، تأكد من رصيد اللاعب', 'error');
-                }
+        if (secondRes.ok) {
+            if (action === 'withdraw') {
+                showNotification(`تم سحب ${amount.toFixed(2)} د.ت بنجاح لرصيد متجرك`);
+            } else {
+                showNotification(`تم شحن اللاعب بمبلغ ${amount.toFixed(2)} د.ت خصماً من رصيدك`);
+            }
+            document.getElementById('finance-amount').value = "";
+            document.getElementById('target-player-name').value = "";
+            await loadShopPlayersData();
+        } else {
+            showNotification('حدث خطأ أثناء تحديث رصيد المتجر', 'error');
+        }
+    } else {
+        const errData = await res.json();
+        showNotification(errData.detail || 'فشلت العملية، تأكد من رصيد اللاعب', 'error');
+    }
             } catch(e) { showNotification('خطأ في معالجة الشبكة المالية للمحلات', 'error'); }
         }
 
