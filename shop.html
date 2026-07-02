@@ -19,7 +19,7 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <aside class="w-full md:w-72 bg-[#090d1a] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
+    <aside id="sidebar" class="hidden md:flex w-full md:w-72 bg-[#090d1a] border-b md:border-b-0 md:border-r border-slate-800/80 p-5 flex-col justify-between shrink-0 h-auto md:h-screen">
         <div class="space-y-6">
             <div class="bg-[#0b101f] border border-slate-800 rounded-xl p-3 flex items-center justify-between">
                 <span class="text-xs font-bold text-slate-400 flex items-center gap-2">🌐 Langue:</span>
@@ -61,6 +61,10 @@
     <div class="flex-1 flex flex-col h-screen overflow-hidden relative">
         <header class="bg-[#0b101f]/90 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
             <div class="flex items-center gap-3">
+                <!-- زر القائمة للهاتف (يظهر فقط على الشاشات الصغيرة) -->
+<button onclick="toggleSidebar()" class="md:hidden p-1.5 text-slate-300 hover:text-white bg-slate-800/50 rounded-lg mr-2 border border-slate-700 transition-colors">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+</button>
                 <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="shop-username-display">Boutique: Connected</span>
             </div>
             <div class="bg-[#04060c] border border-slate-800 px-3 py-1.5 rounded-xl flex items-center gap-2 font-mono text-xs">
@@ -412,6 +416,20 @@ function renderFilteredUsers() {
 
 // استدعاء الدالة عند تحميل الصفحة
 window.onload = loadNetworkData;
-    </script>
+
+   // دالة فتح وإغلاق القائمة الجانبية للهاتف
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    if (sidebar.classList.contains('hidden')) {
+        // فتح القائمة
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('fixed', 'inset-0', 'z-50', 'w-full'); 
+    } else {
+        // إغلاق القائمة
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('fixed', 'inset-0', 'z-50', 'w-full');
+    }
+}
+   </script>
 </body>
 </html>
