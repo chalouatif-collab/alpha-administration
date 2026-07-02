@@ -93,6 +93,12 @@
                     </div>
                     <div class="p-4 overflow-x-auto text-xs">
                        <!-- الحاوية الجديدة بدلاً من الجدول -->
+                        <!-- حقل البحث -->
+<div class="p-4">
+    <input type="text" id="search-input" oninput="renderFilteredUsers()" 
+           placeholder="🔍 بحث عن مستخدم..." 
+           class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-500">
+</div>
                        <div id="owner-network-tbody" class="p-4 space-y-3">
                                      <!-- سيتم عرض بطاقات الحسابات هنا -->
                        </div>
@@ -127,7 +133,8 @@
     </div>
 
     <script>
-     const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+   const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+        let allUsers = []; // سنحفظ بيانات المستخدمين هنا للبحث والفرز
         let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi' };
 
         // 🚀 1. إضافة دالة جلب مفتاح الأمان (Token)
@@ -162,45 +169,61 @@
         }
 
         // 🚀 2. تأمين جلب المستخدمين
-        async function loadNetworkData() {
-            try {
-                const uRes = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, {
-                    method: 'GET',
-                    headers: getAuthHeaders() // إضافة المفتاح هنا
-                });
-                if(uRes.ok){
-                    const users = await uRes.json();
-                    const tbody = document.getElementById('owner-network-tbody'); 
-                    if(!tbody) return;
-                    tbody.innerHTML = '';
-                    
-                   users.forEach(u => {
-    const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-    const userRtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
-    const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
-    const usernameClean = u.username || 'Inconnu';
-    const createdByClean = u.created_by || 'System';
-
-    // كود البطاقة الجديد (تصميم متجاوب)
-    tbody.innerHTML += `
-    <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800 mb-2">
-        <div>
-            <p class="text-[10px] text-slate-500 font-bold">${createdByClean}</p>
-            <p class="font-bold text-white text-sm">${usernameClean}</p>
-            <span class="text-[10px] text-amber-400">${userRole}</span>
-        </div>
-        <div class="flex items-center gap-4">
-            <span class="font-mono text-emerald-400 font-bold text-sm">${userBalance} TND</span>
-            <button onclick="selectForControl('${usernameClean}', ${userRtp})" 
-                    class="bg-emerald-700 w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all shadow-lg">
-                ➜
-            </button>
-        </div>
-    </div>`;
-});
-                }
-            } catch(e){}
+      // 1. دالة جلب البيانات (مع الـ try و catch داخلها)
+async function loadNetworkData() {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
+        if (res.ok) {
+            allUsers = await res.json();
+            renderFilteredUsers();
         }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+// 2. دالة عرض البيانات
+function renderUsers(data) {
+    const container = document.getElementById('owner-network-tbody');
+    if (!container) return;
+    container.innerHTML = ''; 
+    data.forEach(u => {
+        const userRtp = u.rtp || 50;
+        const balance = parseFloat(u.balance || 0);
+        const usernameClean = u.username || 'Inconnu';
+        const createdByClean = u.created_by || 'System';
+        const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
+
+        container.innerHTML += `
+        <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800 mb-2">
+            <div>
+                <p class="text-[10px] text-slate-500 font-bold">${createdByClean}</p>
+                <p class="font-bold text-white text-sm">${usernameClean}</p>
+                <span class="text-[10px] text-amber-400">${userRole}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-emerald-400 font-bold text-sm">${balance.toFixed(2)} TND</span>
+                <button onclick="selectForControl('${usernameClean}', ${userRtp})" 
+                        class="bg-emerald-700 w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all shadow-lg">
+                    ➜
+                </button>
+            </div>
+        </div>`;
+    });
+}
+
+// 3. دالة البحث والفرز
+function renderFilteredUsers() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    let filtered = allUsers.filter(u => (u.username || '').toLowerCase().includes(searchTerm));
+    
+    // الفرز: الأكبر رصيداً أولاً
+    filtered.sort((a, b) => parseFloat(b.balance || 0) - parseFloat(a.balance || 0));
+    
+    renderUsers(filtered);
+}
 
         function selectForControl(username, rtp) {
             document.getElementById('ctrl-target-user').value = username;
