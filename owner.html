@@ -88,14 +88,10 @@
                         </div>
                     </div>
                     <div class="p-4 overflow-x-auto text-xs">
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="bg-slate-800 text-slate-400 border-b border-slate-700">
-                                    <th class="p-3" id="th-compte">Compte</th><th class="p-3" id="th-role">Rôle</th><th class="p-3 text-center">RTP 🔥</th><th class="p-3 text-center">Status 🚦</th><th class="p-3" id="th-createur">Créateur</th><th class="p-3 text-right" id="th-solde">Solde Actuel (TND)</th><th class="p-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="owner-network-tbody" class="divide-y divide-slate-800/60"></tbody>
-                        </table>
+                       <!-- الحاوية الجديدة بدلاً من الجدول -->
+                       <div id="owner-network-tbody" class="p-4 space-y-3">
+                                     <!-- سيتم عرض بطاقات الحسابات هنا -->
+                       </div>
                     </div>
                 </div>
             </div>
@@ -174,26 +170,30 @@
                     if(!tbody) return;
                     tbody.innerHTML = '';
                     
-                    users.forEach(u => {
-                        const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-                        const userRtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
-                        const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
-                        const usernameClean = u.username || 'Inconnu';
-                        const createdByClean = u.created_by || 'System';
+                   users.forEach(u => {
+    const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
+    const userRtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
+    const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
+    const usernameClean = u.username || 'Inconnu';
+    const createdByClean = u.created_by || 'System';
 
-                        const statusBadge = u.is_blocked === 1 ? `<span class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded border border-rose-500/20 font-bold">Blocked</span>` : `<span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">Active</span>`;
-                        
-                        tbody.innerHTML += `
-                            <tr class="border-b border-slate-800/40 hover:bg-slate-800/20">
-                                <td class="p-3 text-white font-bold">${usernameClean}</td>
-                                <td class="p-3 text-rose-400 font-mono font-bold text-xs">${userRole}</td>
-                                <td class="p-3 text-center font-bold text-cyan-400 font-mono">${userRtp}%</td>
-                                <td class="p-3 text-center">${statusBadge}</td>
-                                <td class="p-3 text-slate-400 text-xs">${createdByClean}</td>
-                                <td class="p-3 text-[#10b981] font-mono font-bold text-right">${userBalance} TND</td>
-                                <td class="p-3 text-center"><button onclick="selectForControl('${usernameClean}', ${userRtp})" class="text-xs bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-slate-950 px-2.5 py-1 rounded font-bold cursor-pointer">🎯 Control</button></td>
-                            </tr>`;
-                    });
+    // كود البطاقة الجديد (تصميم متجاوب)
+    tbody.innerHTML += `
+    <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800 mb-2">
+        <div>
+            <p class="text-[10px] text-slate-500 font-bold">${createdByClean}</p>
+            <p class="font-bold text-white text-sm">${usernameClean}</p>
+            <span class="text-[10px] text-amber-400">${userRole}</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <span class="font-mono text-emerald-400 font-bold text-sm">${userBalance} TND</span>
+            <button onclick="selectForControl('${usernameClean}', ${userRtp})" 
+                    class="bg-emerald-700 w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all shadow-lg">
+                ➜
+            </button>
+        </div>
+    </div>`;
+});
                 }
             } catch(e){}
         }
@@ -351,6 +351,7 @@
             if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
             const amount = amountInput ? parseFloat(amountInput) : 0;
             if(amount <= 0) return showNotification('Veuillez introduire un montant valide!', 'error');
+            
             const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, { 
                 method: 'POST', 
                 headers: getAuthHeaders(), // التعديل هنا 
