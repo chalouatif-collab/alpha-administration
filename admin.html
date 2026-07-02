@@ -63,7 +63,7 @@
     </aside>
 
     <div class="flex-1 flex flex-col h-auto md:h-[calc(100vh-2rem)] overflow-hidden relative">
-        <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex justify-between items-center mb-4 shadow-xl shrink-0">
+        <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-wrap justify-between items-center mb-4 shadow-xl shrink-0 gap-4">
             <div class="flex items-center gap-3">
                 <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
                 <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="owner-username">En attente...</span>
@@ -136,6 +136,7 @@
                         </div>
                     </div>
                     <div class="p-4 overflow-x-auto text-xs">
+                       <table class="w-full text-left min-w-[600px]"> <!-- أضفنا min-w-[600px] هنا -->
                         <table class="w-full text-left">
                             <thead>
                                 <tr class="bg-slate-800 text-slate-400 border-b border-slate-700">
