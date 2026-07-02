@@ -111,18 +111,10 @@
                         </div>
                     </div>
                     <div class="overflow-x-auto no-scrollbar">
-                        <table class="w-full text-left text-xs font-bold">
-                            <thead class="bg-[#04060c] text-slate-400 font-mono uppercase text-[10px] border-b border-slate-900">
-                                <tr>
-                                    <th class="p-3">اسم لاعبك</th>
-                                    <th class="p-3">الرصيد المتاح (TND)</th>
-                                    <th class="p-3">الحالة البرمجية</th>
-                                    <th class="p-3">تحديد سريع للعمليات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="players-table-body" class="divide-y divide-slate-900/60 font-mono">
-                            </tbody>
-                        </table>
+                    <!-- الحاوية الجديدة بدلاً من الجدول -->
+                    <div id="players-table-body" class="p-4 space-y-3">
+                                 <!-- سيتم عرض بطاقات اللاعبين هنا -->
+                       </div>
                     </div>
                 </section>
             </div>
@@ -324,23 +316,29 @@
             } catch(e) { showNotification('خطأ في معالجة الشبكة المالية للمحلات', 'error'); }
         }
 
-        function renderPlayersTable() {
-            const tbody = document.getElementById('players-table-body');
-            if (createdPlayersList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-600">Aucun joueur trouvé تحت هذا المتجر</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = createdPlayersList.map(p => `
-                <tr class="hover:bg-slate-900/40 border-b border-slate-900/50">
-                    <td class="p-3 text-white font-bold">${p.username}</td>
-                    <td class="p-3 text-emerald-400 font-bold">${parseFloat(p.balance).toFixed(2)} TND</td>
-                    <td class="p-3 text-cyan-400 text-[10px] font-bold">
-                        ${p.is_blocked === 1 ? '<span class="text-rose-500">BLOCKED</span>' : 'ACTIVE PLAYER'}
-                    </td>
-                    <td class="p-3"><button onclick="selectPlayerForAction('${p.username}')" class="text-[10px] text-amber-400 hover:text-slate-950 hover:bg-amber-400 bg-amber-400/10 border border-amber-400/20 px-2.5 py-1 rounded-lg cursor-pointer font-bold transition-all">Sélectionner</button></td>
-                </tr>
-            `).join('');
-        }
+       function renderPlayersTable() {
+    const container = document.getElementById('players-table-body');
+    if (createdPlayersList.length === 0) {
+        container.innerHTML = `<p class="p-4 text-center text-slate-500">Aucun joueur trouvé</p>`;
+        return;
+    }
+    
+    container.innerHTML = createdPlayersList.map(p => `
+        <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800">
+            <div>
+                <p class="font-bold text-white text-sm">${p.username}</p>
+                <span class="text-[10px] text-amber-400">${p.role || 'PLAYER'}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-emerald-400 font-bold text-sm">${parseFloat(p.balance).toFixed(2)} TND</span>
+                <button onclick="selectPlayerForAction('${p.username}')" 
+                        class="bg-cyan-600 w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-cyan-700 transition-all shadow-lg">
+                    ➜
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
 
         function selectPlayerForAction(name) { document.getElementById('target-player-name').value = name; }
         function changeShopLanguage(lang) { document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'; }
