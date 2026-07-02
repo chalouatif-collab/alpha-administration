@@ -145,24 +145,10 @@
                             <button onclick="executeAction('charge')" class="bg-slate-950 text-white px-3 py-1 rounded font-bold text-xs cursor-pointer" id="btn-credit">Créditer</button>
                             <button onclick="executeAction('withdraw')" class="bg-rose-700 text-white px-3 py-1 rounded font-bold text-xs cursor-pointer" id="btn-retirer">Retirer</button>
                         </div>
-                    </div>
-                    <div class="p-4 overflow-x-auto text-xs">
-                       <table class="w-full text-left min-w-[600px]"> <!-- أضفنا min-w-[600px] هنا -->
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="bg-slate-800 text-slate-400 border-b border-slate-700">
-                                    <th class="p-3" id="th-compte">Compte</th>
-                                    <th class="p-3" id="th-role">Rôle</th>
-                                    <th class="p-3 text-center">RTP 🔥</th>
-                                    <th class="p-3 text-center">Status 🚦</th>
-                                    <th class="p-3" id="th-createur">Créateur</th>
-                                    <th class="p-3 text-right" id="th-solde">Solde Actuel (TND)</th>
-                                    <th class="p-3 text-center">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="owner-network-tbody" class="divide-y divide-slate-800/60"></tbody>
-                        </table>
-                    </div>
+                   <!-- الحاوية الجديدة بدلاً من الجدول -->
+<div id="owner-network-tbody" class="p-4 space-y-3">
+    <!-- سيتم عرض بطاقات الحسابات هنا -->
+</div>
                 </div>
             </div>
 
