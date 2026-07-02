@@ -146,6 +146,12 @@
                             <button onclick="executeAction('withdraw')" class="bg-rose-700 text-white px-3 py-1 rounded font-bold text-xs cursor-pointer" id="btn-retirer">Retirer</button>
                         </div>
                    <!-- الحاوية الجديدة بدلاً من الجدول -->
+           <!-- حقل البحث -->
+<div class="p-4">
+    <input type="text" id="search-input" oninput="renderFilteredUsers()" 
+           placeholder="🔍 بحث عن مستخدم..." 
+           class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-500">
+</div>         
 <div id="owner-network-tbody" class="p-4 space-y-3">
     <!-- سيتم عرض بطاقات الحسابات هنا -->
 </div>
@@ -277,57 +283,74 @@
             if (targetBtn) targetBtn.classList.add('active-admin-btn');
         }
 
-        async function loadNetworkData() {
-            try {
-                const uRes = await fetch(`${BACKEND_URL}/api/admin/users`, {
-                method: 'GET',
-                headers: getAuthHeaders()
-             });
-                if(uRes.ok){
-                    const users = await uRes.json();
-                    
-                    // تحديث رصيد الأدمن تلقائياً في الواجهة عند القراءة من السيرفر
-                    const me = users.find(u => u.username === user.username);
-                    if(me) {
-                        user.balance = me.balance;
-                        document.getElementById('admin-balance-val').innerText = `${parseFloat(user.balance).toFixed(2)} TND`;
-                        localStorage.setItem('alpha_user', JSON.stringify(user));
-                    }
+      // 1. الدالة لجلب البيانات
+async function loadNetworkData() {
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
+        if (res.ok) {
+            const users = await res.json();
+            
+            // تحديث رصيد الأدمن (المنطق القديم)
+            const me = users.find(u => u.username === user.username);
+            if (me) {
+                user.balance = me.balance;
+                document.getElementById('admin-balance-val').innerText = `${parseFloat(user.balance).toFixed(2)} TND`;
+                localStorage.setItem('alpha_user', JSON.stringify(user));
+            }
 
-                    const tbody = document.getElementById('owner-network-tbody'); 
-                    if(!tbody) return;
-                    tbody.innerHTML = '';
-                    
-                    const subAccounts = users.filter(u => u.created_by === user.username);
-                    
-                    if(subAccounts.length === 0) {
-                        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-500">Aucun sous-compte trouvé. قم بإنشاء أول حساب الآن.</td></tr>`;
-                        return;
-                    }
-
-                    subAccounts.forEach(u => {
-                        const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-                        const userRtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
-                        const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
-
-                        const statusBadge = u.is_blocked === 1 
-                            ? `<span class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded border border-rose-500/20 font-bold">Blocked</span>`
-                            : `<span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">Active</span>`;
-                        
-                        tbody.innerHTML += `
-                            <tr class="border-b border-slate-800/40 hover:bg-slate-800/20">
-                                <td class="p-3 text-white font-bold">${u.username}</td>
-                                <td class="p-3 text-amber-400 font-mono font-bold text-xs">${userRole}</td>
-                                <td class="p-3 text-center font-bold text-cyan-400 font-mono">${userRtp}%</td>
-                                <td class="p-3 text-center">${statusBadge}</td>
-                                <td class="p-3 text-slate-400 text-xs">${u.created_by}</td>
-                                <td class="p-3 text-[#10b981] font-mono font-bold text-right">${userBalance} TND</td>
-                                <td class="p-3 text-center"><button onclick="selectForControl('${u.username}', ${userRtp})" class="text-xs bg-amber-500/10 text-amber-400 hover:bg-amber-500 hover:text-slate-950 px-2.5 py-1 rounded font-bold cursor-pointer">🎯 Control</button></td>
-                            </tr>`;
-                    });
-                }
-            } catch(e){}
+            // حفظ الحسابات الفرعية فقط في المتغير العام
+            allUsers = users.filter(u => u.created_by === user.username);
+            renderFilteredUsers();
         }
+    } catch (e) { console.error(e); }
+}
+
+// 2. دالة عرض البيانات
+function renderUsers(data) {
+    const tbody = document.getElementById('owner-network-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = ''; 
+
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-500">Aucun sous-compte trouvé.</td></tr>';
+        return;
+    }
+
+    data.forEach(u => {
+        const userRtp = u.rtp || 50;
+        const userBalance = parseFloat(u.balance || 0);
+        const statusBadge = u.is_blocked === 1 
+            ? `<span class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded border border-rose-500/20 font-bold">Blocked</span>`
+            : `<span class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20 font-bold">Active</span>`;
+
+        tbody.innerHTML += `
+        <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800 mb-2">
+            <div>
+                <p class="font-bold text-white text-sm">${u.username}</p>
+                <span class="text-[10px] text-amber-400">${(u.role || 'PLAYER').toUpperCase()}</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="font-mono text-emerald-400 font-bold text-sm">${userBalance.toFixed(2)} TND</span>
+                ${statusBadge}
+            </div>
+        </div>`;
+    });
+}
+
+// 3. دالة البحث والفرز
+function renderFilteredUsers() {
+    const searchInput = document.getElementById('search-input');
+    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+    
+    // فلترة من الحسابات الفرعية (allUsers)
+    let filtered = allUsers.filter(u => (u.username || '').toLowerCase().includes(searchTerm));
+    
+    // فرز حسب الرصيد
+    filtered.sort((a, b) => parseFloat(b.balance || 0) - parseFloat(a.balance || 0));
+    
+    renderUsers(filtered);
+}
+        
 
         function selectForControl(username, rtp) {
             document.getElementById('ctrl-target-user').value = username;
