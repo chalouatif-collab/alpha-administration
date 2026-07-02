@@ -80,9 +80,7 @@
             <div class="space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-900 pb-3">
                     <div class="flex items-center gap-2">
-                        <div class="w-6 h-6 rounded bg-[#14b8a6] flex items-center justify-center font-black text-slate-950 text-xs">A</div>
-                        <span class="text-xs font-black text-white tracking-wider uppercase">Alphabet Casino</span>
-                    </div>
+                     <img src="image/logo.jpg.jpg" alt="Logo" class="h-8 md:h-10 w-auto rounded-md shadow-sm">
                     <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
                 </div>
 
@@ -690,7 +688,7 @@
             
             await refreshPlayerBalance(); 
             const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            if(stake <= 0 || playerSession.balance < stake) return showNotification('رصيدك الحالي غير كافٍ !', 'error');
+            if(stake <= 0 || playerSession.balance < stake) return showNotification('solde insuffisant!', 'error');
 
             const btn = document.getElementById('ticket-submit-btn');
             btn.disabled = true;
@@ -852,7 +850,11 @@
         async function loadLiveMatchesData() {
             const container = document.getElementById('matches-list-container');
             try {
-                const res = await fetch(`${BACKEND_URL}/api/sports/live?timestamp=${new Date().getTime()}`);
+               // استبدل السطر 855 بهذا السطر الجديد
+const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
+    method: 'GET',
+    headers: getAuthHeaders() // إضافة رؤوس الأمان (Headers) مهمة جداً
+});
                 if(res.ok) {
                     const matches = await res.json();
                     if(matches && matches.length > 0) { return renderMatchesList(matches); }
