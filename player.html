@@ -16,7 +16,7 @@
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
         .active-menu-btn { background-color: #1e293b !important; color: #ffffff !important; border-radius: 12px; }
         .active-filter-btn { background-color: #14b8a6 !important; color: #050814 !important; }
-        .active-sub-tab { border-color: #14b8a6 !important; color: #14b8a6 !important; background-color: rgba(20, 184, 166, 0.05); }
+        .active-sub-tab { border-color: #14b8a6 !important; color: #2c3837 !important; background-color: rgba(20, 184, 166, 0.05); }
         .crash-graph-grid {
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
@@ -86,7 +86,17 @@
 </div>
                     <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
                 </div>
-
+ <!-- نسخة الهاتف من الرصيد واسم المستخدم -->
+        <div class="flex flex-col gap-1.5 bg-slate-950/50 border border-slate-800/80 p-3 rounded-xl mb-4 shadow-lg">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-slate-400 font-bold">👤 اللاعب:</span>
+                <span class="text-white font-black text-xs" id="mobile-sidebar-username">...</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-slate-400 font-bold">💰 الرصيد:</span>
+                <span class="text-emerald-400 font-mono font-black text-sm" id="mobile-sidebar-balance">0.00 TND</span>
+            </div>
+        </div>
                 <nav class="flex flex-col gap-1 text-xs font-bold text-slate-300">
                     <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🎰</span> <span>Casino</span></button>
                     <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🤵</span> <span>Casino Live</span></button>
@@ -223,7 +233,7 @@
             </div>
             
            <div class="flex items-center gap-1.5 md:gap-2">
-                <div class="bg-[#050814] border border-slate-800 px-1.5 py-1 rounded-lg flex items-center gap-1 font-mono">
+                <div class="bg-[#050814] border border-slate-800 px-1.5 py-1 rounded-lg hidden md:flex items-center gap-1 font-mono">
                     <span class="text-[#14b8a6] font-black text-[11px] transition-all relative" id="player-balance-val">0.00</span>
                     <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px] ml-0.5 cursor-pointer" id="eye-icon-btn">👁️</button>
                     <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 font-sans text-[10px] cursor-pointer">🔄</button>
@@ -231,7 +241,7 @@
                 
                 <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg cursor-pointer transition-all">Connexion</button>
                 
-                <div id="top-user-profile" class="hidden items-center bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1 gap-1.5">
+                <div id="top-user-profile" class= "hidden md:flex  items-center bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1 gap-1.5">
                     <span class="text-teal-400 font-bold text-[9px] uppercase tracking-wider truncate max-w-[60px]" id="header-username-display">User</span>
                     <button onclick="logoutPlayer()" class="text-rose-400 hover:text-rose-500 font-black text-[9px] cursor-pointer bg-rose-500/10 px-1 py-0.5 rounded">✕</button>
                 </div>
@@ -1194,7 +1204,36 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
                 eyeBtn.innerText = '🙈'; // عين مغلقة
             }
         }
-   
+   // دالة إخفاء وإظهار الرصيد (القديمة - لا تلمسها)
+        function toggleBalanceVisibility() {
+            const balSpan = document.getElementById('player-balance-val');
+            const eyeBtn = document.getElementById('eye-icon-btn');
+            if (balSpan.classList.contains('hide-bal')) {
+                balSpan.classList.remove('hide-bal');
+                eyeBtn.innerText = '👁️';
+            } else {
+                balSpan.classList.add('hide-bal');
+                eyeBtn.innerText = '🙈'; // عين مغلقة
+            }
+        }
+
+        // --- ألصق الكود الجديد هنا ---
+        // مزامنة الرصيد واسم المستخدم لنسخة الهاتف في الشريط الجانبي
+        setInterval(() => {
+            const mainName = document.getElementById('header-username-display'); 
+            const mainBalance = document.getElementById('player-balance-val'); 
+            const mobName = document.getElementById('mobile-sidebar-username');
+            const mobBalance = document.getElementById('mobile-sidebar-balance');
+            
+            if (mainName && mobName && mobName.innerText !== mainName.innerText) {
+                mobName.innerText = mainName.innerText;
+            }
+            if (mainBalance && mobBalance && mobBalance.innerText !== mainBalance.innerText) {
+                mobBalance.innerText = mainBalance.innerText;
+            }
+        }, 500);
+
+
     </script>
 
 </body>
