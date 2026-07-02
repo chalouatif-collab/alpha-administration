@@ -19,8 +19,12 @@
     
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <aside class="w-full md:w-72 bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shrink-0 h-auto md:h-[calc(100vh-2rem)] shadow-xl z-40">
-        <div class="space-y-6">
+   <aside id="mobile-sidebar" class="fixed inset-0 z-50 hidden md:relative md:flex w-full md:w-72 bg-slate-900 border-r border-slate-800 p-4 flex-col justify-between h-full shadow-xl">
+       <!-- زر الإغلاق للهاتف فقط -->
+    <div class="md:hidden flex justify-end">
+        <button onclick="toggleSidebar()" class="text-white p-4 text-xl">✕</button>
+    </div>
+    <div class="space-y-6">
             <div class="p-2 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
                 <span class="text-xs font-bold text-slate-400">🌐 Langue:</span>
                 <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
@@ -64,6 +68,13 @@
 
     <div class="flex-1 flex flex-col h-auto md:h-[calc(100vh-2rem)] overflow-hidden relative">
         <header class="bg-slate-900 border border-slate-800 p-4 rounded-xl flex flex-wrap justify-between items-center mb-4 shadow-xl shrink-0 gap-4">
+    <!-- أضف هذا الزر قبل الـ H1 -->
+    <button onclick="toggleSidebar()" class="md:hidden text-white bg-slate-800 p-2 rounded-lg">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+    </button>
+    
+    <div class="flex items-center gap-3">
+        <!-- بقية الكود كما هو -->
             <div class="flex items-center gap-3">
                 <h1 class="text-xl font-black text-amber-500 tracking-wider">ALPHA <span class="text-white font-light">ADMIN PANEL</span></h1>
                 <span class="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-lg font-mono font-black" id="owner-username">En attente...</span>
@@ -444,7 +455,16 @@
 
         function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        
+        function toggleSidebar() {
+    const sidebar = document.getElementById('mobile-sidebar');
+    if (sidebar.classList.contains('hidden')) {
+        sidebar.classList.remove('hidden'); // إظهار القائمة
+        sidebar.classList.add('flex');
+    } else {
+        sidebar.classList.add('hidden'); // إخفاء القائمة
+        sidebar.classList.remove('flex');
+    }
+}
         function logout() { 
             localStorage.clear(); 
             window.location.href = "index.html"; 
