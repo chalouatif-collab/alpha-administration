@@ -11,7 +11,7 @@
         @keyframes spin-slot {
             0% { transform: translateY(0); }
             50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); 
+            100% { transform: translateY(0); }
         }
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
         .active-menu-btn { background-color: #1e293b !important; color: #ffffff !important; border-radius: 12px; }
@@ -75,7 +75,7 @@
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
     <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
-   <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
+    <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
     <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 border-r border-slate-900 shadow-2xl">
         <!-- الرأس -->
         <div class="flex justify-between items-center border-b border-slate-900 pb-3">
@@ -97,14 +97,6 @@
         </nav>
     </div>
 </div>
-            </div>
-
-            <div class="pt-4 border-t border-slate-900 space-y-4">
-                <div class="text-[10px] uppercase text-slate-500 tracking-wider">Historiques & Options</div>
-                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-400">
-                    <button onclick="switchSection('history-transfer'); toggleMobileSidebar();" class="w-full flex items-center gap-3 hover:text-white p-2 rounded-lg text-left"><span>💸</span> <span>Historique de transfére</span></button>
-                    <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="w-full flex items-center gap-3 hover:text-white p-2 rounded-lg text-left"><span>📜</span> <span>Historique de casino</span></button>
-                </nav>
                 <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-900 mt-2">
                     <span class="text-xs font-bold text-slate-400">🌐 Language</span>
                     <select onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-[11px] font-bold p-1 rounded border border-slate-800 focus:outline-none cursor-pointer">
@@ -215,7 +207,7 @@
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
-    <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
+   <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
     <div class="flex items-center gap-2">
         <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
         <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
@@ -249,26 +241,7 @@
             </div>
         </div>
     </div>
-
-</header>ass="hidden md:flex relative">
-    <!-- الزر الذي يظهر الاسم -->
-    <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-700 transition-all">
-        <span id="header-username-display" class="text-white">CHAWKI</span>
-        <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
-    </button>
-
-    <!-- محتوى القائمة -->
-    <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
-        <div class="px-3 py-2 border-b border-slate-700 mb-1">
-            <p class="text-[9px] text-slate-400 uppercase font-bold">Solde</p>
-            <p class="text-emerald-400 font-black text-sm" id="header-balance-display">500.00 TND</p>
-        </div>
-        <button onclick="switchSection('history-transfert')" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">💸 Historique de transfert</button>
-        <button onclick="switchSection('history-casino')" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">📜 Historique de casino</button>
-        <div class="h-px bg-slate-700 my-1"></div>
-        <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold">🚪 Déconnexion</button>
-    </div>
-   </div>
+</header>
         </header>
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
@@ -1255,6 +1228,7 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
                 mobBalance.innerText = mainBalance.innerText;
             }
         }, 500);
+
 function toggleUserMenu() {
     document.getElementById('user-dropdown').classList.toggle('hidden');
 }
