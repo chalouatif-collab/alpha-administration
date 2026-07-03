@@ -22,7 +22,7 @@
             background-size: 20px 20px;
         }
 
-        /* 🔥 السحر البرمجي للهاتف (يُحول القائمة الجانبية إلى شريط سفلي بـ 4 أزرار فقط) 🔥 */
+        /* 🔥 السحر البرمجي للهاتف 🔥 */
         @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
@@ -44,7 +44,6 @@
                 justify-content: space-between !important; align-items: center !important;
                 width: 100% !important; height: 100% !important; margin: 0 !important;
             }
-            /* توزيع الـ 4 أزرار المتبقية بالتساوي 25% */
             #main-sidebar nav > button {
                 display: flex !important; flex-direction: column !important;
                 align-items: center !important; justify-content: center !important;
@@ -58,14 +57,12 @@
             #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 20px !important; transform: none !important; }
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
            
-            /* إصلاح زر Mes Paris ليكون النص تحت الأيقونة مباشرة */
             #btn-menu-paris-view > div {
                 display: flex !important;
                 flex-direction: column !important;
                 gap: 4px !important;
             }
 
-            /* رفع أيقونة الرهان العائمة فوق الشريط السفلي */
             #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
     </style>
@@ -74,85 +71,71 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
+    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف -->
     <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
-    <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 border-r border-slate-900 shadow-2xl">
-        <!-- الرأس -->
-        <div class="flex justify-between items-center border-b border-slate-900 pb-3">
-            <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
-            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 border-r border-slate-900 shadow-2xl">
+            <!-- الرأس -->
+            <div class="flex justify-between items-center border-b border-slate-900 pb-3">
+                <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
+                <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+
+            <!-- القائمة -->
+            <nav class="flex flex-col gap-1 overflow-y-auto no-scrollbar pb-2">
+                <button onclick="switchSection('accueil'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🏠</span> 
+                    <span class="font-medium text-sm">Accueil</span>
+                </button>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">⚽</span> 
+                    <span class="font-medium text-sm">Sport</span>
+                </button>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center relative">
+                        ⚡
+                        <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                        </span>
+                    </span> 
+                    <span class="font-medium text-sm">Live Sport</span>
+                </button>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎮</span> 
+                    <span class="font-medium text-sm">E-Sport</span>
+                </button>
+
+                <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎰</span> 
+                    <span class="font-medium text-sm">Casino</span>
+                </button>
+
+                <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center relative">
+                        🤵
+                        <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                        </span>
+                    </span> 
+                    <span class="font-medium text-sm">Live Casino</span>
+                </button>
+
+                <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center text-teal-400">🚀</span> 
+                    <span class="font-medium text-sm text-teal-400">Aviator</span>
+                </button>
+
+                <button onclick="switchSection('roue'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎡</span> 
+                    <span class="font-medium text-sm">Roue de jeux</span>
+                </button>
+            </nav>
         </div>
-
-        <!-- القائمة -->
-        <nav class="flex flex-col gap-1 overflow-y-auto no-scrollbar pb-2">
-    <!-- الصفحة الرئيسية -->
-    <button onclick="switchSection('accueil'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center">🏠</span> 
-        <span class="font-medium text-sm">Accueil</span>
-    </button>
-
-    <!-- الرياضة -->
-    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center">⚽</span> 
-        <span class="font-medium text-sm">Sport</span>
-    </button>
-
-    <!-- الرياضة المباشرة (مع مؤشر أحمر وامض) -->
-    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center relative">
-            ⚡
-            <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-            </span>
-        </span> 
-        <span class="font-medium text-sm">Live Sport</span>
-    </button>
-
-    <!-- الرياضة الإلكترونية -->
-    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center">🎮</span> 
-        <span class="font-medium text-sm">E-Sport</span>
-    </button>
-
-    <!-- الكازينو -->
-    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center">🎰</span> 
-        <span class="font-medium text-sm">Casino</span>
-    </button>
-
-    <!-- الكازينو المباشر (مع مؤشر أحمر وامض) -->
-    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center relative">
-            🤵
-            <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
-            </span>
-        </span> 
-        <span class="font-medium text-sm">Live Casino</span>
-    </button>
-
-    <!-- لعبة أفياتور (Jeux crash) -->
-    <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center text-teal-400">🚀</span> 
-        <span class="font-medium text-sm text-teal-400">Aviator</span>
-    </button>
-
-    <!-- عجلة الحظ -->
-    <button onclick="switchSection('roue'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-        <span class="text-xl w-6 text-center">🎡</span> 
-        <span class="font-medium text-sm">Roue de jeux</span>
-    </button>
-
-    <!-- قسم التاريخ (Historiques) -->
-    <div class="border-t border-slate-900 pt-4 mt-2">
-        <p class="text-[10px] text-slate-500 font-bold uppercase px-3 mb-2">Historiques</p>
-        <button onclick="switchSection('history-transfer'); toggleMobileSidebar();" class="w-full flex items-center gap-3 p-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl text-xs text-left transition-all">💸 Transferts</button>
-        <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="w-full flex items-center gap-3 p-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl text-xs text-left transition-all">📜 Casino</button>
-    </div>
-</nav>
-    </div>
+    </div> <!-- تم إصلاح العطل هنا: إضافة وسم الإغلاق المفقود -->
 
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
@@ -180,7 +163,7 @@
         </div>
     </div>
 
-    <!-- السايدبار العادي للكمبيوتر (يتحول لشريط سفلي بـ 4 أزرار على الهاتف) -->
+    <!-- السايدبار العادي للكمبيوتر -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -189,7 +172,6 @@
             </div>
 
             <nav class="space-y-1 text-sm font-bold text-slate-300">
-                
                 <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
                     <span>🏠</span> <span id="menu-accueil">Accueil</span>
                 </button>
@@ -207,7 +189,6 @@
                     <span>🎰</span> <span id="menu-casino">Le casino</span>
                 </button>
 
-                <!-- أزرار مخفية في شريط الهاتف (تظهر للكمبيوتر بشكل عادي وفي القائمة الجانبية للهاتف) -->
                 <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>🤵</span> <span id="menu-live">Casino en direct</span>
                 </button>
@@ -236,50 +217,44 @@
                 </div>
             </nav>
         </div>
-
     </aside>
-
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
-   <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
-    <div class="flex items-center gap-2">
-        <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
-        <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
-    </div>
-    
-    <div class="flex items-center gap-2">
-        <!-- الرصيد (يظهر فقط على الكمبيوتر) -->
-        <div class="bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg hidden md:flex items-center gap-2 font-mono">
-            <span class="text-[#14b8a6] font-black text-xs" id="player-balance-val">0.00</span>
-            <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px]" id="eye-icon-btn">👁️</button>
+       <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
+        <div class="flex items-center gap-2">
+            <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
+            <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
         </div>
-
-        <!-- زر تسجيل الدخول (يظهر إذا لم يكن هناك جلسة) -->
-        <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer">Connexion</button>
         
-        <!-- القائمة المنسدلة للمستخدم (تظهر بعد تسجيل الدخول) -->
-        <div id="top-user-profile" class="hidden md:flex relative">
-            <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all">
-                <span id="header-username-display" class="text-white">User</span>
-                <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
-            </button>
-            <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
-                <div class="px-3 py-2 border-b border-slate-700 mb-1">
-                    <p class="text-[9px] text-slate-400 uppercase font-bold">Solde</p>
-                    <p class="text-emerald-400 font-black text-sm" id="header-balance-display">0.00 TND</p>
+        <div class="flex items-center gap-2">
+            <div class="bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg hidden md:flex items-center gap-2 font-mono">
+                <span class="text-[#14b8a6] font-black text-xs" id="player-balance-val">0.00</span>
+                <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px]" id="eye-icon-btn">👁️</button>
+            </div>
+
+            <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer">Connexion</button>
+            
+            <div id="top-user-profile" class="hidden md:flex relative">
+                <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all">
+                    <span id="header-username-display" class="text-white">User</span>
+                    <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+                </button>
+                <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
+                    <div class="px-3 py-2 border-b border-slate-700 mb-1">
+                        <p class="text-[9px] text-slate-400 uppercase font-bold">Solde</p>
+                        <p class="text-emerald-400 font-black text-sm" id="header-balance-display">0.00 TND</p>
+                    </div>
+                    <button onclick="switchSection('history-transfer'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">💸 Historique de transfert</button>
+                    <button onclick="switchSection('history-casino'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">📜 Historique de casino</button>
+                    <div class="h-px bg-slate-700 my-1"></div>
+                    <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold">🚪 Déconnexion</button>
                 </div>
-                <button onclick="switchSection('history-transfer'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">💸 Historique de transfert</button>
-                <button onclick="switchSection('history-casino'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">📜 Historique de casino</button>
-                <div class="h-px bg-slate-700 my-1"></div>
-                <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold">🚪 Déconnexion</button>
             </div>
         </div>
-    </div>
-</header>
-        </header>
+    </header> <!-- تم إزالة التكرار من هنا -->
+        
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
-
             <div id="pane-accueil" class="player-view-section space-y-4">
               <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
                     <div class="bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
@@ -452,7 +427,6 @@
     </div>
 
     <script>
-        // 📱 دالة التحكم في القائمة الجانبية للهاتف (إظهار وإخفاء)
         function toggleMobileSidebar() {
             const drawer = document.getElementById('mobile-drawer-menu');
             if (drawer.classList.contains('hidden')) {
@@ -518,18 +492,16 @@
             if(sectionId === 'sport') loadLiveMatchesData();
             if(sectionId === 'paris') renderMyBetsHistoryPane();
         }
-// 👁️ دالة إخفاء وإظهار الرصيد (نظام التمويه الحديث)
+
+        // 👁️ دالة إخفاء وإظهار الرصيد (نظام التمويه الحديث)
         function toggleBalanceVisibility() {
             const balSpan = document.getElementById('player-balance-val');
             const eyeBtn = document.getElementById('eye-icon-btn');
             
-            // التحقق من حالة التمويه الحالية
             if (balSpan.style.filter === 'blur(4px)') {
-                // إظهار الرصيد
                 balSpan.style.filter = 'none';
                 eyeBtn.innerText = '👁️';
             } else {
-                // إخفاء الرصيد (تمويه)
                 balSpan.style.filter = 'blur(4px)';
                 eyeBtn.innerText = '🙈';
             }
@@ -562,42 +534,37 @@
             }, 300);
         }
 
-    async function refreshPlayerBalance() {
-    if (!playerSession || !playerSession.username) return;
-    try {
-        // إرسال الطلب للسيرفر
-        const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
-            method: 'GET',
-            headers: getAuthHeaders()
-        });
-        
-        if (res.ok) {
-            const users = await res.json();
-            const currentMe = users.find(u => u.username === playerSession.username);
-            
-            if (currentMe) {
-                // 1. تحديث الرصيد في المتغير
-                playerSession.balance = currentMe.balance;
+        async function refreshPlayerBalance() {
+            if (!playerSession || !playerSession.username) return;
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
+                    method: 'GET',
+                    headers: getAuthHeaders()
+                });
                 
-                // 2. تحديث الذاكرة المحلية
-                localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
-                
-                // 3. تحديث الشاشة (الرصيد الأساسي)
-                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                
-                // 4. التحديث الجديد: تحديث الشاشة (القائمة المنسدلة)
-                const dropBalance = document.getElementById('header-balance-display');
-                if(dropBalance) {
-                    dropBalance.innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                if (res.ok) {
+                    const users = await res.json();
+                    const currentMe = users.find(u => u.username === playerSession.username);
+                    
+                    if (currentMe) {
+                        playerSession.balance = currentMe.balance;
+                        localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
+                        
+                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                        
+                        const dropBalance = document.getElementById('header-balance-display');
+                        if(dropBalance) {
+                            dropBalance.innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
+                        }
+                    }
+                } else {
+                    console.error("السيرفر رفض تحديث الرصيد! رمز الخطأ:", res.status);
                 }
+            } catch (e) { 
+                console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); 
             }
-        } else {
-            console.error("السيرفر رفض تحديث الرصيد! رمز الخطأ:", res.status);
         }
-    } catch (e) { 
-        console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); 
-    }
-}
+        
         async function fetchPlayerTicketsFromServer() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -662,13 +629,11 @@
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
             document.getElementById('top-login-btn')?.classList.add('hidden');
             
-            // إظهار اسم المستخدم في الهيدر العلوي
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('hidden'); topProfile.classList.add('flex'); }
             const headerName = document.getElementById('header-username-display');
             if(headerName) headerName.innerText = playerSession.username;
 
-            // تحديث السايدبار الجانبي
             const playerDisplay = document.getElementById('player-name-display');
             if(playerDisplay) {
                 playerDisplay.innerText = `${playerSession.username}`;
@@ -898,11 +863,10 @@
         async function loadLiveMatchesData() {
             const container = document.getElementById('matches-list-container');
             try {
-               // استبدل السطر 855 بهذا السطر الجديد
-const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
-    method: 'GET',
-    headers: getAuthHeaders() // إضافة رؤوس الأمان (Headers) مهمة جداً
-});
+                const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
+                    method: 'GET',
+                    headers: getAuthHeaders() 
+                });
                 if(res.ok) {
                     const matches = await res.json();
                     if(matches && matches.length > 0) { return renderMatchesList(matches); }
@@ -1168,7 +1132,6 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
             
             document.getElementById('player-balance-val').innerText = "0.00";
             
-            // إعادة الهيدر لوضع الزائر
             document.getElementById('top-login-btn')?.classList.remove('hidden');
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('flex'); topProfile.classList.add('hidden'); }
@@ -1202,75 +1165,31 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
                 }, 1000); 
             }
         };
-       // 💰 نظام الجاكبوت الزمني (يومي، أسبوعي، شهري)
+
         function startJackpots() {
             setInterval(() => {
                 const now = new Date();
                 
-                // 1. الميني (Mini) - 120 د.ت (يومي)
                 let miniProgress = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) / 86400;
                 let miniVal = miniProgress * 120;
 
-                // 2. الماجور (Major) - 350 د.ت (أسبوعي)
                 let dayOfWeek = (now.getDay() === 0) ? 7 : now.getDay();
                 let majorProgress = ((dayOfWeek - 1) * 86400 + (now.getHours() * 3600 + now.getMinutes() * 60)) / 604800;
                 let majorVal = majorProgress * 350;
 
-                // 3. الميجا (Mega) - 1000 د.ت (شهري)
                 let dayOfMonth = now.getDate();
                 let megaProgress = ((dayOfMonth - 1) * 86400 + (now.getHours() * 3600)) / 2592000;
                 let megaVal = megaProgress * 1000;
 
-                // عرض القيم
                 document.getElementById('jackpot-mega').innerText = megaVal.toFixed(2);
                 document.getElementById('jackpot-major').innerText = majorVal.toFixed(2);
                 document.getElementById('jackpot-mini').innerText = miniVal.toFixed(2);
             }, 1000); 
         }
-        // 👁️ دالة إخفاء وإظهار الرصيد
-        function toggleBalanceVisibility() {
-            const balSpan = document.getElementById('player-balance-val');
-            const eyeBtn = document.getElementById('eye-icon-btn');
-            if (balSpan.classList.contains('hide-bal')) {
-                balSpan.classList.remove('hide-bal');
-                eyeBtn.innerText = '👁️';
-            } else {
-                balSpan.classList.add('hide-bal');
-                eyeBtn.innerText = '🙈'; // عين مغلقة
-            }
-        }
-   // دالة إخفاء وإظهار الرصيد (القديمة - لا تلمسها)
-        function toggleBalanceVisibility() {
-            const balSpan = document.getElementById('player-balance-val');
-            const eyeBtn = document.getElementById('eye-icon-btn');
-            if (balSpan.classList.contains('hide-bal')) {
-                balSpan.classList.remove('hide-bal');
-                eyeBtn.innerText = '👁️';
-            } else {
-                balSpan.classList.add('hide-bal');
-                eyeBtn.innerText = '🙈'; // عين مغلقة
-            }
-        }
 
-        // --- ألصق الكود الجديد هنا ---
-        // مزامنة الرصيد واسم المستخدم لنسخة الهاتف في الشريط الجانبي
-        setInterval(() => {
-            const mainName = document.getElementById('header-username-display'); 
-            const mainBalance = document.getElementById('player-balance-val'); 
-            const mobName = document.getElementById('mobile-sidebar-username');
-            const mobBalance = document.getElementById('mobile-sidebar-balance');
-            
-            if (mainName && mobName && mobName.innerText !== mainName.innerText) {
-                mobName.innerText = mainName.innerText;
-            }
-            if (mainBalance && mobBalance && mobBalance.innerText !== mainBalance.innerText) {
-                mobBalance.innerText = mainBalance.innerText;
-            }
-        }, 500);
-
-function toggleUserMenu() {
-    document.getElementById('user-dropdown').classList.toggle('hidden');
-}
+        function toggleUserMenu() {
+            document.getElementById('user-dropdown').classList.toggle('hidden');
+        }
     </script>
 
 </body>
