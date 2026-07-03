@@ -74,48 +74,52 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
-    <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
-        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col justify-start gap-6 border-r border-slate-900 shadow-2xl overflow-y-auto no-scrollbar">
-            <div class="flex flex-col gap-4">
-                <div class="flex justify-between items-center border-b border-slate-900 pb-3">
-    <div class="flex items-center gap-2">
-        <img src="image/logo.png" alt="Logo" class="h-16 md:h-25 w-auto object-contain drop-shadow-lg">
-    </div>
-    <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
-</div>
-                </div>
- 
-       <!-- بطاقة المستخدم المصغرة -->
-<div class="bg-slate-900 border border-slate-700/50 rounded-xl p-2 mx-3 mb-4 shadow-lg">
-    <div class="flex flex-col gap-1.5">
-        <div class="flex justify-between items-center text-[11px]">
-            <span class="text-slate-400">👤 اللاعب:</span>
-            <span class="text-white font-bold tracking-wider" id="mobile-sidebar-username">...</span>
+  <!-- القائمة الجانبية المعدلة -->
+<div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/80 hidden transition-all duration-300">
+    <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 shadow-2xl border-r border-slate-800">
+        
+        <!-- الزر والإغلاق -->
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
+            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold">✕</button>
         </div>
-        <div class="h-px bg-slate-800"></div>
-        <div class="flex justify-between items-center text-[12px]">
-            <span class="text-slate-400">💰 الرصيد:</span>
-            <span class="text-emerald-400 font-black" id="mobile-sidebar-balance">0.00 TND</span>
-       <nav class="space-y-1 px-3">
-    <button onclick="switchSection('casino'); toggleMobileSidebar();" 
-            class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-200">
-        <span class="text-lg">🎰</span>
-        <span class="font-medium text-sm">Casino</span>
-    </button>
-    
-    <button onclick="switchSection('sport'); toggleMobileSidebar();" 
-            class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-200">
-        <span class="text-lg">⚽</span>
-        <span class="font-medium text-sm">Sport</span>
-    </button>
-    
-    <!-- كرر نفس النمط للأزرار الأخرى -->
-</nav>
-                    </button>
-                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🔥</span> <span>Meilleur jeux</span></button>
-                    <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-teal-400"><span>🚀</span> <span>Jeux crash</span></button>
-                </nav>
+
+        <!-- بطاقة المستخدم المصغرة (التصميم الجديد) -->
+        <div class="bg-slate-900 border border-slate-700/50 rounded-xl p-3 shadow-lg">
+            <div class="flex flex-col gap-2">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="text-slate-400 flex items-center gap-1">👤 اللاعب:</span>
+                    <span class="text-white font-bold" id="mobile-sidebar-username">...</span>
+                </div>
+                <div class="h-px bg-slate-800"></div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-slate-400 flex items-center gap-1">💰 الرصيد:</span>
+                    <span class="text-emerald-400 font-black" id="mobile-sidebar-balance">0.00 TND</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- قائمة الأزرار (التصميم الجديد) -->
+        <nav class="flex flex-col gap-1">
+            <button onclick="switchSection('casino'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <span class="text-lg">🎰</span> <span class="font-medium">Casino</span>
+            </button>
+            <button onclick="switchSection('sport'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <span class="text-lg">⚽</span> <span class="font-medium">Sport</span>
+            </button>
+            <button onclick="switchSection('crash'); toggleMobileSidebar();" class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all">
+                <span class="text-lg">🚀</span> <span class="font-medium">Jeux crash</span>
+            </button>
+        </nav>
+
+        <!-- قسم التاريخ -->
+        <div class="mt-auto border-t border-slate-800 pt-4">
+            <div class="text-[10px] uppercase text-slate-500 font-bold mb-2 px-4">Historiques</div>
+            <button onclick="switchSection('history-transfert'); toggleMobileSidebar();" class="w-full text-left px-4 py-2 text-slate-400 hover:text-white text-xs">💸 Transferts</button>
+            <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="w-full text-left px-4 py-2 text-slate-400 hover:text-white text-xs">🎰 Casino</button>
+        </div>
+    </div>
+  </div>>
             </div>
 
             <div class="pt-4 border-t border-slate-900 space-y-4">
