@@ -20,7 +20,7 @@
         .bg-amber { background-color: #f59e0b; color: #000; }
         .bg-amber:hover { background-color: #d97706; color: #000; }
         
-        /* إخفاء شريط التمرير مع الحفاظ على وظيفته */
+        /* إخفاء شريط التمرير مع الحفاظ على وظيفته (السحب بالأصابع) */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
@@ -73,15 +73,15 @@
 
     <div id="toast-container"></div>
 
-    <!-- شريط التنقل العلوي (يظهر على الهاتف لتسهيل الوصول) -->
+    <!-- شريط التنقل العلوي -->
     <nav class="navbar navbar-dark bg-panel sticky-top p-3 mb-4 shadow-sm">
         <div class="container-fluid">
-            <!-- زر القائمة الجانبية للهاتف -->
+            <!-- زر فتح القائمة الجانبية للهاتف -->
             <button class="navbar-toggler d-md-none border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
-            <div class="d-flex items-center gap-2">
+            <div class="d-flex align-items-center gap-2">
                 <h1 class="h5 mb-0 fw-black text-amber m-0">ALPHA <span class="text-white fw-light">ADMIN</span></h1>
                 <span class="badge bg-warning text-dark border border-warning" id="owner-username">En attente...</span>
             </div>
@@ -98,12 +98,14 @@
     <div class="container-fluid pb-5">
         <div class="row g-4">
             
-            <!-- القائمة الجانبية (شاشة الكمبيوتر) & نافذة منزلقة (شاشة الهاتف) -->
+            <!-- القائمة الجانبية -->
             <div class="col-md-3">
                 <div class="offcanvas-md offcanvas-start bg-panel rounded-4 p-3 h-100 shadow" tabindex="-1" id="mobileSidebar">
-                    <div class="offcanvas-header d-md-none border-bottom border-secondary mb-3">
+                    
+                    <!-- رأس القائمة للهاتف مع زر إغلاق صريح يعمل بالجافاسكربت -->
+                    <div class="offcanvas-header d-md-none border-bottom border-secondary mb-3 pb-2">
                         <h5 class="offcanvas-title text-amber fw-bold"><i class="fa-solid fa-bars-staggered"></i> Menu</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+                        <button type="button" class="btn-close btn-close-white" onclick="closeSidebarManually()"></button>
                     </div>
                     
                     <div class="offcanvas-body flex-column p-0">
@@ -214,14 +216,19 @@
 
                     <!-- شحن/سحب وجدول المستخدمين -->
                     <div class="bg-panel rounded-4 shadow-sm overflow-hidden mb-4">
-                        <div class="bg-amber p-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-                            <span class="fw-bold mb-0 small" id="title-table-console"><i class="fa-solid fa-wallet"></i> Console financière des Comptes</span>
+                        
+                        <!-- التعديل الأهم: قسم الشحن والسحب أصبح قابلاً للتمرير بدون أن ينضغط -->
+                        <div class="bg-amber p-3">
+                            <div class="mb-2">
+                                <span class="fw-bold small" id="title-table-console"><i class="fa-solid fa-wallet"></i> Console financière des Comptes</span>
+                            </div>
                             
-                            <div class="d-flex gap-2">
-                                <input type="text" id="target-action-user" class="form-control form-control-sm w-auto text-center fw-bold" readonly placeholder="Sélectionnez...">
-                                <input type="number" id="target-action-amount" class="form-control form-control-sm w-auto text-center" style="max-width: 100px;" placeholder="Montant">
-                                <button onclick="executeAction('charge')" class="btn btn-sm btn-dark fw-bold" id="btn-credit">Créditer</button>
-                                <button onclick="executeAction('withdraw')" class="btn btn-sm btn-danger fw-bold" id="btn-retirer">Retirer</button>
+                            <!-- حاوية التمرير الأفقي السلس -->
+                            <div class="d-flex flex-nowrap gap-2 overflow-x-auto pb-1 no-scrollbar align-items-center">
+                                <input type="text" id="target-action-user" class="form-control form-control-sm text-center fw-bold flex-shrink-0" style="width: 140px;" readonly placeholder="Sélectionnez...">
+                                <input type="number" id="target-action-amount" class="form-control form-control-sm text-center flex-shrink-0" style="width: 120px;" placeholder="Montant TND">
+                                <button onclick="executeAction('charge')" class="btn btn-sm btn-dark fw-bold flex-shrink-0 px-3" id="btn-credit">Créditer</button>
+                                <button onclick="executeAction('withdraw')" class="btn btn-sm btn-danger fw-bold flex-shrink-0 px-3" id="btn-retirer">Retirer</button>
                             </div>
                         </div>
                         
@@ -296,7 +303,7 @@
         const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
         let sessionData = localStorage.getItem('alpha_user');
         let user = sessionData ? JSON.parse(sessionData) : null;
-        let allUsers = []; // تم إضافة هذا المتغير لحل مشكلة البحث
+        let allUsers = []; 
 
         function getAuthHeaders() {
             const token = localStorage.getItem('token');
@@ -316,7 +323,6 @@
             loadNetworkData();
         });
 
-        // الترجمات
         const translations = {
             fr: {
                 menu: "Gestion Admin", selected: "Compte Sélectionné:", create: "👑 Créer un compte (Shop / Player)",
@@ -348,7 +354,6 @@
             document.getElementById('btn-logout').innerText = translations[lang].out;
         }
 
-        // نظام الإشعارات الجديد العائم
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -361,6 +366,14 @@
                 toast.classList.remove('toast-show');
                 setTimeout(() => { toast.remove(); }, 300);
             }, 3000);
+        }
+
+        // --- إصلاحات إغلاق القائمة الجانبية (Sidebar) ---
+        // الدالة التي يتم استدعاؤها عند الضغط على زر X
+        function closeSidebarManually() {
+            const offcanvasElement = document.getElementById('mobileSidebar');
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
+            bsOffcanvas.hide();
         }
 
         // التنقل بين الأقسام
@@ -380,12 +393,11 @@
             }
 
             // إغلاق القائمة الجانبية تلقائياً في الموبايل عند اختيار قسم
-            const offcanvasElement = document.getElementById('mobileSidebar');
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement);
-            if (bsOffcanvas) { bsOffcanvas.hide(); }
+            if(window.innerWidth < 768) {
+                closeSidebarManually();
+            }
         }
 
-        // 1. جلب البيانات
         async function loadNetworkData() {
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
@@ -405,7 +417,6 @@
             } catch (e) { console.error(e); }
         }
 
-        // 2. دالة عرض كروت المستخدمين (تم إضافة زر التحديد)
         function renderUsers(data) {
             const tbody = document.getElementById('owner-network-tbody');
             if (!tbody) return;
@@ -436,7 +447,6 @@
                         <div class="d-flex align-items-center gap-3">
                             <span class="text-info fw-bold font-monospace">${userBalance.toFixed(2)} TND</span>
                             ${statusBadge}
-                            <!-- الزر السحري الجديد لتحديد اللاعب -->
                             <button onclick="selectForControl('${u.username}', ${userRtp})" class="btn btn-sm btn-outline-light border-secondary px-2 py-0">
                                 <i class="fa-solid fa-hand-pointer text-amber"></i> Sélect
                             </button>
@@ -446,7 +456,6 @@
             });
         }
 
-        // 3. دالة البحث والفرز
         function renderFilteredUsers() {
             const searchInput = document.getElementById('search-input');
             const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
@@ -457,19 +466,16 @@
             renderUsers(filtered);
         }
 
-        // 4. تحديد المستخدم للتحكم به
         function selectForControl(username, rtp) {
             document.getElementById('ctrl-target-user').value = username;
             document.getElementById('target-action-user').value = username;
             document.getElementById('ctrl-rtp-range').value = rtp;
             document.getElementById('rtp-val-label').innerText = rtp + '%';
             
-            // تمرير الشاشة للأعلى قليلاً لرؤية الحقل الذي تم تعبئته
             window.scrollTo({ top: 0, behavior: 'smooth' });
             showNotification(`Le compte [${username}] est sélectionné.`);
         }
 
-        // باقي دوال الاتصال بالسيرفر
         async function changePlayerPasswordFromAdmin() {
             const target = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
             const newPassword = document.getElementById('ctrl-player-new-pass').value;
@@ -558,7 +564,6 @@
         }
 
         async function submitNewPassword() {
-            // قم ببرمجة مسار الـ API الخاص بتعديل كلمة سر الأدمن هنا مستقبلاً
             showNotification('Veuillez connecter cette fonction à l\'API d\'abord.', 'error');
         }
 
