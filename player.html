@@ -85,24 +85,33 @@
     <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
 </div>
                 </div>
- <!-- نسخة الهاتف من الرصيد واسم المستخدم -->
-        <div class="flex flex-col gap-1.5 bg-slate-950/50 border border-slate-800/80 p-3 rounded-xl mb-4 shadow-lg">
-            <div class="flex justify-between items-center">
-                <span class="text-[11px] text-slate-400 font-bold">👤 اللاعب:</span>
-                <span class="text-white font-black text-xs" id="mobile-sidebar-username">...</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-[11px] text-slate-400 font-bold">💰 الرصيد:</span>
-                <span class="text-emerald-400 font-mono font-black text-sm" id="mobile-sidebar-balance">0.00 TND</span>
-            </div>
+ 
+       <!-- بطاقة المستخدم المصغرة -->
+<div class="bg-slate-900 border border-slate-700/50 rounded-xl p-2 mx-3 mb-4 shadow-lg">
+    <div class="flex flex-col gap-1.5">
+        <div class="flex justify-between items-center text-[11px]">
+            <span class="text-slate-400">👤 اللاعب:</span>
+            <span class="text-white font-bold tracking-wider" id="mobile-sidebar-username">...</span>
         </div>
-                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-300">
-                    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🎰</span> <span>Casino</span></button>
-                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🤵</span> <span>Casino Live</span></button>
-                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🏆</span> <span>Sport</span></button>
-                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-red-400">
-                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
-                        <span>Sport en direct</span>
+        <div class="h-px bg-slate-800"></div>
+        <div class="flex justify-between items-center text-[12px]">
+            <span class="text-slate-400">💰 الرصيد:</span>
+            <span class="text-emerald-400 font-black" id="mobile-sidebar-balance">0.00 TND</span>
+       <nav class="space-y-1 px-3">
+    <button onclick="switchSection('casino'); toggleMobileSidebar();" 
+            class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-200">
+        <span class="text-lg">🎰</span>
+        <span class="font-medium text-sm">Casino</span>
+    </button>
+    
+    <button onclick="switchSection('sport'); toggleMobileSidebar();" 
+            class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all duration-200">
+        <span class="text-lg">⚽</span>
+        <span class="font-medium text-sm">Sport</span>
+    </button>
+    
+    <!-- كرر نفس النمط للأزرار الأخرى -->
+</nav>
                     </button>
                     <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🔥</span> <span>Meilleur jeux</span></button>
                     <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-teal-400"><span>🚀</span> <span>Jeux crash</span></button>
