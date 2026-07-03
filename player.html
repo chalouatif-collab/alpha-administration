@@ -76,14 +76,7 @@
 
   <!-- القائمة الجانبية المعدلة -->
 <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/80 hidden transition-all duration-300">
-    <div class="w-72 bg-[#060914] h-full flex flex-col shadow-2xl border-r border-slate-800">
-        
-        <!-- الهيدر -->
-        <div class="flex justify-between items-center p-5 border-b border-slate-800">
-            <img src="image/logo.png" alt="Logo" class="h-8 object-contain">
-            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold p-1">✕</button>
-                   <!-- HISTORIQUES & OPTIONS (الجزء الذي طلبته) -->
-        <div class="p-4 border-t border-slate-800 mt-auto">
+    <div class="p-4 border-t border-slate-800 mt-auto">
             <div class="text-[10px] uppercase text-slate-500 font-bold mb-3 px-3">HISTORIQUES & OPTIONS</div>
             
             <button onclick="switchSection('history-transfert'); toggleMobileSidebar();" class="w-full flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white text-xs font-medium transition-all">
@@ -96,7 +89,16 @@
         </div>
     </div>
 </div>
+    <div class="w-72 bg-[#060914] h-full flex flex-col shadow-2xl border-r border-slate-800">
+        
+        <!-- الهيدر -->
+        <div class="flex justify-between items-center p-5 border-b border-slate-800">
+            <img src="image/logo.png" alt="Logo" class="h-8 object-contain">
+            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold p-1">✕</button>
+                   <span class="text-lg">📜</span> <span>Historique de casino</span>
+            </button>
         </div>
+    
 
         <!-- بطاقة المستخدم -->
         <div class="p-4">
