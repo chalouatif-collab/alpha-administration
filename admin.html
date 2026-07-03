@@ -254,10 +254,27 @@
                     </div>
                 </div>
 
-                <div id="panel-admin-transfert" class="admin-main-view d-none">
-                    <div class="alert alert-dark text-center border-secondary text-muted mt-4">
-                        <i class="fa-solid fa-money-bill-transfer fs-1 mb-3"></i><br>
-                        Aucun transfert financier trouvé dans les bases de données.
+              <div id="panel-admin-transfert" class="admin-main-view d-none">
+                    <div class="bg-panel rounded-4 shadow-sm overflow-hidden mt-4">
+                        <div class="bg-dark p-3 border-bottom border-secondary d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 text-white"><i class="fa-solid fa-money-bill-transfer text-amber"></i> Historique de transfére</h6>
+                            <button onclick="loadTransactionsHistory()" class="btn btn-sm btn-outline-light px-2 py-0"><i class="fa-solid fa-rotate-right"></i></button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-hover mb-0 text-center align-middle">
+                                <thead>
+                                    <tr class="text-muted small">
+                                        <th>Date</th>
+                                        <th>De / À</th>
+                                        <th>Type</th>
+                                        <th>Montant</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactions-tbody">
+                                    <!-- البيانات ستظهر هنا تلقائياً -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -382,6 +399,7 @@
             document.getElementById('admin-sidebar-nav').querySelectorAll('button').forEach(btn => {
                 btn.classList.remove('active-admin-btn');
                 btn.classList.add('text-secondary');
+                if(sectionId === 'transfert') loadTransactionsHistory();
             });
             
             const targetSection = document.getElementById(`panel-admin-${sectionId}`);
@@ -395,6 +413,28 @@
             // إغلاق القائمة الجانبية تلقائياً في الموبايل عند اختيار قسم
             if(window.innerWidth < 768) {
                 closeSidebarManually();
+                function switchAdminPanelSection(sectionId) {
+            document.querySelectorAll('.admin-main-view').forEach(el => el.classList.add('d-none'));
+            document.getElementById('admin-sidebar-nav').querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('active-admin-btn');
+                btn.classList.add('text-secondary');
+            });
+            
+            const targetSection = document.getElementById(`panel-admin-${sectionId}`);
+            const targetBtn = document.getElementById(`btn-admin-${sectionId}`);
+            if (targetSection) targetSection.classList.remove('d-none');
+            if (targetBtn) {
+                targetBtn.classList.remove('text-secondary');
+                targetBtn.classList.add('active-admin-btn');
+            }
+
+            if(window.innerWidth < 768) {
+                closeSidebarManually();
+            }
+            
+            // --- السطر الجديد الذي يجب إضافته ---
+            if(sectionId === 'transfert') loadTransactionsHistory();
+        }
             }
         }
 
@@ -567,6 +607,50 @@
             showNotification('Veuillez connecter cette fonction à l\'API d\'abord.', 'error');
         }
 
+        async function loadTransactionsHistory() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, {
+                    headers: getAuthHeaders()
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const tbody = document.getElementById('transactions-tbody');
+                    tbody.innerHTML = '';
+                    
+                    if(data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="text-muted p-4">Aucune transaction trouvée.</td></tr>';
+                        return;
+                    }
+                    
+                    data.forEach(tx => {
+                        const isCharge = tx.action === 'charge';
+                        const typeBadge = isCharge 
+                            ? '<span class="badge bg-success">Crédit</span>' 
+                            : '<span class="badge bg-danger">Retrait</span>';
+                            
+                        const amountColor = isCharge ? 'text-success' : 'text-danger';
+                        const sign = isCharge ? '+' : '-';
+                        
+                        let otherParty = tx.target_username;
+                        if (tx.target_username === user.username) {
+                            otherParty = tx.admin_username; 
+                        }
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td class="small text-muted" style="font-size: 0.7rem;">${tx.date}</td>
+                                <td class="fw-bold">${otherParty}</td>
+                                <td>${typeBadge}</td>
+                                <td class="fw-bold font-monospace ${amountColor}">${sign}${tx.amount.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            } catch (e) {
+                console.error("Erreur", e);
+            }
+        }
+        
         function logout() { 
             localStorage.clear(); 
             window.location.href = "index.html"; 
