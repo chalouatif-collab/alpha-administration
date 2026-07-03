@@ -75,38 +75,28 @@
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
     <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
-    <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
-        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col justify-start gap-6 border-r border-slate-900 shadow-2xl overflow-y-auto no-scrollbar">
-            <div class="flex flex-col gap-4">
-                <div class="flex justify-between items-center border-b border-slate-900 pb-3">
-    <div class="flex items-center gap-2">
-        <img src="image/logo.png" alt="Logo" class="h-16 md:h-25 w-auto object-contain drop-shadow-lg">
-    </div>
-    <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
-</div>
-                </div>
- <!-- نسخة الهاتف من الرصيد واسم المستخدم -->
-        <div class="flex flex-col gap-1.5 bg-slate-950/50 border border-slate-800/80 p-3 rounded-xl mb-4 shadow-lg">
-            <div class="flex justify-between items-center">
-                <span class="text-[11px] text-slate-400 font-bold">👤 اللاعب:</span>
-                <span class="text-white font-black text-xs" id="mobile-sidebar-username">...</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="text-[11px] text-slate-400 font-bold">💰 الرصيد:</span>
-                <span class="text-emerald-400 font-mono font-black text-sm" id="mobile-sidebar-balance">0.00 TND</span>
-            </div>
+   <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
+    <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 border-r border-slate-900 shadow-2xl">
+        <!-- الرأس -->
+        <div class="flex justify-between items-center border-b border-slate-900 pb-3">
+            <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
+            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
         </div>
-                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-300">
-                    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🎰</span> <span>Casino</span></button>
-                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🤵</span> <span>Casino Live</span></button>
-                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🏆</span> <span>Sport</span></button>
-                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-red-400">
-                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
-                        <span>Sport en direct</span>
-                    </button>
-                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🔥</span> <span>Meilleur jeux</span></button>
-                    <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-teal-400"><span>🚀</span> <span>Jeux crash</span></button>
-                </nav>
+
+        <!-- القائمة -->
+        <nav class="flex flex-col gap-2">
+            <button onclick="switchSection('casino'); toggleMobileSidebar();" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-900 rounded-xl">🎰 <span>Casino</span></button>
+            <button onclick="switchSection('sport'); toggleMobileSidebar();" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-900 rounded-xl">⚽ <span>Sport</span></button>
+            <button onclick="switchSection('crash'); toggleMobileSidebar();" class="flex items-center gap-3 p-3 text-slate-300 hover:bg-slate-900 rounded-xl">🚀 <span>Jeux crash</span></button>
+            
+            <div class="border-t border-slate-900 pt-4 mt-2">
+                <p class="text-[10px] text-slate-500 font-bold uppercase px-3 mb-2">Historiques</p>
+                <button onclick="switchSection('history-transfer'); toggleMobileSidebar();" class="flex items-center gap-3 p-3 text-slate-400 hover:text-white rounded-xl text-xs">💸 Transferts</button>
+                <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="flex items-center gap-3 p-3 text-slate-400 hover:text-white rounded-xl text-xs">📜 Casino</button>
+            </div>
+        </nav>
+    </div>
+</div>
             </div>
 
             <div class="pt-4 border-t border-slate-900 space-y-4">
@@ -226,22 +216,41 @@
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
         
     <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
-            <div class="flex items-center gap-2">
-                <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
-                <img src="image/logo.png" alt="Logo" class="h-16 md:h-25 w-auto object-contain drop-shadow-lg">
-            </div>
-            
-           <div class="flex items-center gap-1.5 md:gap-2">
-                <div class="bg-[#050814] border border-slate-800 px-1.5 py-1 rounded-lg hidden md:flex items-center gap-1 font-mono">
-                    <span class="text-[#14b8a6] font-black text-[11px] transition-all relative" id="player-balance-val">0.00</span>
-                    <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px] ml-0.5 cursor-pointer" id="eye-icon-btn">👁️</button>
-                    <button onclick="refreshPlayerBalance()" class="text-teal-400 hover:text-teal-500 font-sans text-[10px] cursor-pointer">🔄</button>
+    <div class="flex items-center gap-2">
+        <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
+        <img src="image/logo.png" alt="Logo" class="h-10 w-auto object-contain">
+    </div>
+    
+    <div class="flex items-center gap-2">
+        <!-- الرصيد (يظهر فقط على الكمبيوتر) -->
+        <div class="bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg hidden md:flex items-center gap-2 font-mono">
+            <span class="text-[#14b8a6] font-black text-xs" id="player-balance-val">0.00</span>
+            <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px]" id="eye-icon-btn">👁️</button>
+        </div>
+
+        <!-- زر تسجيل الدخول (يظهر إذا لم يكن هناك جلسة) -->
+        <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer">Connexion</button>
+        
+        <!-- القائمة المنسدلة للمستخدم (تظهر بعد تسجيل الدخول) -->
+        <div id="top-user-profile" class="hidden md:flex relative">
+            <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all">
+                <span id="header-username-display" class="text-white">User</span>
+                <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+            </button>
+            <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
+                <div class="px-3 py-2 border-b border-slate-700 mb-1">
+                    <p class="text-[9px] text-slate-400 uppercase font-bold">Solde</p>
+                    <p class="text-emerald-400 font-black text-sm" id="header-balance-display">0.00 TND</p>
                 </div>
-                
-                <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg cursor-pointer transition-all">Connexion</button>
-                
-               <!-- القائمة المنسدلة الجديدة -->
-<div id="top-user-profile" class="hidden md:flex relative">
+                <button onclick="switchSection('history-transfer'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">💸 Historique de transfert</button>
+                <button onclick="switchSection('history-casino'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">📜 Historique de casino</button>
+                <div class="h-px bg-slate-700 my-1"></div>
+                <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold">🚪 Déconnexion</button>
+            </div>
+        </div>
+    </div>
+
+</header>ass="hidden md:flex relative">
     <!-- الزر الذي يظهر الاسم -->
     <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-700 transition-all">
         <span id="header-username-display" class="text-white">CHAWKI</span>
