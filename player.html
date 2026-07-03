@@ -74,61 +74,39 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-  <!-- القائمة الجانبية المعدلة -->
-<div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/80 hidden transition-all duration-300">
-    <div class="p-4 border-t border-slate-800 mt-auto">
-            <div class="text-[10px] uppercase text-slate-500 font-bold mb-3 px-3">HISTORIQUES & OPTIONS</div>
-            
-            <button onclick="switchSection('history-transfert'); toggleMobileSidebar();" class="w-full flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white text-xs font-medium transition-all">
-                <span class="text-lg">💸</span> <span>Historique de transfére</span>
-            </button>
-            
-            <button onclick="switchSection('history-casino'); toggleMobileSidebar();" class="w-full flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white text-xs font-medium transition-all">
-                <span class="text-lg">📜</span> <span>Historique de casino</span>
-            </button>
-        </div>
+    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (تخرج عند الضغط على زر الهامبرغر) -->
+    <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
+        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col justify-start gap-6 border-r border-slate-900 shadow-2xl overflow-y-auto no-scrollbar">
+            <div class="flex flex-col gap-4">
+                <div class="flex justify-between items-center border-b border-slate-900 pb-3">
+    <div class="flex items-center gap-2">
+        <img src="image/logo.png" alt="Logo" class="h-16 md:h-25 w-auto object-contain drop-shadow-lg">
     </div>
+    <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white font-bold text-2xl cursor-pointer">&times;</button>
 </div>
-    <div class="w-72 bg-[#060914] h-full flex flex-col shadow-2xl border-r border-slate-800">
-        
-        <!-- الهيدر -->
-        <div class="flex justify-between items-center p-5 border-b border-slate-800">
-            <img src="image/logo.png" alt="Logo" class="h-8 object-contain">
-            <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold p-1">✕</button>
-                   <span class="text-lg">📜</span> <span>Historique de casino</span>
-            </button>
-        </div>
-    
-
-        <!-- بطاقة المستخدم -->
-        <div class="p-4">
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-slate-400 text-[11px] font-bold">👤 اللاعب:</span>
-                    <span class="text-white font-bold text-sm" id="mobile-sidebar-username">CHAWKI</span>
                 </div>
-                <div class="flex justify-between items-center">
-                    <span class="text-slate-400 text-[11px] font-bold">💰 الرصيد:</span>
-                    <span class="text-emerald-400 font-bold text-sm" id="mobile-sidebar-balance">500.00</span>
-                </div>
+ <!-- نسخة الهاتف من الرصيد واسم المستخدم -->
+        <div class="flex flex-col gap-1.5 bg-slate-950/50 border border-slate-800/80 p-3 rounded-xl mb-4 shadow-lg">
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-slate-400 font-bold">👤 اللاعب:</span>
+                <span class="text-white font-black text-xs" id="mobile-sidebar-username">...</span>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-[11px] text-slate-400 font-bold">💰 الرصيد:</span>
+                <span class="text-emerald-400 font-mono font-black text-sm" id="mobile-sidebar-balance">0.00 TND</span>
             </div>
         </div>
-
-        <!-- القائمة الرئيسية -->
-        <nav class="flex-1 px-4 space-y-1">
-            <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 px-3 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-sm font-medium">
-                <span class="text-xl w-6 text-center">🎰</span> <span>Casino</span>
-            </button>
-            <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 px-3 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-sm font-medium">
-                <span class="text-xl w-6 text-center">⚽</span> <span>Sport</span>
-            </button>
-            <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 px-3 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition-all text-sm font-medium">
-                <span class="text-xl w-6 text-center">🚀</span> <span>Jeux crash</span>
-            </button>
-        </nav>
-
- 
-</div>
+                <nav class="flex flex-col gap-1 text-xs font-bold text-slate-300">
+                    <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🎰</span> <span>Casino</span></button>
+                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🤵</span> <span>Casino Live</span></button>
+                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left"><span>🏆</span> <span>Sport</span></button>
+                    <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-red-400">
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span></span>
+                        <span>Sport en direct</span>
+                    </button>
+                    <button class="w-full flex items-center gap-4 p-3 rounded-xl text-left opacity-40 cursor-not-allowed"><span>🔥</span> <span>Meilleur jeux</span></button>
+                    <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl text-left text-teal-400"><span>🚀</span> <span>Jeux crash</span></button>
+                </nav>
             </div>
 
             <div class="pt-4 border-t border-slate-900 space-y-4">
@@ -262,36 +240,10 @@
                 
                 <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg cursor-pointer transition-all">Connexion</button>
                 
-                <!-- قائمة المستخدم المنسدلة (Dropdown Menu) للكمبيوتر -->
-<div id="top-user-profile" class="hidden md:flex relative">
-    <!-- الزر الذي يظهر فيه اسم المستخدم -->
-    <button onclick="toggleProfileMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 hover:bg-slate-700 transition-colors cursor-pointer">
-        <span class="text-teal-400 font-bold text-[10px] uppercase tracking-wider" id="header-username-display">User</span>
-        <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-    </button>
-
-    <!-- الخيارات المخفية (تظهر عند الضغط) -->
-    <div id="profile-dropdown-menu" class="hidden absolute right-0 top-full mt-2 w-56 bg-[#060914] border border-slate-800 rounded-xl shadow-2xl z-50 overflow-hidden">
-        <div class="flex flex-col text-[11px] font-bold text-slate-300">
-            <button onclick="switchSection('history-transfer'); toggleProfileMenu();" class="w-full text-left flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white border-b border-slate-800/80 transition-colors">
-                <span>💸</span> Historique de transfert
-            </button>
-            <button onclick="switchSection('history-casino'); toggleProfileMenu();" class="w-full text-left flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white border-b border-slate-800/80 transition-colors">
-                <span>🎰</span> Historique de casino
-            </button>
-            <button onclick="switchSection('paris'); toggleProfileMenu();" class="w-full text-left flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white border-b border-slate-800/80 transition-colors">
-                <span>🎫</span> Mes paris
-            </button>
-            <button onclick="openChangePasswordModal(); toggleProfileMenu();" class="w-full text-left flex items-center gap-3 px-4 py-3 border-b border-slate-800/80 hover:bg-slate-800 hover:text-white transition-colors">
-                <span>🔐</span> Changer mot de passe
-            </button>
-            <!-- زر تسجيل الخروج -->
-            <button onclick="logoutPlayer(); toggleProfileMenu();" class="w-full text-left flex items-center gap-3 px-4 py-3 bg-rose-950/20 hover:bg-rose-950/40 text-rose-400 hover:text-rose-300 transition-colors">
-                <span>🚪</span> Déconnexion
-            </button>
-        </div>
-    </div>
-</div>
+                <div id="top-user-profile" class= "hidden md:flex  items-center bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1 gap-1.5">
+                    <span class="text-teal-400 font-bold text-[9px] uppercase tracking-wider truncate max-w-[60px]" id="header-username-display">User</span>
+                    <button onclick="logoutPlayer()" class="text-rose-400 hover:text-rose-500 font-black text-[9px] cursor-pointer bg-rose-500/10 px-1 py-0.5 rounded">✕</button>
+                </div>
             </div>
         </header>
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
@@ -1280,24 +1232,7 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
             }
         }, 500);
 
-// دالة فتح وإغلاق قائمة المستخدم (Dropdown)
-function toggleProfileMenu() {
-    const menu = document.getElementById('profile-dropdown-menu');
-    menu.classList.toggle('hidden');
-}
 
-// إغلاق القائمة تلقائياً إذا قام المستخدم بالضغط في أي مكان خارجها
-document.addEventListener('click', function(event) {
-    const menu = document.getElementById('profile-dropdown-menu');
-    const displaySpan = document.getElementById('header-username-display');
-    
-    if (menu && displaySpan) {
-        const button = displaySpan.parentElement;
-        if (!button.contains(event.target) && !menu.contains(event.target)) {
-            menu.classList.add('hidden');
-        }
-    }
-});
     </script>
 
 </body>
