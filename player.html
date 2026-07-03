@@ -515,38 +515,42 @@
             }, 300);
         }
 
-     async function refreshPlayerBalance() {
-        if (!playerSession || !playerSession.username) return;
-        try {
-            // إرسال الطلب للسيرفر
-            const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
-                method: 'GET',
-                headers: getAuthHeaders()
-            });
+    async function refreshPlayerBalance() {
+    if (!playerSession || !playerSession.username) return;
+    try {
+        // إرسال الطلب للسيرفر
+        const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        
+        if (res.ok) {
+            const users = await res.json();
+            const currentMe = users.find(u => u.username === playerSession.username);
             
-            if (res.ok) {
-                const users = await res.json();
-                const currentMe = users.find(u => u.username === playerSession.username);
+            if (currentMe) {
+                // 1. تحديث الرصيد في المتغير
+                playerSession.balance = currentMe.balance;
                 
-                if (currentMe) {
-                    // 1. تحديث الرصيد في المتغير
-                    playerSession.balance = currentMe.balance;
-                    
-                    // 2. تحديث الذاكرة المحلية (هذا السطر كان مفقوداً ومهم جداً!)
-                    localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
-                    
-                    // 3. تحديث الشاشة
-                    document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                // 2. تحديث الذاكرة المحلية
+                localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
+                
+                // 3. تحديث الشاشة (الرصيد الأساسي)
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+                
+                // 4. التحديث الجديد: تحديث الشاشة (القائمة المنسدلة)
+                const dropBalance = document.getElementById('header-balance-display');
+                if(dropBalance) {
+                    dropBalance.innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
                 }
-            } else {
-                // إذا رفض السيرفر الطلب (لأن اللاعب ليس آدمن)
-                console.error("السيرفر رفض تحديث الرصيد! رمز الخطأ:", res.status);
             }
-        } catch (e) { 
-            console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); 
+        } else {
+            console.error("السيرفر رفض تحديث الرصيد! رمز الخطأ:", res.status);
         }
+    } catch (e) { 
+        console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); 
     }
-
+}
         async function fetchPlayerTicketsFromServer() {
             if (!playerSession || !playerSession.username) return;
             try {
