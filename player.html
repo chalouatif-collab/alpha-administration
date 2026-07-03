@@ -11,7 +11,7 @@
         @keyframes spin-slot {
             0% { transform: translateY(0); }
             50% { transform: translateY(-50px); }
-            100% { transform: translateY(0); }
+            100% { transform: translateY(0); 
         }
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
         .active-menu-btn { background-color: #1e293b !important; color: #ffffff !important; border-radius: 12px; }
@@ -240,11 +240,26 @@
                 
                 <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg cursor-pointer transition-all">Connexion</button>
                 
-                <div id="top-user-profile" class= "hidden md:flex  items-center bg-slate-800 border border-slate-700 rounded-lg px-1.5 py-1 gap-1.5">
-                    <span class="text-teal-400 font-bold text-[9px] uppercase tracking-wider truncate max-w-[60px]" id="header-username-display">User</span>
-                    <button onclick="logoutPlayer()" class="text-rose-400 hover:text-rose-500 font-black text-[9px] cursor-pointer bg-rose-500/10 px-1 py-0.5 rounded">✕</button>
-                </div>
-            </div>
+               <!-- القائمة المنسدلة الجديدة -->
+<div id="top-user-profile" class="hidden md:flex relative">
+    <!-- الزر الذي يظهر الاسم -->
+    <button onclick="toggleUserMenu()" class="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-full text-xs font-bold hover:bg-slate-700 transition-all">
+        <span id="header-username-display" class="text-white">CHAWKI</span>
+        <i class="fa-solid fa-chevron-down text-[8px] text-slate-400"></i>
+    </button>
+
+    <!-- محتوى القائمة -->
+    <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2">
+        <div class="px-3 py-2 border-b border-slate-700 mb-1">
+            <p class="text-[9px] text-slate-400 uppercase font-bold">Solde</p>
+            <p class="text-emerald-400 font-black text-sm" id="header-balance-display">500.00 TND</p>
+        </div>
+        <button onclick="switchSection('history-transfert')" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">💸 Historique de transfert</button>
+        <button onclick="switchSection('history-casino')" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs">📜 Historique de casino</button>
+        <div class="h-px bg-slate-700 my-1"></div>
+        <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold">🚪 Déconnexion</button>
+    </div>
+   </div>
         </header>
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
@@ -1231,8 +1246,9 @@ const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
                 mobBalance.innerText = mainBalance.innerText;
             }
         }, 500);
-
-
+function toggleUserMenu() {
+    document.getElementById('user-dropdown').classList.toggle('hidden');
+}
     </script>
 
 </body>
