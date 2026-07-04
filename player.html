@@ -698,7 +698,7 @@
             await fetchPlayerTicketsFromServer();
         } else { 
 
-       showNotification(data.detail || data.message || data.error || 'بيانات الدخول خاطئة !', 'error');
+showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
         }
     } catch(e) { 
         showNotification('عطل اتصال بالسيرفر', 'error'); 
