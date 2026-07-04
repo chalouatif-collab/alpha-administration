@@ -418,10 +418,10 @@ async function loadTransactions() {
     
     try {
         // تنبيه: تأكد أن مسار الـ API هنا يطابق ما هو موجود في الباك إند الخاص بك
-        const res = await fetch(`${BACKEND_URL}/api/admin/transactions?username=${user.username}`, {
-            method: 'GET',
-            headers: getAuthHeaders()
-        });
+       const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, {
+    method: 'GET',
+    headers: getAuthHeaders()
+});
 
         if (res.ok) {
             const transactions = await res.json();
