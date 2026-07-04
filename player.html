@@ -111,6 +111,25 @@
 
             #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
+/* 💰 أنيماسيون الجاكبوت (نبض ضوئي) */
+.jackpot-card {
+    position: relative;
+    transition: all 0.3s ease;
+    animation: pulse-glow 3s infinite alternate;
+}
+
+@keyframes pulse-glow {
+    0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+    50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+    100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+}
+
+/* تأثير لمعة خفيفة عند المرور */
+.jackpot-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
     </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
@@ -309,15 +328,15 @@
         </div>
             <div id="pane-accueil" class="player-view-section space-y-4">
               <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
-                    <div class="bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
+                    <div class="jackpot-card bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
                         <div class="text-amber-400 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mega 🥇</div>
                         <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mega">124,567.89</div>
                     </div>
-                    <div class="bg-gradient-to-b from-slate-300/20 to-[#090f24] border border-slate-300/40 rounded-2xl p-3 text-center shadow-lg">
+                   <div class="jackpot-card bg-gradient-to-b from-slate-300/20 to-[#090f24] border border-slate-300/40 rounded-2xl p-3 text-center shadow-lg">
                         <div class="text-slate-300 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Major 🥈</div>
                         <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-major">14,230.50</div>
                     </div>
-                    <div class="bg-gradient-to-b from-orange-600/20 to-[#090f24] border border-orange-600/40 rounded-2xl p-3 text-center shadow-lg">
+                    <div class="jackpot-card bg-gradient-to-b from-orange-600/20 to-[#090f24] border border-orange-600/40 rounded-2xl p-3 text-center shadow-lg">
                         <div class="text-orange-500 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mini 🥉</div>
                         <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mini">1,850.25</div>
                     </div>
