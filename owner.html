@@ -378,44 +378,22 @@
                 } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
             } 
             // 3. سجل الحسابات (Compte) - الجزء الجديد
+          // 3. سجل الحسابات (إحصائيات مالية مفصلة)
             else if (safeType === 'compte') {
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
-                    if(res.ok) {
-                        const users = await res.json();
-                        if(users && users.length > 0) {
-                            let html = `<div class="d-flex flex-column gap-2" style="max-height: 400px; overflow-y: auto;">`;
-                            
-                            users.forEach(u => {
-                                const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-                                const createdBy = u.created_by || 'System';
-                                const rtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
-                                const statusDot = u.is_blocked === 1 ? 'bg-danger' : 'bg-success';
-                                
-                                html += `
-                                <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
-                                    <div class="card-body p-2 d-flex justify-content-between align-items-center">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="position-relative p-2 rounded-circle border border-secondary bg-card-blue" style="font-size: 0.8rem;">👤
-                                                <span class="position-absolute top-0 start-100 translate-middle p-1 ${statusDot} border border-dark rounded-circle"></span>
-                                            </div>
-                                            <div>
-                                                <div class="text-white fw-bold mb-0" style="font-size: 0.9rem;">${u.username}</div>
-                                                <div class="text-info fw-bold" style="font-size: 0.65rem;">Rôle: <span class="text-owner-primary">${userRole}</span></div>
-                                            </div>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="text-secondary mb-1" style="font-size: 0.7rem;">Créé par: <span class="text-white fw-bold">${createdBy}</span></div>
-                                            <div class="text-secondary font-monospace" style="font-size: 0.65rem;">RTP: ${rtp}%</div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                            });
-                            html += `</div>`;
-                            body.innerHTML = html;
-                        } else {
-                            body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Aucun compte trouvé.</div>`;
-                        }
+                    // جلب قائمة المستخدمين (للاختيار) + جلب كل المعاملات (للحساب) في نفس الوقت
+                    const [usersRes, txRes] = await Promise.all([
+                        fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() }),
+                        fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, { headers: getAuthHeaders() })
+                    ]);
+
+                    if(usersRes.ok && txRes.ok) {
+                        const usersList = await usersRes.json();
+                        allTransactionsCache = await txRes.json(); // حفظ المعاملات للفلترة
+                        
+                        renderCompteStatsUI(body, usersList); // رسم واجهة الإحصائيات
+                    } else {
+                        body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">خطأ في جلب البيانات</div>`;
                     }
                 } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
             }
@@ -496,6 +474,112 @@
             });
             listContainer.innerHTML = html;
         }
+// --- بناء واجهة الإحصائيات المالية (المحاسبة) ---
+        function renderCompteStatsUI(container, usersList) {
+            // تجهيز قائمة الخيارات للمستخدمين
+            let userOptions = `<option value="ALL">🌐 كل الموقع (Tous les comptes)</option>`;
+            if (usersList && usersList.length > 0) {
+                usersList.forEach(u => {
+                    userOptions += `<option value="${u.username}">👤 ${u.username}</option>`;
+                });
+            }
+
+            let html = `
+                <!-- صندوق الفلاتر -->
+                <div class="bg-dark border border-blue-custom p-3 rounded shadow-sm mb-3">
+                    <div class="row g-2" dir="rtl">
+                        <div class="col-12 col-md-4">
+                            <label class="text-secondary mb-1" style="font-size: 0.65rem;">اختر الحساب:</label>
+                            <select id="stat-user-select" class="form-select input-blue p-1 text-center font-bold text-white" style="font-size: 0.75rem;">
+                                ${userOptions}
+                            </select>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="text-secondary mb-1" style="font-size: 0.65rem;">من تاريخ:</label>
+                            <input type="date" id="stat-start-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <label class="text-secondary mb-1" style="font-size: 0.65rem;">إلى تاريخ:</label>
+                            <input type="date" id="stat-end-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+                        </div>
+                        <div class="col-12 col-md-2 mt-auto">
+                            <button onclick="calculateAccountStats()" class="btn bg-owner-primary w-100 fw-bold p-1" style="font-size: 0.75rem;">🔍 إحسب</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- المكان الذي ستظهر فيه نتيجة الحساب -->
+                <div id="stat-dashboard-results"></div>
+            `;
+            
+            container.innerHTML = html;
+            calculateAccountStats(); // تشغيل الحساب التلقائي لأول مرة
+        }
+
+        // --- الآلة الحاسبة: فرز التواريخ وحساب المبالغ ---
+        function calculateAccountStats() {
+            const selectedUser = document.getElementById('stat-user-select').value;
+            const startDate = document.getElementById('stat-start-date').value;
+            const endDate = document.getElementById('stat-end-date').value;
+
+            let filteredTx = allTransactionsCache || [];
+
+            // 1. فلترة حسب المستخدم (إذا لم يختر "الكل")
+            if (selectedUser !== "ALL") {
+                filteredTx = filteredTx.filter(t => t.target_username === selectedUser);
+            }
+
+            // 2. فلترة حسب التاريخ
+            if (startDate || endDate) {
+                filteredTx = filteredTx.filter(t => {
+                    const txDate = t.date ? t.date.split(' ')[0] : '';
+                    if (!txDate) return false;
+                    let isAfterStart = true, isBeforeEnd = true;
+                    if (startDate) isAfterStart = txDate >= startDate;
+                    if (endDate) isBeforeEnd = txDate <= endDate;
+                    return isAfterStart && isBeforeEnd;
+                });
+            }
+
+            // 3. حساب المجاميع
+            let totalCharged = 0;
+            let totalWithdrawn = 0;
+
+            filteredTx.forEach(t => {
+                const amt = parseFloat(t.amount) || 0;
+                if (t.action === 'charge') totalCharged += amt;
+                else if (t.action === 'withdraw') totalWithdrawn += amt;
+            });
+
+            // 4. رسم النتيجة النهائية
+            const dashboard = document.getElementById('stat-dashboard-results');
+            const titleText = selectedUser === "ALL" ? "📊 إحصائيات الموقع بالكامل" : `📊 إحصائيات الحساب: <span class="text-white">${selectedUser}</span>`;
+
+            let html = `
+                <h6 class="text-owner-primary fw-bold text-center mb-3" dir="rtl">${titleText}</h6>
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <div class="bg-card-blue border border-success rounded p-3 text-center shadow-sm">
+                            <div class="text-secondary mb-1" style="font-size: 0.7rem;">إجمالي الشحن المباع ⬆️</div>
+                            <div class="text-success fw-bold font-monospace" style="font-size: 1.1rem;">${totalCharged.toFixed(2)} TND</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-card-blue border border-danger rounded p-3 text-center shadow-sm">
+                            <div class="text-secondary mb-1" style="font-size: 0.7rem;">إجمالي السحب ⬇️</div>
+                            <div class="text-danger fw-bold font-monospace" style="font-size: 1.1rem;">${totalWithdrawn.toFixed(2)} TND</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-card-blue border border-blue-custom rounded p-3 text-center shadow-sm">
+                    <div class="text-secondary mb-1" style="font-size: 0.7rem;">صافي الحركة (الشحن ناقص السحب)</div>
+                    <div class="text-info fw-bold font-monospace" style="font-size: 1.3rem;">${(totalCharged - totalWithdrawn).toFixed(2)} TND</div>
+                </div>
+            `;
+            
+            dashboard.innerHTML = html;
+        }
+       
 
         // --- وظائف التحكم (كلمة السر، الرصيد، الحذف) ---
         function openPasswordModal() { new bootstrap.Modal(document.getElementById('passwordModal')).show(); }
