@@ -14,57 +14,62 @@
             100% { transform: translateY(0); }
         }
         .slot-anim { animation: spin-slot 0.4s ease-in-out; }
-        
+        .active-menu-btn { background-color: #1e293b !important; color: #ffffff !important; border-radius: 12px; }
         .active-filter-btn { background-color: #14b8a6 !important; color: #050814 !important; }
         .active-sub-tab { border-color: #14b8a6 !important; color: #2c3837 !important; background-color: rgba(20, 184, 166, 0.05); }
         .crash-graph-grid {
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-
-        /* ------------------------------------------- */
-        /* ✨ التصميم الجديد والفاخر للقائمة الجانبية ✨ */
-        /* ------------------------------------------- */
-        .sidebar-nav { display: flex; flex-direction: column; gap: 0.5rem; }
-        
-        .menu-item {
-            display: flex; align-items: center; gap: 1rem; padding: 0.6rem 1rem;
-            border-radius: 0.75rem; text-decoration: none; color: #cbd5e1;
-            font-weight: 600; font-size: 0.95rem; border: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-item:hover, .active-menu-btn {
-            background-color: rgba(20, 184, 166, 0.1) !important; color: #ffffff !important;
-            border-color: rgba(20, 184, 166, 0.2) !important;
-        }
-        .menu-item:hover { transform: translateX(5px); }
-        .active-menu-btn { transform: translateX(5px); border-left: 3px solid #14b8a6 !important; }
-
-        .icon-box {
-            width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;
-            background: rgba(255, 255, 255, 0.05); border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1); font-size: 1.2rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); flex-shrink: 0;
+   /* 🏆 شريط الرابحين المباشر (Live Winners Ticker) */
+        .live-ticker-wrapper {
+            width: 100%;
+            background: linear-gradient(90deg, rgba(20, 184, 166, 0.05) 0%, rgba(20, 184, 166, 0.15) 50%, rgba(20, 184, 166, 0.05) 100%);
+            border: 1px solid rgba(20, 184, 166, 0.2);
+            border-radius: 16px;
+            padding: 8px 0;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            z-index: 30;
         }
 
-        .pulse-dot {
-            width: 8px; height: 8px; background-color: #ef4444; border-radius: 50%;
-            display: inline-block; margin-left: 0.5rem;
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); animation: pulse-red 1.5s infinite;
-        }
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        .live-ticker-track {
+            display: flex;
+            gap: 2rem;
+            white-space: nowrap;
+            animation: scroll-ticker 35s linear infinite;
         }
 
-        /* 🚀 تنسيق خاص ومميز للعبة Aviator */
-        .menu-item-aviator { background: linear-gradient(90deg, rgba(20, 184, 166, 0.15) 0%, transparent 100%); border-left: 4px solid #14b8a6; color: #14b8a6; font-weight: 800; }
-        .menu-item-aviator .icon-box { border-color: rgba(20, 184, 166, 0.4); background: rgba(20, 184, 166, 0.1); }
-        .menu-item-aviator:hover { background: linear-gradient(90deg, rgba(20, 184, 166, 0.25) 0%, rgba(20, 184, 166, 0.05) 100%); color: #5eead4; }
+        .live-ticker-track:hover { animation-play-state: paused; }
 
-        /* 🔥 السحر البرمجي للهاتف (محدث ليتوافق مع الأزرار الجديدة) 🔥 */
+        @keyframes scroll-ticker {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-150%); }
+        }
+
+        .winner-card {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(5, 8, 20, 0.8);
+            border: 1px solid rgba(30, 41, 59, 0.8);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .winner-card .w-icon { font-size: 1rem; }
+        .winner-card .w-name { color: #fff; font-weight: bold; }
+        .winner-card .w-game { color: #64748b; font-family: sans-serif; font-size: 0.7rem;}
+        .winner-card .w-amount { color: #14b8a6; font-weight: 900; text-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
+      
+      
+        /* 🔥 السحر البرمجي للهاتف 🔥 */
         @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
@@ -75,26 +80,36 @@
                 background-color: #090f24 !important; border-top: 1px solid #1e293b !important;
                 z-index: 40 !important; display: flex !important; flex-direction: column !important; justify-content: center !important;
             }
-            #main-sidebar .space-y-6 > div.flex, #main-sidebar .hide-on-mobile-bar { display: none !important; } 
+            #main-sidebar .space-y-6 > div.flex, 
+            #main-sidebar .pt-4,
+            #main-sidebar nav .hide-on-mobile-bar { display: none !important; } 
+            
             #main-sidebar .space-y-6 { width: 100% !important; margin: 0 !important; height: 100% !important; display: flex; align-items: center; }
             
-            #main-sidebar nav { display: flex !important; flex-direction: row !important; justify-content: space-around !important; align-items: center !important; width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; gap: 0 !important; }
-            
-            #main-sidebar nav > button {
-                display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important;
-                width: 25% !important; height: 100% !important; padding: 5px !important; background: transparent !important; border: none !important; position: relative !important; gap: 4px !important; transform: none !important;
+            #main-sidebar nav {
+                display: flex !important; flex-direction: row !important;
+                justify-content: space-between !important; align-items: center !important;
+                width: 100% !important; height: 100% !important; margin: 0 !important;
             }
+            #main-sidebar nav > button {
+                display: flex !important; flex-direction: column !important;
+                align-items: center !important; justify-content: center !important;
+                width: 25% !important; height: 100% !important; padding: 5px !important;
+                background: transparent !important; gap: 4px !important; border: none !important;
+                position: relative !important; 
+            }
+            #main-sidebar nav span { font-size: 10px !important; margin: 0 !important; font-weight: bold !important; text-align: center !important; }
+            #main-sidebar nav span:first-child { font-size: 20px !important; } 
             
-            /* إزالة الستايل الزجاجي في شريط الهاتف السفلي ليكون نظيفاً */
-            #main-sidebar nav .icon-box { background: transparent !important; border: none !important; box-shadow: none !important; width: auto !important; height: auto !important; font-size: 20px !important; margin: 0 !important; padding: 0 !important; }
-            #main-sidebar nav span:not(.icon-box) { font-size: 10px !important; margin: 0 !important; font-weight: bold !important; text-align: center !important; }
-            #main-sidebar nav .pulse-dot { display: none !important; } /* إخفاء النبضة في البار السفلي توفيراً للمساحة */
-            
-            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 15px !important; transform: none !important; }
-            .active-menu-btn { background: transparent !important; color: #14b8a6 !important; border: none !important; }
-            .active-menu-btn .icon-box { color: #14b8a6 !important; transform: scale(1.1); }
-            
-            #btn-menu-paris-view > div { display: flex !important; flex-direction: column !important; gap: 4px !important; align-items: center !important; justify-content: center !important; width: 100%; }
+            #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 20px !important; transform: none !important; }
+            .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
+           
+            #btn-menu-paris-view > div {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 4px !important;
+            }
+
             #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
     </style>
@@ -103,42 +118,71 @@
 
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2 w-full max-w-sm px-4"></div>
 
-    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف (محدثة بالتصميم الجديد) -->
+    <!-- 🚪 القائمة الجانبية المبرمجة للهاتف -->
     <div id="mobile-drawer-menu" class="fixed inset-0 z-50 bg-black/60 hidden backdrop-blur-sm transition-all duration-300">
-        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-4 border-r border-slate-900 shadow-2xl">
+        <div class="w-72 bg-[#060914] h-full p-5 flex flex-col gap-6 border-r border-slate-900 shadow-2xl">
+            <!-- الرأس -->
             <div class="flex justify-between items-center border-b border-slate-900 pb-3">
                 <img src="image/logo.png" alt="Logo" class="h-16 w-auto object-contain">
                 <button onclick="toggleMobileSidebar()" class="text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
             </div>
 
-            <nav class="sidebar-nav overflow-y-auto no-scrollbar pb-2">
-                <button onclick="switchSection('accueil'); toggleMobileSidebar();" class="menu-item w-full text-left">
-                    <div class="icon-box">🏠</div><span>Accueil</span>
+            <!-- القائمة -->
+            <nav class="flex flex-col gap-1 overflow-y-auto no-scrollbar pb-2">
+                <button onclick="switchSection('accueil'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🏠</span> 
+                    <span class="font-medium text-sm">Accueil</span>
                 </button>
-                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="menu-item w-full text-left">
-                    <div class="icon-box">⚽</div><span>Sport</span>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">⚽</span> 
+                    <span class="font-medium text-sm">Sport</span>
                 </button>
-                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="menu-item w-full text-left">
-                    <div class="icon-box">⚡</div><span style="display: flex; align-items: center;">Live Sport <span class="pulse-dot"></span></span>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center relative">
+                        ⚡
+                        <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                        </span>
+                    </span> 
+                    <span class="font-medium text-sm">Live Sport</span>
                 </button>
-                <button class="menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">🎮</div><span>E-Sport</span>
+
+                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎮</span> 
+                    <span class="font-medium text-sm">E-Sport</span>
                 </button>
-                <button onclick="switchSection('casino'); toggleMobileSidebar();" class="menu-item w-full text-left">
-                    <div class="icon-box">🎰</div><span>Casino</span>
+
+                <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎰</span> 
+                    <span class="font-medium text-sm">Casino</span>
                 </button>
-                <button class="menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">🤵</div><span style="display: flex; align-items: center;">Live Casino <span class="pulse-dot"></span></span>
+
+                <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center relative">
+                        🤵
+                        <span class="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                        </span>
+                    </span> 
+                    <span class="font-medium text-sm">Live Casino</span>
                 </button>
-                <button onclick="switchSection('crash'); toggleMobileSidebar();" class="menu-item menu-item-aviator w-full text-left">
-                    <div class="icon-box">🚀</div><span>Aviator</span>
+
+                <button onclick="switchSection('crash'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center text-teal-400">🚀</span> 
+                    <span class="font-medium text-sm text-teal-400">Aviator</span>
                 </button>
-                <button class="menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">🎡</div><span>Roue de jeux</span>
+
+                <button onclick="switchSection('roue'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎡</span> 
+                    <span class="font-medium text-sm">Roue de jeux</span>
                 </button>
             </nav>
         </div>
-    </div>
+    </div> <!-- تم إصلاح العطل هنا: إضافة وسم الإغلاق المفقود -->
 
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
@@ -166,7 +210,7 @@
         </div>
     </div>
 
-    <!-- السايدبار العادي للكمبيوتر (محدث بالتصميم الجديد) -->
+    <!-- السايدبار العادي للكمبيوتر -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -174,43 +218,43 @@
                 <span class="text-base font-black tracking-wider text-white" id="player-name-display">Visitor</span>
             </div>
 
-            <nav class="sidebar-nav">
-                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="menu-item active-menu-btn w-full text-left">
-                    <div class="icon-box">🏠</div><span id="menu-accueil">Accueil</span>
+            <nav class="space-y-1 text-sm font-bold text-slate-300">
+                <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
+                    <span>🏠</span> <span id="menu-accueil">Accueil</span>
                 </button>
 
-                <button onclick="switchSection('sport')" id="btn-menu-sport" class="menu-item w-full text-left">
-                    <div class="icon-box">⚽</div><span id="menu-sport">Sport</span>
+                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🏆</span> <span id="menu-sport">Sport</span>
                 </button>
 
-                <button class="hide-on-mobile-bar menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">⚡</div><span style="display: flex; align-items: center;" id="menu-live">Live Sport <span class="pulse-dot"></span></span>
-                </button>
-
-                <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="menu-item w-full flex justify-between items-center text-left relative">
-                    <div class="flex items-center gap-3"><div class="icon-box">📄</div><span id="menu-paris">Mes Paris</span></div>
+                <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left relative">
+                    <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
                     <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
                 </button>
 
-                <button onclick="switchSection('casino')" id="btn-menu-casino" class="menu-item w-full text-left">
-                    <div class="icon-box">🎰</div><span id="menu-casino">Casino</span>
+                <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🎰</span> <span id="menu-casino">Le casino</span>
                 </button>
 
-                <button class="hide-on-mobile-bar menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">🤵</div><span style="display: flex; align-items: center;">Live Casino <span class="pulse-dot"></span></span>
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🤵</span> <span id="menu-live">Casino en direct</span>
                 </button>
 
-                <button onclick="switchSection('crash')" id="btn-menu-crash" class="hide-on-mobile-bar menu-item menu-item-aviator w-full text-left">
-                    <div class="icon-box">🚀</div><span id="menu-crash">Aviator</span>
+                <button onclick="switchSection('crash')" id="btn-menu-crash" class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                    <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
                 </button>
 
-                <button class="hide-on-mobile-bar menu-item w-full text-left opacity-60 cursor-not-allowed">
-                    <div class="icon-box">🎡</div><span>Roue de jeux</span>
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
+                </button>
+
+                <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
+                    <span>🎁</span> <span id="menu-promotions">Promotions</span>
                 </button>
 
                 <div class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/40 border border-slate-800/60 mt-2 hide-on-mobile-bar">
                     <div class="flex items-center gap-4 text-slate-400">
-                        <span>💬</span> <span id="menu-langue" class="font-bold text-sm">Langue</span>
+                        <span>💬</span> <span id="menu-langue">Langue</span>
                     </div>
                     <select id="player-lang-select" onchange="changePlayerLanguage(this.value)" class="bg-[#050814] text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
                         <option value="fr">Français</option>
@@ -255,9 +299,15 @@
                 </div>
             </div>
         </div>
-    </header> 
+    </header> <!-- تم إزالة التكرار من هنا -->
         
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
+            <!-- شريط الرابحين المتحرك -->
+        <div class="live-ticker-wrapper">
+            <div class="live-ticker-track" id="winners-ticker-track">
+                <!-- سيتم توليد الرابحين هنا -->
+            </div>
+        </div>
             <div id="pane-accueil" class="player-view-section space-y-4">
               <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
                     <div class="bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
@@ -439,12 +489,11 @@
             }
         }
 
-        // تم إصلاح خطأ الـ Content-Type الذي كان يمنع الاتصال بالسيرفر
         function getAuthHeaders() {
             const token = localStorage.getItem('token');
             return {
                 'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json' 
+                'Content-Type': 'getAuthHeaders'
             };
         }
         
@@ -489,7 +538,7 @@
             const panelElement = document.getElementById(`pane-${sectionId}`);
             if (panelElement) panelElement.classList.remove('hidden');
             
-            document.getElementById('main-sidebar').querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active-menu-btn'));
+            document.getElementById('main-sidebar').querySelectorAll('button').forEach(btn => btn.classList.remove('active-menu-btn'));
             const targetBtn = document.getElementById(`btn-menu-${sectionId === 'paris' ? 'paris-view' : sectionId}`);
             if(targetBtn) targetBtn.classList.add('active-menu-btn');
 
@@ -601,39 +650,41 @@
         }
 
       async function handlePlayerAuth() {
-            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
-            const password = document.getElementById('p-auth-password').value;
-            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+    const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
+    const password = document.getElementById('p-auth-password').value;
+    if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
-            try {
-                // تم إصلاح خطأ الـ Content-Type هنا أيضاً لكي يقرأ السيرفر بيانات الدخول
-                const res = await fetch(`${BACKEND_URL}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await res.json();
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'getAuthHeaders' },
+            body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
 
-                if(res.ok) {
-                    if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
-                        showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
-                        return; 
-                    }
-
-                    playerSession = data;
-                    localStorage.setItem('alpha_player_session', JSON.stringify(data));
-                    localStorage.setItem('token', data.access_token); 
-
-                    setupLoggedInUI();
-                    await fetchPlayerTicketsFromServer();
-                } else { 
-                    showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); 
-                }
-            } catch(e) { 
-                showNotification('عطل اتصال بالسيرفر', 'error'); 
+        if(res.ok) {
+            // --- الحارس الأمني لمنع الإدارة من دخول صفحة اللاعب ---
+            // نتحقق من الدور (Role) الذي يرسله السيرفر
+            if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
+                // إظهار إشعار أحمر يرفض الدخول
+                showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
+                return; // نوقف عملية الدخول فوراً ونمنع حفظ الجلسة
             }
+            // ----------------------------------------------------
+
+            playerSession = data;
+            localStorage.setItem('alpha_player_session', JSON.stringify(data));
+            localStorage.setItem('token', data.access_token); 
+
+            setupLoggedInUI();
+            await fetchPlayerTicketsFromServer();
+        } else { 
+            showNotification(data.detail || 'بيانات الدخول خاطئة !', 'error'); 
         }
-        
+    } catch(e) { 
+        showNotification('عطل اتصال بالسيرفر', 'error'); 
+    }
+}
          function setupLoggedInUI() {
             closeLoginModal();
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
@@ -1154,6 +1205,7 @@
             renderCasinoGames(); 
             clearTicket(); 
             startJackpots();
+            generateLiveWinnersTicker();
             
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
@@ -1200,6 +1252,45 @@
         function toggleUserMenu() {
             document.getElementById('user-dropdown').classList.toggle('hidden');
         }
+
+        // --- نظام شريط الرابحين المباشر ---
+        function generateLiveWinnersTicker() {
+            const track = document.getElementById('winners-ticker-track');
+            if(!track) return;
+
+            const fakeNames = ["fethi", "ahmed", "samir", "karim", "yassine", "mohamed", "ali", "hassen", "rami", "anis", "wael"];
+            const gamesList = ["Aviator 🚀", "Gates of Olympus ⚡", "Sport ⚽", "Live Roulette 🎡", "Sweet Bonanza 🍭", "Blackjack 🃏"];
+            
+            const maskName = (name) => {
+                const visibleLen = Math.ceil(name.length / 2);
+                return name.substring(0, visibleLen) + "***";
+            };
+
+            let tickerHTML = '';
+            
+            for(let i = 0; i < 15; i++) {
+                const randomBaseName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+                const randomNumbers = Math.floor(Math.random() * 99);
+                const fullName = randomBaseName + randomNumbers;
+                
+                const maskedUsername = maskName(fullName);
+                const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+                const randomAmount = (Math.random() * 800 + 15).toFixed(2);
+                
+                tickerHTML += `
+                    <div class="winner-card">
+                        <span class="w-icon">🎉</span>
+                        <span class="w-name">${maskedUsername}</span>
+                        <span class="w-game">gagné sur ${randomGame}</span>
+                        <span class="w-amount">+${randomAmount} TND</span>
+                    </div>
+                `;
+            }
+            
+            track.innerHTML = tickerHTML;
+        }
+
+
     </script>
 
 </body>
