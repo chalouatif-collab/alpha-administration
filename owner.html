@@ -314,7 +314,7 @@
             showNotification(`تم تحديد: ${username}`);
         }
 
-        // --- المودال: الفلترة والتواريخ للرياضة والتحويلات ---
+    // --- المودال: الفلترة والتواريخ للرياضة والتحويلات والحسابات ---
         async function fetchAndOpenHistory(type) {
             const modalEl = document.getElementById('historyModal');
             const myModal = new bootstrap.Modal(modalEl);
@@ -339,7 +339,7 @@
                     if (res.ok) {
                         const tickets = await res.json();
                         if (tickets && tickets.length > 0) {
-                            let html = `<div class="d-flex flex-column gap-2">`;
+                            let html = `<div class="d-flex flex-column gap-2" style="max-height: 400px; overflow-y: auto;">`;
                             tickets.forEach(t => {
                                 let badgeColor = t.status === "gagne" ? "text-success" : (t.status === "perdu" ? "text-danger" : (t.status === "cashout" ? "text-warning" : "text-info"));
                                 let matchesHtml = Array.isArray(t.details_list) ? t.details_list.map(g => `• ${g.matchName} (<span class="text-warning">${g.outcome}</span>)`).join('<br>') : (t.match || "Match Inconnu");
@@ -367,7 +367,7 @@
                 } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
                 
             } 
-            // 2. سجل التحويلات (النظام الجديد بالتواريخ)
+            // 2. سجل التحويلات
             else if (safeType === 'transfert') {
                 try {
                     const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, { headers: getAuthHeaders() });
@@ -377,9 +377,51 @@
                     }
                 } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
             } 
-            // 3. الحسابات والكازينو
+            // 3. سجل الحسابات (Compte) - الجزء الجديد
+            else if (safeType === 'compte') {
+                try {
+                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
+                    if(res.ok) {
+                        const users = await res.json();
+                        if(users && users.length > 0) {
+                            let html = `<div class="d-flex flex-column gap-2" style="max-height: 400px; overflow-y: auto;">`;
+                            
+                            users.forEach(u => {
+                                const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
+                                const createdBy = u.created_by || 'System';
+                                const rtp = u.rtp !== undefined && u.rtp !== null ? u.rtp : 50;
+                                const statusDot = u.is_blocked === 1 ? 'bg-danger' : 'bg-success';
+                                
+                                html += `
+                                <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
+                                    <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="position-relative p-2 rounded-circle border border-secondary bg-card-blue" style="font-size: 0.8rem;">👤
+                                                <span class="position-absolute top-0 start-100 translate-middle p-1 ${statusDot} border border-dark rounded-circle"></span>
+                                            </div>
+                                            <div>
+                                                <div class="text-white fw-bold mb-0" style="font-size: 0.9rem;">${u.username}</div>
+                                                <div class="text-info fw-bold" style="font-size: 0.65rem;">Rôle: <span class="text-owner-primary">${userRole}</span></div>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="text-secondary mb-1" style="font-size: 0.7rem;">Créé par: <span class="text-white fw-bold">${createdBy}</span></div>
+                                            <div class="text-secondary font-monospace" style="font-size: 0.65rem;">RTP: ${rtp}%</div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            });
+                            html += `</div>`;
+                            body.innerHTML = html;
+                        } else {
+                            body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Aucun compte trouvé.</div>`;
+                        }
+                    }
+                } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
+            }
+            // 4. الكازينو
             else {
-                body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Fonctionnalité en cours de maintenance...</div>`;
+                body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Fonctionnalité de Casino en cours de maintenance...</div>`;
             }
         }
 
