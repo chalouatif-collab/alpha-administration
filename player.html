@@ -667,28 +667,29 @@
             } catch (e) { console.error("Error syncing tickets from database", e); }
         }
 
-      async function handlePlayerAuth() {
+     async function handlePlayerAuth() {
     const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
     const password = document.getElementById('p-auth-password').value;
+    
+    // تصحيح منطق التحقق (السطر 673)
     if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
     try {
         const res = await fetch(`${BACKEND_URL}/api/login`, {
             method: 'POST',
-            headers: { 'Content-Type': 'getAuthHeaders' },
+            // تصحيح الترويسة (السطر 678)
+            headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify({ username, password })
         });
+        
         const data = await res.json();
 
         if(res.ok) {
-            // --- الحارس الأمني لمنع الإدارة من دخول صفحة اللاعب ---
-            // نتحقق من الدور (Role) الذي يرسله السيرفر
+            // ... (باقي كود التحقق من الدور "admin/owner/shop") ...
             if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
-                // إظهار إشعار أحمر يرفض الدخول
                 showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
-                return; // نوقف عملية الدخول فوراً ونمنع حفظ الجلسة
+                return;
             }
-            // ----------------------------------------------------
 
             playerSession = data;
             localStorage.setItem('alpha_player_session', JSON.stringify(data));
@@ -697,12 +698,13 @@
             setupLoggedInUI();
             await fetchPlayerTicketsFromServer();
         } else { 
-
-showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
+            // الإشعار كما قمنا بتعديله سابقاً
+            showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
         }
     } catch(e) { 
         showNotification('عطل اتصال بالسيرفر', 'error'); 
     }
+}
 }
          function setupLoggedInUI() {
             closeLoginModal();
