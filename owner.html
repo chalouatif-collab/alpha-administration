@@ -4,416 +4,553 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha Core - Owner Control Centre</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- استدعاء Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <style>
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* ألوان الأونر المخصصة: أزرق داكن */
+        body { background-color: #040a18; color: #e2e8f0; font-family: system-ui, -apple-system, sans-serif; }
+        .bg-card-blue { background-color: #0a162d; }
+        .border-blue-custom { border-color: #172a4f !important; }
+        
+        /* حقول الإدخال */
+        .input-blue { background-color: #040a18; border: 1px solid #172a4f; color: #bfdbfe; }
+        .input-blue:focus { border-color: #e11d48; outline: none; box-shadow: 0 0 0 0.25rem rgba(225, 29, 72, 0.25); color: #fff;}
+        .input-blue::placeholder { color: rgba(148, 163, 184, 0.5); }
+        
+        /* ألوان مميزة للأونر (تميل للوردي/الأحمر الفاتح) */
+        .text-owner-primary { color: #f43f5e !important; }
+        .bg-owner-primary { background-color: #f43f5e !important; color: white !important; }
+        .bg-owner-primary:hover { background-color: #e11d48 !important; }
+        
+        .cursor-pointer { cursor: pointer; }
+    </style>
 </head>
-<body class="bg-[#0f172a] text-slate-200 min-h-screen p-4 relative">
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+<body class="d-flex flex-column min-vh-100 position-relative">
+    
+    <!-- حاوية الإشعارات -->
+    <div id="toast-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1090; max-width: 350px; width: 100%;"></div>
 
-    <header class="bg-slate-900 border-b border-slate-800 p-4 rounded-xl flex justify-between items-center mb-6 shadow-xl">
-        <!-- زر القائمة للهاتف -->
-       <button onclick="toggleSidebar()" class="md:hidden text-white text-2xl mr-4">☰</button>
-        <h1 class="text-xl font-black text-rose-500 tracking-wider">ALPHA <span class="text-white font-light">OWNER CONTROL</span></h1>
-        <div class="flex items-center gap-4">
-            <span class="text-sm bg-rose-500/10 text-rose-400 px-3 py-1 rounded-lg border border-rose-500/20 font-bold" id="badge-role">Super Owner</span>
-            <span class="font-bold text-slate-300" id="owner-username">fethi</span>
+    <!-- القائمة الجانبية (Offcanvas) -->
+    <div class="offcanvas offcanvas-start bg-card-blue border-end border-blue-custom text-white" tabindex="-1" id="sidebar-menu">
+        <div class="offcanvas-header border-bottom border-blue-custom mb-2">
+            <h5 class="offcanvas-title text-owner-primary fw-black">ALPHA OWNER</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        
+        <div class="offcanvas-body d-flex flex-column p-3 pt-0">
+            <!-- محدد اللغة -->
+            <div class="d-flex align-items-center justify-content-between mb-4 border border-blue-custom p-2 rounded" style="background-color: #040a18;">
+                <span class="text-secondary fw-bold" style="font-size: 0.8rem;">🌐 Langue:</span>
+                <select id="lang-select" onchange="changeLanguage(this.value)" class="form-select form-select-sm bg-card-blue text-white border-blue-custom w-auto fw-bold cursor-pointer shadow-none">
+                    <option value="fr">Français</option><option value="ar">العربية</option><option value="en">English</option>
+                </select>
+            </div>
+
+            <h6 class="text-secondary fw-bold mb-3 text-uppercase" style="font-size: 0.75rem;" id="menu-title">Menu de Gestion</h6>
+            
+            <nav class="d-flex flex-column gap-2 flex-grow-1">
+                <button onclick="fetchAndOpenHistory('casino')" class="btn text-start text-secondary fw-bold w-100 border border-transparent hover-bg-dark">🎰 Historique de casino</button>
+                <button onclick="fetchAndOpenHistory('transfert')" class="btn text-start text-secondary fw-bold w-100 border border-transparent hover-bg-dark">💸 Historique de transfert</button>
+                <button onclick="fetchAndOpenHistory('sport')" class="btn text-start text-secondary fw-bold w-100 border border-transparent hover-bg-dark">⚽ Historique de sport</button>
+                <button onclick="fetchAndOpenHistory('compte')" class="btn text-start text-secondary fw-bold w-100 border border-transparent hover-bg-dark">👤 Historique de compte</button>
+                <button onclick="openPasswordModal()" class="btn text-start text-secondary fw-bold w-100 border border-transparent hover-bg-dark">🔑 Changement de mot de passe</button>
+            </nav>
+            <button onclick="logout()" id="btn-logout" class="btn btn-outline-danger w-100 mt-3 fw-bold">🚪 Déconnexion</button>
+        </div>
+    </div>
+
+    <!-- الهيدر العلوي -->
+    <header class="bg-card-blue border-bottom border-blue-custom px-3 py-3 d-flex justify-content-between align-items-center shadow-sm sticky-top">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-secondary border-0 text-white px-2 py-1 fs-4" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar-menu">☰</button>
+            <h1 class="h5 mb-0 fw-black text-owner-primary tracking-wider d-none d-md-block">ALPHA <span class="text-white fw-light">OWNER</span></h1>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-danger bg-opacity-25 text-owner-primary border border-danger px-2 py-1" id="badge-role">Super Owner</span>
+            <span class="fw-bold text-white" id="owner-username">fethi</span>
         </div>
     </header>
 
-    <div class="max-w-7xl mx-auto table w-full border-spacing-4">
-        <div class="table-row">
-            <div id="sidebar-menu" class="fixed inset-y-0 left-0 z-50 w-64 bg-slate-900 p-4 border-r border-slate-800 shadow-xl transform -translate-x-full transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
-                    <!-- زر إغلاق للقائمة (يظهر فقط على الموبايل) -->
-              <button onclick="toggleSidebar()" class="md:hidden text-white mb-4">✕ إغلاق</button>
-                <div class="mb-4 p-2 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between gap-2">
-                    <span class="text-xs font-bold text-slate-400">🌐 Langue:</span>
-                    <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-slate-900 text-white text-xs font-bold p-1 rounded border border-slate-700 focus:outline-none cursor-pointer">
-                        <option value="fr">Français</option><option value="ar">العربية</option><option value="en">English</option>
-                    </select>
+    <!-- مساحة العمل الرئيسية -->
+    <main class="flex-grow-1 p-3 mx-auto w-100" style="max-width: 900px;">
+        
+        <div class="d-flex flex-column gap-4">
+            
+            <!-- لوحة التحكم بالمستخدم المحدد -->
+            <section class="bg-card-blue border border-blue-custom rounded p-3 shadow-sm">
+                <div class="row g-3 items-end">
+                    <div class="col-12 col-md-4">
+                        <label class="text-secondary fw-bold mb-1" style="font-size: 0.75rem;" id="lbl-selected-user">Utilisateur Sélectionné</label>
+                        <input type="text" id="ctrl-target-user" class="form-control input-blue text-white fw-bold font-monospace text-center" placeholder="Sélectionnez..." readonly>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="text-secondary fw-bold mb-1 d-flex justify-content-between" style="font-size: 0.75rem;">
+                            <span>🎮 RTP:</span>
+                            <span id="rtp-val-label" class="text-owner-primary">50%</span>
+                        </label>
+                        <input type="range" id="ctrl-rtp-range" min="1" max="99" value="50" oninput="document.getElementById('rtp-val-label').innerText = this.value + '%'" class="form-range" style="accent-color: #f43f5e;">
+                    </div>
+                    <div class="col-12 col-md-4 d-flex gap-2">
+                        <button onclick="saveRtpAndBlock(0)" class="btn btn-success flex-grow-1 fw-bold text-dark" style="font-size: 0.8rem;">🔓 حفظ</button>
+                        <button onclick="saveRtpAndBlock(1)" class="btn btn-warning flex-grow-1 fw-bold text-dark" style="font-size: 0.8rem;">⛔ حظر</button>
+                        <button onclick="deleteAccountAction()" class="btn btn-danger flex-grow-1 fw-bold" style="font-size: 0.8rem;">🗑️ حذف</button>
+                    </div>
                 </div>
-                <h2 class="text-xs font-bold text-slate-400 tracking-wider uppercase mb-3 px-2" id="menu-title">Menu de Gestion</h2>
-                <div class="space-y-2">
-                    <button onclick="fetchAndOpenHistory('casino')" class="w-full text-left bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-xs text-slate-300 hover:text-rose-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">🎰 Historique de casino</button>
-                    <button onclick="fetchAndOpenHistory('transfert')" class="w-full text-left bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-xs text-slate-300 hover:text-rose-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">💸 Historique de transfert</button>
-                    <button onclick="fetchAndOpenHistory('sport')" class="w-full text-left bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-xs text-slate-300 hover:text-rose-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">⚽ Historique de sport</button>
-                    <button onclick="fetchAndOpenHistory('compte')" class="w-full text-left bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-xs text-slate-300 hover:text-rose-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">👤 Historique de compte</button>
-                    <button onclick="openPasswordModal()" class="w-full text-left bg-slate-950 hover:bg-rose-500/10 border border-slate-800 hover:border-rose-500/30 text-xs text-slate-300 hover:text-rose-400 p-3 rounded-xl transition-all cursor-pointer font-bold block">🔑 Changement de mot de passe</button>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-800">
-                    <button onclick="logout()" class="w-full text-center bg-rose-600/20 hover:bg-rose-600 border border-rose-600/40 text-rose-400 hover:text-white text-xs font-bold p-3 rounded-xl transition-all cursor-pointer block" id="btn-logout">🚪 Déconnexion</button>
-                </div>
-            </div>
+            </section>
 
-            <div class="table-cell vertical-align-top pl-4 space-y-6">
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/60">
-                        <span class="text-xs text-slate-400 block mb-1" id="lbl-selected-user">Utilisateur Sélectionné</span>
-                        <input type="text" id="ctrl-target-user" class="text-white font-bold bg-transparent font-mono text-sm focus:outline-none w-full" placeholder="Sélectionnez..." readonly>
+            <!-- إنشاء حساب جديد -->
+            <section class="bg-card-blue border border-blue-custom rounded p-3 shadow-sm">
+                <h6 class="fw-bold text-white mb-3" dir="rtl" id="title-create-user">👑 Créer un nouveau compte dans le réseau</h6>
+                <div class="row g-2 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="text-secondary mb-1" style="font-size: 0.75rem;" id="lbl-username">Nom d'utilisateur</label>
+                        <input type="text" id="new-user-name" class="form-control input-blue font-monospace">
                     </div>
-                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800/60">
-                        <label class="text-xs text-slate-400 block mb-1">🎮 Configuration RTP: <span id="rtp-val-label" class="text-rose-400 font-bold">50%</span></label>
-                        <input type="range" id="ctrl-rtp-range" min="1" max="99" value="50" oninput="document.getElementById('rtp-val-label').innerText = this.value + '%'" class="w-full accent-rose-500 h-1 bg-slate-800 rounded-lg cursor-pointer">
+                    <div class="col-12 col-md-4">
+                        <label class="text-secondary mb-1" style="font-size: 0.75rem;" id="lbl-password">Mot de passe</label>
+                        <input type="password" id="new-user-pass" class="form-control input-blue font-monospace">
                     </div>
-                    <div class="flex gap-2 w-full md:col-span-2">
-                        <button onclick="saveRtpAndBlock(0)" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs font-bold py-3.5 rounded-xl transition-all cursor-pointer">🔓 Active / Save</button>
-                        <button onclick="saveRtpAndBlock(1)" class="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold py-3.5 rounded-xl transition-all cursor-pointer">⛔ Blockage</button>
-                        <button onclick="deleteAccountAction()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-3.5 rounded-xl transition-all cursor-pointer">🗑️ Supprimer</button>
+                    <div class="col-12 col-md-4">
+                        <label class="text-secondary mb-1" style="font-size: 0.75rem;">Rôle</label>
+                        <select id="new-user-role" class="form-select input-blue font-monospace">
+                            <option value="owner">Owner</option><option value="super_admin">Super Admin</option><option value="admin">Admin</option><option value="shop">Shop</option><option value="player">Player</option>
+                        </select>
+                    </div>
+                </div>
+                <button onclick="createNetworkUser()" class="btn bg-owner-primary w-100 fw-bold" id="btn-create">Créer le compte</button>
+            </section>
+
+            <!-- العمليات المالية وتغيير كلمة سر المستخدم -->
+            <section class="bg-card-blue border border-blue-custom rounded p-3 shadow-sm">
+                <h6 class="fw-bold text-white mb-3" dir="rtl" id="title-table-console">📋 Console de gestion globale des comptes</h6>
+                
+                <div class="row g-2 mb-2">
+                    <div class="col-6">
+                        <input type="text" id="target-action-user" readonly placeholder="Compte" class="form-control input-blue text-center text-owner-primary fw-bold">
+                    </div>
+                    <div class="col-6">
+                        <input type="number" id="target-action-amount" placeholder="Montant TND" class="form-control input-blue text-center font-monospace">
+                    </div>
+                </div>
+                
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <button onclick="executeAction('charge')" id="btn-credit" class="btn btn-success w-100 fw-bold text-dark">Créditer</button>
+                    </div>
+                    <div class="col-6">
+                        <button onclick="executeAction('withdraw')" id="btn-retirer" class="btn btn-danger w-100 fw-bold">Retirer</button>
                     </div>
                 </div>
 
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
-                    <h3 class="text-sm font-bold text-white mb-4" id="title-create-user">👑 Créer un nouveau compte dans le réseau</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end text-xs">
-                        <div>
-                            <label class="text-slate-400 block mb-1" id="lbl-username">Nom d'utilisateur</label>
-                            <input type="text" id="new-user-name" class="w-full p-2.5 rounded bg-slate-800 border border-slate-700 text-white font-mono focus:outline-none focus:border-rose-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1" id="lbl-password">Mot de passe</label>
-                            <input type="password" id="new-user-pass" class="w-full p-2.5 rounded bg-slate-800 border border-slate-700 text-white font-mono focus:outline-none focus:border-rose-500">
-                        </div>
-                        <div>
-                            <label class="text-slate-400 block mb-1" id="lbl-role">Rôle</label>
-                            <select id="new-user-role" class="w-full p-2.5 rounded bg-slate-800 border border-slate-700 text-white focus:outline-none">
-                                <option value="owner">Owner</option><option value="super_admin">Super Admin</option><option value="admin">Admin</option><option value="shop">Shop</option><option value="player">Player</option>
-                            </select>
-                        </div>
-                        <button onclick="createNetworkUser()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-2.5 rounded transition-all cursor-pointer" id="btn-create">Créer le compte</button>
+                <!-- إضافة ميزة تغيير كلمة السر للمستخدم المحدد هنا -->
+                <div class="d-flex gap-2 pt-3 border-top border-blue-custom">
+                    <input type="password" id="ctrl-user-new-pass" placeholder="كلمة سر جديدة للمستخدم" class="form-control input-blue font-monospace" dir="rtl">
+                    <button onclick="changeUserPasswordFromOwner()" class="btn btn-info fw-bold px-4">تغيير</button>
+                </div>
+            </section>
+
+            <!-- قائمة المستخدمين (البحث + الكروت) -->
+            <section class="bg-card-blue border border-blue-custom rounded shadow-sm overflow-hidden">
+                <div class="p-3 border-bottom border-blue-custom">
+                    <div class="d-flex align-items-center bg-dark border border-blue-custom rounded p-2">
+                        <span class="ms-2">🔍</span>
+                        <input type="text" id="search-input" oninput="renderFilteredUsers()" placeholder="بحث عن مستخدم..." class="form-control border-0 bg-transparent text-white shadow-none p-0 ps-2" dir="rtl" style="font-size: 0.85rem;">
                     </div>
                 </div>
+                <div id="owner-network-tbody" class="p-3 d-flex flex-column gap-2" style="max-height: 500px; overflow-y: auto;">
+                    <!-- سيتم عرض البطاقات هنا -->
+                </div>
+            </section>
+        </div>
 
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
-                    <div class="bg-[#10b981] p-4 text-slate-950 font-bold flex justify-between items-center text-xs">
-                        <span id="title-table-console">📋 Console de gestion globale des comptes</span>
-                        <div class="flex gap-2">
-                            <input type="text" id="target-action-user" class="bg-white p-1 rounded font-mono text-center text-slate-900" readonly placeholder="Compte">
-                            <input type="number" id="target-action-amount" class="bg-white p-1 rounded font-mono text-center text-slate-900 w-24" placeholder="Montant TND">
-                            <button onclick="executeAction('charge')" class="bg-slate-950 text-white px-3 py-1 rounded font-bold cursor-pointer" id="btn-credit">Créditer</button>
-                            <button onclick="executeAction('withdraw')" class="bg-rose-700 text-white px-3 py-1 rounded font-bold cursor-pointer" id="btn-retirer">Retirer</button>
-                        </div>
-                    </div>
-                    <div class="p-4 overflow-x-auto text-xs">
-                       <!-- الحاوية الجديدة بدلاً من الجدول -->
-                        <!-- حقل البحث -->
-<div class="p-4">
-    <input type="text" id="search-input" oninput="renderFilteredUsers()" 
-           placeholder="🔍 بحث عن مستخدم..." 
-           class="w-full bg-slate-800 text-white p-3 rounded-xl border border-slate-700 focus:outline-none focus:border-cyan-500">
-</div>
-                       <div id="owner-network-tbody" class="p-4 space-y-3">
-                                     <!-- سيتم عرض بطاقات الحسابات هنا -->
-                       </div>
-                    </div>
+    </main>
+
+    <!-- نافذة السجلات (Modal للرياضة والتحويلات) -->
+    <div class="modal fade" id="historyModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-card-blue border-blue-custom text-white">
+                <div class="modal-header border-blue-custom">
+                    <h6 class="modal-title fw-bold text-owner-primary" id="modal-title">Historique</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-3" id="modal-dynamic-content">
+                    <!-- سيتم حقن الجداول أو الفلاتر هنا برمجياً -->
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="history-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-2xl p-6 shadow-2xl relative">
-            <button onclick="closeModal('history-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
-            <h3 id="modal-title" class="text-base font-bold text-rose-500 mb-4">Historique</h3>
-            <div class="overflow-x-auto max-h-[400px] rounded-xl border border-slate-800 bg-slate-950 p-2">
-                <table class="w-full text-left text-xs font-mono">
-                    <thead class="bg-slate-900 text-slate-400 border-b border-slate-800"><tr id="modal-table-headers"></tr></thead>
-                    <tbody id="modal-table-body" class="divide-y divide-slate-800/50 text-slate-300"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="password-modal" class="fixed inset-0 bg-black/70 hidden items-center justify-center p-4 z-50">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xs p-6 shadow-2xl relative">
-            <button onclick="closeModal('password-modal')" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
-            <h3 class="text-sm font-bold text-white mb-4">🔑 Modifier le mot de passe</h3>
-            <div class="space-y-3 text-xs">
-                <input type="password" id="new-sys-pass" placeholder="Nouveau mot de passe" class="w-full p-2.5 rounded bg-slate-800 border border-slate-700 text-white font-mono focus:outline-none focus:border-rose-500">
-                <button onclick="submitNewPassword()" class="w-full bg-rose-500 hover:bg-rose-600 text-white py-2.5 rounded font-bold cursor-pointer transition-all">Mettre à jour</button>
+    <!-- نافذة تعديل كلمة سر النظام الخاصة بالأونر -->
+    <div class="modal fade" id="passwordModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content bg-card-blue border-blue-custom text-white">
+                <div class="modal-header border-blue-custom">
+                    <h6 class="modal-title fw-bold">🔑 Modifier le mot de passe</h6>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <input type="password" id="new-sys-pass" placeholder="Nouveau mot de passe" class="form-control input-blue mb-3 font-monospace">
+                    <button onclick="submitNewPassword()" class="btn bg-owner-primary w-100 fw-bold">Mettre à jour</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-   const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
-        let allUsers = []; // سنحفظ بيانات المستخدمين هنا للبحث والفرز
-        let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi' };
+        const BACKEND_URL = "https://alpha-core-fl0v.onrender.com";
+        let allUsers = []; 
+        let allTransactionsCache = []; // كاش المعاملات
+        let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi', role: 'owner' };
 
-        // 🚀 1. إضافة دالة جلب مفتاح الأمان (Token)
         function getAuthHeaders() {
             const token = localStorage.getItem('token');
-            return {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            };
+            return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
         }
 
         const translations = {
-            fr: { menu: "Menu de Gestion", selected: "Utilisateur Sélectionné", create: "👑 Créer un nouveau compte dans le réseau", user: "Nom d'utilisateur", pass: "Mot de passe", console: "📋 Console de gestion globale des comptes", credit: "Créditer", retirer: "Retirer", th_c: "Compte", th_r: "Rôle", th_cr: "Créateur", th_s: "Solde Actuel (TND)", out: "🚪 Déconnexion" },
-            ar: { menu: "قائمة الإدارة والتحكم", selected: "المستعمل المختار", create: "👑 إنشاء وتعيين رتبة جديدة في الشبكة", user: "اسم المستخدم", pass: "كلمة المرور", console: "📋 لوحة التحكم المالي وإدارة أرصدة الشبكة", credit: "شحن رصيد", retirer: "سحب جزئي", th_c: "الحساب", th_r: "الرتبة", th_cr: "المنشِئ", th_s: "الرصيد الحالي (TND)", out: "🚪 تسجيل الخروج" },
-            en: { menu: "Management Menu", selected: "Selected Account", create: "👑 Create a New Rank in the Hierarchy", user: "Username", pass: "Password", console: "📋 Global Balances Control Console", credit: "Charge", retirer: "Withdraw", th_c: "Account", th_r: "Rank Role", th_cr: "Created By", th_s: "Available Balance (TND)", out: "🚪 Logout" }
+            fr: { menu: "Menu de Gestion", selected: "Utilisateur Sélectionné", create: "👑 Créer un nouveau compte", user: "Nom d'utilisateur", pass: "Mot de passe", console: "📋 Console de gestion globale", credit: "Créditer", retirer: "Retirer", out: "🚪 Déconnexion" },
+            ar: { menu: "قائمة الإدارة", selected: "المستعمل المختار", create: "👑 إنشاء حساب جديد", user: "اسم المستخدم", pass: "كلمة المرور", console: "📋 لوحة التحكم المالي", credit: "شحن رصيد", retirer: "سحب", out: "🚪 تسجيل الخروج" },
+            en: { menu: "Management Menu", selected: "Selected Account", create: "👑 Create New Account", user: "Username", pass: "Password", console: "📋 Global Balances Console", credit: "Charge", retirer: "Withdraw", out: "🚪 Logout" }
         };
 
         function changeLanguage(lang) {
             document.body.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.getElementById('menu-title').innerText = translations[lang].menu; document.getElementById('lbl-selected-user').innerText = translations[lang].selected; document.getElementById('title-create-user').innerText = translations[lang].create; document.getElementById('lbl-username').innerText = translations[lang].user; document.getElementById('lbl-password').innerText = translations[lang].pass; document.getElementById('title-table-console').innerText = translations[lang].console; document.getElementById('btn-credit').innerText = translations[lang].credit; document.getElementById('btn-retirer').innerText = translations[lang].retirer; document.getElementById('th-compte').innerText = translations[lang].th_c; document.getElementById('th-role').innerText = translations[lang].th_r; document.getElementById('th-createur').innerText = translations[lang].th_cr; document.getElementById('th-solde').innerText = translations[lang].th_s; document.getElementById('btn-logout').innerText = translations[lang].out;
+            document.getElementById('menu-title').innerText = translations[lang].menu; 
+            document.getElementById('lbl-selected-user').innerText = translations[lang].selected; 
+            document.getElementById('title-create-user').innerText = translations[lang].create; 
+            document.getElementById('lbl-username').innerText = translations[lang].user; 
+            document.getElementById('lbl-password').innerText = translations[lang].pass; 
+            document.getElementById('title-table-console').innerText = translations[lang].console; 
+            document.getElementById('btn-credit').innerText = translations[lang].credit; 
+            document.getElementById('btn-retirer').innerText = translations[lang].retirer; 
+            document.getElementById('btn-logout').innerText = translations[lang].out;
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            const el = document.getElementById('owner-username');
+            if(el) el.innerText = user.username;
+            loadNetworkData();
+        });
+
+        // --- نظام الإشعارات ---
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
             if(!container) return;
-            const toast = document.createElement('div');
-            toast.className = `p-4 rounded-xl shadow-2xl border text-xs font-bold text-slate-950 transition-all duration-300 transform translate-y-2 opacity-0 flex items-center gap-2 ${type === 'success' ? 'bg-emerald-400 border-emerald-500' : 'bg-rose-400 border-rose-500'}`;
-            toast.innerHTML = type === 'success' ? `✅ ${message}` : `❌ ${message}`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.classList.remove('translate-y-2', 'opacity-0'); }, 10);
-            setTimeout(() => { toast.classList.add('translate-y-2', 'opacity-0'); setTimeout(() => { toast.remove(); }, 300); }, 2500);
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast align-items-center text-white border-0 mb-2 show ${type === 'success' ? 'bg-success' : 'bg-danger'}`;
+            toastEl.innerHTML = `<div class="d-flex"><div class="toast-body fw-bold" style="font-size: 0.85rem;">${type === 'success' ? '✅' : '❌'} ${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div>`;
+            container.appendChild(toastEl);
+            setTimeout(() => { toastEl.remove(); }, 3500);
         }
 
-        // 🚀 2. تأمين جلب المستخدمين
-      // 1. دالة جلب البيانات (مع الـ try و catch داخلها)
-async function loadNetworkData() {
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
-        if (res.ok) {
-            allUsers = await res.json();
-            renderFilteredUsers();
+        // --- جلب وعرض الشبكة ---
+        async function loadNetworkData() {
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
+                if (res.ok) {
+                    allUsers = await res.json();
+                    renderFilteredUsers();
+                }
+            } catch (e) { console.error(e); }
         }
-    } catch (e) {
-        console.error(e);
-    }
-}
 
-// 2. دالة عرض البيانات
-function renderUsers(data) {
-    const container = document.getElementById('owner-network-tbody');
-    if (!container) return;
-    container.innerHTML = ''; 
-    data.forEach(u => {
-        const userRtp = u.rtp || 50;
-        const balance = parseFloat(u.balance || 0);
-        const usernameClean = u.username || 'Inconnu';
-        const createdByClean = u.created_by || 'System';
-        const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
+        function renderUsers(data) {
+            const container = document.getElementById('owner-network-tbody');
+            if (!container) return;
+            container.innerHTML = ''; 
+            
+            if(data.length === 0) {
+                container.innerHTML = `<div class="text-center text-secondary p-3" style="font-size: 0.85rem;">لا توجد حسابات.</div>`;
+                return;
+            }
 
-        container.innerHTML += `
-        <div class="bg-slate-900 p-3 rounded-lg flex justify-between items-center border border-slate-800 mb-2">
-            <div>
-                <p class="text-[10px] text-slate-500 font-bold">${createdByClean}</p>
-                <p class="font-bold text-white text-sm">${usernameClean}</p>
-                <span class="text-[10px] text-amber-400">${userRole}</span>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="font-mono text-emerald-400 font-bold text-sm">${balance.toFixed(2)} TND</span>
-                <button onclick="selectForControl('${usernameClean}', ${userRtp})" 
-                        class="bg-emerald-700 w-9 h-9 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-all shadow-lg">
-                    ➜
-                </button>
-            </div>
-        </div>`;
-    });
-}
+            data.forEach(u => {
+                const userRtp = u.rtp || 50;
+                const balance = parseFloat(u.balance || 0);
+                const usernameClean = u.username || 'Inconnu';
+                const createdByClean = u.created_by || 'System';
+                const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
+                const statusDot = u.is_blocked === 1 ? 'bg-danger' : 'bg-success';
 
-// 3. دالة البحث والفرز
-function renderFilteredUsers() {
-    const searchInput = document.getElementById('search-input');
-    const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
-    
-    let filtered = allUsers.filter(u => (u.username || '').toLowerCase().includes(searchTerm));
-    
-    // الفرز: الأكبر رصيداً أولاً
-    filtered.sort((a, b) => parseFloat(b.balance || 0) - parseFloat(a.balance || 0));
-    
-    renderUsers(filtered);
-}
+                container.innerHTML += `
+                <div class="card bg-transparent border-blue-custom shadow-sm cursor-pointer" style="background-color: #040a18 !important;" onclick="selectForControl('${usernameClean}', ${userRtp})">
+                    <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="position-relative p-2 rounded-circle border border-secondary bg-card-blue">👤
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 ${statusDot} border border-dark rounded-circle"></span>
+                            </div>
+                            <div>
+                                <div class="text-white fw-bold mb-0" style="font-size: 0.9rem;">${usernameClean}</div>
+                                <div class="text-info fw-bold" style="font-size: 0.65rem;">${userRole} | By: ${createdByClean}</div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="text-emerald-400 fw-bold font-monospace" style="font-size: 0.85rem;">${balance.toFixed(2)} TND</span>
+                            <div class="badge bg-secondary bg-opacity-25 text-white border border-secondary p-2">🎯</div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+        }
+
+        function renderFilteredUsers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            let filtered = allUsers.filter(u => (u.username || '').toLowerCase().includes(searchTerm));
+            filtered.sort((a, b) => parseFloat(b.balance || 0) - parseFloat(a.balance || 0));
+            renderUsers(filtered);
+        }
 
         function selectForControl(username, rtp) {
             document.getElementById('ctrl-target-user').value = username;
             document.getElementById('target-action-user').value = username;
             document.getElementById('ctrl-rtp-range').value = rtp;
             document.getElementById('rtp-val-label').innerText = rtp + '%';
+            showNotification(`تم تحديد: ${username}`);
         }
-         function getAuthHeaders() {
-    const token = localStorage.getItem('token');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-}
-       // 🚀 3. تأمين النوافذ المنبثقة للرياضة والتحويلات
+
+        // --- المودال: الفلترة والتواريخ للرياضة والتحويلات ---
         async function fetchAndOpenHistory(type) {
-            const modal = document.getElementById('history-modal');
+            const modalEl = document.getElementById('historyModal');
+            const myModal = new bootstrap.Modal(modalEl);
             const title = document.getElementById('modal-title');
-            const headers = document.getElementById('modal-table-headers');
-            const body = document.getElementById('modal-table-body');
-            
+            const body = document.getElementById('modal-dynamic-content');
             const target_username = document.getElementById('ctrl-target-user').value.trim().toLowerCase();
-            
             const safeType = type.trim().toLowerCase(); 
             
-            title.innerText = "Historique de " + safeType.toUpperCase();
-            body.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-slate-400">Chargement en cours... (جاري التحميل)</td></tr>';
-            modal.style.display = 'flex';
+            title.innerText = "Historique: " + safeType.toUpperCase();
+            body.innerHTML = '<div class="text-center p-4 text-info fw-bold">Chargement en cours... (جاري التحميل)</div>';
+            myModal.show();
 
+            // 1. الرياضة
             if (safeType === 'sport') {
                 if(!target_username || target_username === "sélectionnez...") {
-                    headers.innerHTML = `<th class="p-2">Info</th>`;
-                    body.innerHTML = `<tr><td class="p-2 text-amber-400 font-bold text-center">Sélectionnez un joueur dans la console d'abord ! (اختر لاعباً أولاً)</td></tr>`;
+                    body.innerHTML = `<div class="text-center p-4 text-warning fw-bold">Sélectionnez un joueur dans la console d'abord ! (اختر لاعباً أولاً)</div>`;
                     return;
                 }
                 
-                headers.innerHTML = `<th class="p-2">Ref / Date</th><th class="p-2">Matchs & Choix</th><th class="p-2 text-center">Cote / Mise</th><th class="p-2 text-right">Statut / Gain</th>`;
-                
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`, {
-                        method: 'GET',
-                        headers: getAuthHeaders() // إضافة المفتاح
-                    });
+                    const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`, { headers: getAuthHeaders() });
                     if (res.ok) {
                         const tickets = await res.json();
-                        body.innerHTML = ''; 
-                        
                         if (tickets && tickets.length > 0) {
+                            let html = `<div class="d-flex flex-column gap-2">`;
                             tickets.forEach(t => {
-                                let badgeColor = t.status === "gagne" ? "text-emerald-400 font-black" : (t.status === "perdu" ? "text-rose-400" : (t.status === "cashout" ? "text-purple-400" : "text-cyan-400"));
+                                let badgeColor = t.status === "gagne" ? "text-success" : (t.status === "perdu" ? "text-danger" : (t.status === "cashout" ? "text-warning" : "text-info"));
+                                let matchesHtml = Array.isArray(t.details_list) ? t.details_list.map(g => `• ${g.matchName} (<span class="text-warning">${g.outcome}</span>)`).join('<br>') : (t.match || "Match Inconnu");
                                 
-                                let matchesHtml = Array.isArray(t.details_list) ? 
-                                    t.details_list.map(g => `• ${g.matchName} (<span class="text-amber-400">${g.outcome}</span>)`).join('<br>') : 
-                                    (t.match || "Match Inconnu");
-
-                                body.innerHTML += `
-                                    <tr class="border-b border-slate-800/40 hover:bg-slate-800/30">
-                                        <td class="p-2 text-slate-400 text-xs">#${t.ticket_id}<br><span class="text-[10px]">${t.date || ''}</span></td>
-                                        <td class="p-2 text-white font-sans text-xs">${matchesHtml}</td>
-                                        <td class="p-2 text-center font-mono">X${parseFloat(t.total_cote).toFixed(2)}<br><span class="text-slate-400">${parseFloat(t.mise).toFixed(2)} TND</span></td>
-                                        <td class="p-2 text-right font-mono font-bold ${badgeColor}">${t.status.toUpperCase()}<br><span>+${parseFloat(t.gain).toFixed(2)} TND</span></td>
-                                    </tr>`;
+                                html += `
+                                <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
+                                    <div class="card-body p-2 d-flex flex-column flex-md-row justify-content-between gap-2">
+                                        <div class="text-white" style="font-size: 0.75rem; line-height: 1.4;">
+                                            <span class="text-secondary">#${t.ticket_id} | ${t.date || ''}</span><br>${matchesHtml}
+                                        </div>
+                                        <div class="text-end font-monospace" style="font-size: 0.7rem;">
+                                            <div class="text-light mb-1">Cote: X${parseFloat(t.total_cote).toFixed(2)} | Mise: ${parseFloat(t.mise).toFixed(2)}</div>
+                                            <div class="fw-bold ${badgeColor}">Gain: +${parseFloat(t.gain).toFixed(2)} TND</div>
+                                            <span class="badge border border-secondary text-uppercase ${badgeColor} mt-1">${t.status}</span>
+                                        </div>
+                                    </div>
+                                </div>`;
                             });
+                            html += `</div>`;
+                            body.innerHTML = html;
                         } else {
-                            body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500 font-bold">Aucun pari actif pour ce joueur.</td></tr>`;
+                            body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Aucun pari actif pour ce joueur.</div>`;
                         }
                     }
-                } catch(e) { 
-                    body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-rose-500 font-bold">Erreur de connexion API</td></tr>`; 
-                }
+                } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
                 
-            } else if (safeType === 'transfert') {
-                headers.innerHTML = `<th class="p-2">Expéditeur</th><th class="p-2">Bénéficiaire</th><th class="p-2">Action</th><th class="p-2 text-right">Montant (TND)</th>`;
-                body.innerHTML = '';
+            } 
+            // 2. سجل التحويلات (النظام الجديد بالتواريخ)
+            else if (safeType === 'transfert') {
                 try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
+                    const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, { headers: getAuthHeaders() });
                     if(res.ok) {
-                        const users = await res.json();
-                        users.forEach(u => {
-                            if(u.balance > 0 || u.username === 'samir') {
-                                const userBalance = u.balance !== undefined && u.balance !== null ? parseFloat(u.balance).toFixed(2) : "0.00";
-                                body.innerHTML += `<tr><td class="p-2">fethi</td><td class="p-2 text-white font-bold">${u.username}</td><td class="p-2 text-emerald-400 font-bold">Créditer</td><td class="p-2 text-right font-bold text-cyan-400">${userBalance} TND</td></tr>`;
-                                if(u.username === 'samir') {
-                                    body.innerHTML += `<tr><td class="p-2">fethi</td><td class="p-2 text-white font-bold">samir</td><td class="p-2 text-rose-500 font-bold">Retirer</td><td class="p-2 text-right font-bold text-rose-400">4999.00 TND</td></tr>`;
-                                }
-                            }
-                        });
-                        if(body.innerHTML === '') body.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">Aucun transfert trouvé.</td></tr>`;
+                        allTransactionsCache = await res.json();
+                        renderTransactionsModalUI(body);
                     }
-                } catch(e){}
-            } else if (safeType === 'compte') {
-                headers.innerHTML = `<th class="p-2">Compte Creé</th><th class="p-2">Rôle système</th><th class="p-2 text-right">Créateur</th>`;
-                body.innerHTML = '';
-                try {
-                    const res = await fetch(`${BACKEND_URL}/api/admin/users?t=${Date.now()}`, { headers: getAuthHeaders() });
-                    if(res.ok) {
-                        const users = await res.json();
-                        users.forEach(u => {
-                            const userRole = u.role ? u.role.toUpperCase() : 'PLAYER';
-                            body.innerHTML += `<tr><td class="p-2 text-white font-bold">${u.username}</td><td class="p-2 text-right text-rose-400">${userRole}</td></tr>`;
-                        });
-                    }
-                } catch(e){}
-            } else {
-                headers.innerHTML = `<th class="p-2">Détails</th><th class="p-2 text-right">Statut</th>`;
-                body.innerHTML = `<tr><td class="p-2 text-slate-500">Aucune donnée trouvée.</td><td class="p-2 text-right text-slate-500">0.00 TND</td></tr>`;
+                } catch(e) { body.innerHTML = `<div class="text-center p-4 text-danger fw-bold">Erreur de connexion API</div>`; }
+            } 
+            // 3. الحسابات والكازينو
+            else {
+                body.innerHTML = `<div class="text-center p-4 text-secondary fw-bold">Fonctionnalité en cours de maintenance...</div>`;
             }
         }
 
-        function openPasswordModal() { document.getElementById('password-modal').style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function logout() { localStorage.removeItem('alpha_user'); localStorage.clear(); sessionStorage.clear(); showNotification('Déconnexion réussie...'); setTimeout(() => { window.location.href = "index.html"; }, 600); }
+        // --- وظائف سجل التحويلات في النافذة ---
+        function renderTransactionsModalUI(container) {
+            let html = `
+                <div class="row g-2 mb-3 bg-dark border border-blue-custom p-2 rounded shadow-sm align-items-center">
+                    <div class="col-5">
+                        <label class="text-secondary mb-1" style="font-size: 0.65rem;">من تاريخ:</label>
+                        <input type="date" id="tx-start-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+                    </div>
+                    <div class="col-5">
+                        <label class="text-secondary mb-1" style="font-size: 0.65rem;">إلى تاريخ:</label>
+                        <input type="date" id="tx-end-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+                    </div>
+                    <div class="col-2 mt-auto">
+                        <button onclick="applyModalDateFilter()" class="btn btn-info w-100 fw-bold p-1" style="font-size: 0.75rem;">🔍</button>
+                    </div>
+                </div>
+                <div id="modal-tx-list" class="d-flex flex-column gap-2" style="max-height: 350px; overflow-y: auto;"></div>
+            `;
+            container.innerHTML = html;
+            displayModalTransactions(allTransactionsCache);
+        }
 
-        // 🚀 4. تأمين تغيير كلمة المرور
+        function applyModalDateFilter() {
+            const startDate = document.getElementById('tx-start-date').value;
+            const endDate = document.getElementById('tx-end-date').value;
+            let filtered = allTransactionsCache;
+            if (startDate || endDate) {
+                filtered = allTransactionsCache.filter(t => {
+                    const txDate = t.date ? t.date.split(' ')[0] : '';
+                    if (!txDate) return false;
+                    let isAfterStart = true, isBeforeEnd = true;
+                    if (startDate) isAfterStart = txDate >= startDate;
+                    if (endDate) isBeforeEnd = txDate <= endDate;
+                    return isAfterStart && isBeforeEnd;
+                });
+            }
+            displayModalTransactions(filtered);
+        }
+
+        function displayModalTransactions(transactions) {
+            const listContainer = document.getElementById('modal-tx-list');
+            if (!transactions || transactions.length === 0) {
+                listContainer.innerHTML = '<div class="text-center text-secondary fw-bold p-3" style="font-size: 0.8rem;">لا توجد معاملات في هذه الفترة.</div>';
+                return;
+            }
+            let html = '';
+            transactions.forEach(t => {
+                const isCharge = t.action === 'charge'; 
+                const color = isCharge ? 'text-success' : 'text-danger';
+                const icon = isCharge ? '⬆️ شحن' : '⬇️ سحب';
+                const targetName = t.target_username || t.target || 'مجهول';
+                const date = t.date || 'بدون تاريخ';
+                
+                html += `
+                    <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
+                        <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-white fw-bold mb-0" style="font-size: 0.85rem;">👤 ${targetName}</div>
+                                <div class="text-secondary font-monospace" style="font-size: 0.65rem;">🕒 ${date}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="${color} fw-bold font-monospace mb-0" style="font-size: 0.85rem;">
+                                    ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)}
+                                </div>
+                                <div class="text-info" style="font-size: 0.65rem;">${icon}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            listContainer.innerHTML = html;
+        }
+
+        // --- وظائف التحكم (كلمة السر، الرصيد، الحذف) ---
+        function openPasswordModal() { new bootstrap.Modal(document.getElementById('passwordModal')).show(); }
+        function logout() { localStorage.clear(); sessionStorage.clear(); window.location.href = "index.html"; }
+
         async function submitNewPassword() {
             const new_password = document.getElementById('new-sys-pass').value;
             if(!new_password) return showNotification('Veuillez introduire un mot de passe!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/user/change-password`, { 
-                method: 'POST', 
-                headers: getAuthHeaders(), // التعديل هنا
+                method: 'POST', headers: getAuthHeaders(),
                 body: JSON.stringify({ username: user.username, new_password }) 
             });
-            if(res.ok) { showNotification('Mot de passe mis à jour avec succès!'); closeModal('password-modal'); document.getElementById('new-sys-pass').value = ''; }
+            if(res.ok) { 
+                showNotification('Mot de passe mis à jour!'); 
+                document.getElementById('new-sys-pass').value = ''; 
+                bootstrap.Modal.getInstance(document.getElementById('passwordModal')).hide();
+            }
         }
 
-        // 🚀 5. تأمين حفظ نسبة الـ RTP والحظر
+        // 🚀 إضافة: دالة تغيير كلمة سر المستخدم المحدد
+        async function changeUserPasswordFromOwner() {
+            const target = document.getElementById('target-action-user').value;
+            const newPassword = document.getElementById('ctrl-user-new-pass').value;
+            
+            if(!target) return showNotification('الرجاء تحديد مستخدم أولاً', 'error');
+            if(!newPassword || newPassword.length < 4) return showNotification('كلمة المرور يجب أن تكون 4 أحرف على الأقل', 'error');
+            
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/change-player-password`, {
+                    method: 'POST', headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: user.username, target_username: target, new_password: newPassword })
+                });
+                if(res.ok) {
+                    showNotification(`تم تغيير كلمة سر [ ${target} ] بنجاح!`);
+                    document.getElementById('ctrl-user-new-pass').value = '';
+                } else { showNotification('فشلت العملية', 'error'); }
+            } catch(e) { showNotification('خطأ في الاتصال', 'error'); }
+        }
+
         async function saveRtpAndBlock(blockStatus) {
             const target_username = document.getElementById('ctrl-target-user').value, rtp = parseInt(document.getElementById('ctrl-rtp-range').value);
             if(!target_username) return showNotification('Sélectionnez un compte d\'abord!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/admin/configure-account`, { 
-                method: 'POST', 
-                headers: getAuthHeaders(), // التعديل هنا
+                method: 'POST', headers: getAuthHeaders(),
                 body: JSON.stringify({ admin_username: user.username, target_username, rtp, is_blocked: blockStatus }) 
             });
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
         }
 
-        // 🚀 6. تأمين حذف الحساب
         async function deleteAccountAction() {
             const target_username = document.getElementById('ctrl-target-user').value;
             if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
             const res = await fetch(`${BACKEND_URL}/api/admin/delete-account?admin_username=${user.username}&target_username=${target_username}`, { 
-                method: 'DELETE',
-                headers: getAuthHeaders() // التعديل هنا
+                method: 'DELETE', headers: getAuthHeaders()
             });
             if(res.ok) { showNotification('Compte supprimé!'); setTimeout(() => location.reload(), 800); }
         }
 
-        // 🚀 7. تأمين الدالة الأهم (شحن / سحب الرصيد)
         async function executeAction(action) {
-            const target_username = document.getElementById('target-action-user').value, amountInput = document.getElementById('target-action-amount').value;
+            const target_username = document.getElementById('target-action-user').value;
+            const amountInput = document.getElementById('target-action-amount').value;
             if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
             const amount = amountInput ? parseFloat(amountInput) : 0;
             if(amount <= 0) return showNotification('Veuillez introduire un montant valide!', 'error');
             
-            const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, { 
-                method: 'POST', 
-                headers: getAuthHeaders(), // التعديل هنا 
-                body: JSON.stringify({ admin_username: "fethi", target_username, action, amount }) 
-            });
-            if(res.ok) { showNotification('Opération réussie!'); loadNetworkData(); }
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, { 
+                    method: 'POST', headers: getAuthHeaders(), 
+                    body: JSON.stringify({ admin_username: user.username, target_username, action, amount }) 
+                });
+                const data = await res.json();
+                if(res.ok) { 
+                    showNotification('Opération réussie!'); 
+                    document.getElementById('target-action-amount').value = '';
+                    loadNetworkData(); 
+                } else { showNotification(data.detail || 'فشلت العملية', 'error'); }
+            } catch(e) { showNotification('Erreur', 'error'); }
         }
 
-        // 🚀 8. تأمين إنشاء حساب جديد
         async function createNetworkUser() {
-            const usernameInput = document.getElementById('new-user-name'), passwordInput = document.getElementById('new-user-pass'), roleSelect = document.getElementById('new-user-role');
-            if(!usernameInput || !passwordInput) return showNotification('عطل في التعرف على خانات الإدخال بالصفحة', 'error');
+            const usernameInput = document.getElementById('new-user-name');
+            const passwordInput = document.getElementById('new-user-pass');
+            const roleSelect = document.getElementById('new-user-role');
             const username = usernameInput.value.trim().toLowerCase(), password = passwordInput.value, role = roleSelect ? roleSelect.value : 'player';
+            
             if(!username || !password) return showNotification('Remplir tous les champs!', 'error');
             try {
                 const res = await fetch(`${BACKEND_URL}/api/register`, { 
-                    method: 'POST', 
-                    headers: getAuthHeaders(), // التعديل هنا
+                    method: 'POST', headers: getAuthHeaders(),
                     body: JSON.stringify({ username, password, role, created_by: user.username }) 
                 });
-                if(res.ok){ showNotification('Compte créé avec succès!'); usernameInput.value = ''; passwordInput.value = ''; await loadNetworkData(); } 
-                else { showNotification('Échec de la création, nom d\'utilisateur déjà pris', 'error'); }
-            } catch(e) { showNotification('Erreur de connexion au serveur', 'error'); }
+                if(res.ok){ 
+                    showNotification('Compte créé avec succès!'); 
+                    usernameInput.value = ''; passwordInput.value = ''; 
+                    loadNetworkData(); 
+                } else { showNotification('Nom d\'utilisateur déjà pris', 'error'); }
+            } catch(e) { showNotification('Erreur', 'error'); }
         }
-
-        window.onload = function() { loadNetworkData(); }
-       function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar-menu');
-        if (sidebar) {
-            sidebar.classList.toggle('-translate-x-full');
-        }
-    } // <-- هذا القوس هو الذي كان ينقصك
-
-</script>
-
-
-    
+    </script>
 </body>
+</html>
