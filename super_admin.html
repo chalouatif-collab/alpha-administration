@@ -255,6 +255,7 @@
             if (targetBtn) targetBtn.classList.add('active-sadmin-btn', 'text-info');
 
             if (sectionId === 'sport') loadSportTickets();
+            if (sectionId === 'transaction') loadTransactions();
 
             // إغلاق القائمة الجانبية بعد اختيار قسم (لتحسين تجربة الهاتف)
             const offcanvasElement = document.getElementById('mobileSidebar');
@@ -408,6 +409,66 @@
             } catch(e) { showNotification('خطأ في الاتصال', 'error'); }
         }
 
+        // --- جلب سجل المعاملات (شحن / سحب) ---
+async function loadTransactions() {
+    const container = document.getElementById('panel-sadmin-transaction');
+    
+    // إظهار رسالة تحميل
+    container.innerHTML = '<div class="text-secondary fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="text-center p-4 text-info fw-bold" style="font-size: 0.85rem;">جاري جلب سجل المعاملات...</div>';
+    
+    try {
+        // تنبيه: تأكد أن مسار الـ API هنا يطابق ما هو موجود في الباك إند الخاص بك
+        const res = await fetch(`${BACKEND_URL}/api/admin/transactions?username=${user.username}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+
+        if (res.ok) {
+            const transactions = await res.json();
+            
+            // إذا لم يكن هناك معاملات
+            if (!transactions || transactions.length === 0) {
+                container.innerHTML = '<div class="text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="bg-card-blue border border-blue-custom rounded p-4 text-center text-secondary fw-bold text-uppercase" style="font-size: 0.8rem;">Aucune transaction comptable enregistrée.</div>';
+                return;
+            }
+
+            // بناء واجهة الكروت للمعاملات
+            let html = '<div class="text-secondary fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="d-flex flex-column gap-2">';
+            
+            transactions.forEach(t => {
+                // تحديد نوع العملية (شحن أو سحب) والألوان المناسبة
+                const isCharge = t.action === 'charge'; 
+                const color = isCharge ? 'text-success' : 'text-danger';
+                const icon = isCharge ? '⬆️ شحن (Crédit)' : '⬇️ سحب (Retrait)';
+                const targetName = t.target_username || t.target || 'مجهول';
+                const date = t.date || t.created_at || 'بدون تاريخ';
+                
+                html += `
+                    <div class="card bg-card-blue border-blue-custom shadow-sm">
+                        <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="text-white fw-bold mb-1" style="font-size: 0.9rem;">👤 ${targetName}</div>
+                                <div class="text-secondary" style="font-size: 0.7rem;">🕒 ${date}</div>
+                            </div>
+                            <div class="text-end">
+                                <div class="${color} fw-bold font-monospace mb-1" style="font-size: 0.9rem;">
+                                    ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} TND
+                                </div>
+                                <div class="text-info" style="font-size: 0.7rem;">${icon}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
+        } else {
+            container.innerHTML = '<div class="text-center p-4 text-danger fw-bold" style="font-size: 0.85rem;">فشل جلب المعاملات ❌</div>';
+        }
+    } catch(e) {
+        container.innerHTML = '<div class="text-center p-4 text-danger fw-bold" style="font-size: 0.85rem;">خطأ في الاتصال بالسيرفر ❌</div>';
+    }
+}
         // --- جلب التذاكر الرياضية ---
         async function loadSportTickets() {
             const container = document.getElementById('panel-sadmin-sport');
