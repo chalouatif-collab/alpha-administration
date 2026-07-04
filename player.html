@@ -188,6 +188,7 @@
                         </span>
                     </span> 
                     <span class="font-medium text-sm">Live Sport</span>
+    
                 </button>
 
                 <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
@@ -216,9 +217,10 @@
                     <span class="font-medium text-sm text-teal-400">Aviator</span>
                 </button>
 
-                <button onclick="switchSection('roue'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
-                    <span class="text-xl w-6 text-center">🎡</span> 
-                    <span class="font-medium text-sm">Roue de jeux</span>
+                         <button onclick="toggleWheelModal(); toggleMobileSideBar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded transition">
+    <span class="text-xl w-6 text-center">🎰</span>
+    <span class="font-medium text-sm">عجلة الحظ</span>
+</button>
                 </button>
             </nav>
         </div>
@@ -349,12 +351,6 @@
             </div>
         </div>
             <div id="pane-accueil" class="player-view-section space-y-4">
-            <!-- ضع الكود هنا في السطر 352 -->
-<div class="wheel-container flex flex-col items-center py-8">
-    <div id="wheel" class="wheel"></div>
-    <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition shadow-lg">
-        دوران العجلة! 🎰
-    </button>
 </div> 
                 <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
                     <div class="jackpot-card bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
@@ -525,7 +521,19 @@
 
         </main>
     </div>
-
+<!-- النافذة المنبثقة للعجلة (مخفية افتراضياً) -->
+<div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="bg-slate-900 p-8 rounded-3xl border border-amber-500 shadow-2xl relative">
+        <button onclick="toggleWheelModal()" class="absolute top-4 right-4 text-white hover:text-red-500 text-xl font-bold">X</button>
+        
+        <div class="wheel-container flex flex-col items-center">
+            <div id="wheel" class="wheel"></div>
+            <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">
+                دوران العجلة! 🎰
+            </button>
+        </div>
+    </div>
+</div>
     <script>
         function toggleMobileSidebar() {
             const drawer = document.getElementById('mobile-drawer-menu');
@@ -1377,7 +1385,15 @@ async function spinWheel() {
         alert("حدث خطأ في الاتصال بالسيرفر");
     }
 }
+function toggleWheelModal() {
+    const modal = document.getElementById('wheel-modal');
+    modal.classList.toggle('hidden');
+}
 
+async function spinWheel() {
+    // كود دالة spinWheel الذي جهزناه سابقاً...
+    // (تأكد من نسخه هنا)
+}
     </script>
 
 </body>
