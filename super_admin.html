@@ -409,65 +409,127 @@
             } catch(e) { showNotification('خطأ في الاتصال', 'error'); }
         }
 
-        // --- جلب سجل المعاملات (شحن / سحب) ---
+       // متغير عالمي لحفظ كل المعاملات والبحث فيها بسرعة بدون العودة للسيرفر
+let allTransactionsCache = []; 
+
+// --- 1. جلب سجل المعاملات (شحن / سحب) ---
 async function loadTransactions() {
     const container = document.getElementById('panel-sadmin-transaction');
     
     // إظهار رسالة تحميل
-    container.innerHTML = '<div class="text-secondary fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="text-center p-4 text-info fw-bold" style="font-size: 0.85rem;">جاري جلب سجل المعاملات...</div>';
+    container.innerHTML = '<div class="text-center p-4 text-info fw-bold" style="font-size: 0.85rem;">جاري جلب سجل المعاملات...</div>';
     
     try {
-        // تنبيه: تأكد أن مسار الـ API هنا يطابق ما هو موجود في الباك إند الخاص بك
-       const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, {
-    method: 'GET',
-    headers: getAuthHeaders()
-});
+        const res = await fetch(`${BACKEND_URL}/api/admin/transactions-history?username=${user.username}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
 
         if (res.ok) {
-            const transactions = await res.json();
-            
-            // إذا لم يكن هناك معاملات
-            if (!transactions || transactions.length === 0) {
-                container.innerHTML = '<div class="text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="bg-card-blue border border-blue-custom rounded p-4 text-center text-secondary fw-bold text-uppercase" style="font-size: 0.8rem;">Aucune transaction comptable enregistrée.</div>';
-                return;
-            }
-
-            // بناء واجهة الكروت للمعاملات
-            let html = '<div class="text-secondary fw-bold text-uppercase mb-3" style="font-size: 0.75rem;">📊 Historique de transaction :</div><div class="d-flex flex-column gap-2">';
-            
-            transactions.forEach(t => {
-                // تحديد نوع العملية (شحن أو سحب) والألوان المناسبة
-                const isCharge = t.action === 'charge'; 
-                const color = isCharge ? 'text-success' : 'text-danger';
-                const icon = isCharge ? '⬆️ شحن (Crédit)' : '⬇️ سحب (Retrait)';
-                const targetName = t.target_username || t.target || 'مجهول';
-                const date = t.date || t.created_at || 'بدون تاريخ';
-                
-                html += `
-                    <div class="card bg-card-blue border-blue-custom shadow-sm">
-                        <div class="card-body p-3 d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="text-white fw-bold mb-1" style="font-size: 0.9rem;">👤 ${targetName}</div>
-                                <div class="text-secondary" style="font-size: 0.7rem;">🕒 ${date}</div>
-                            </div>
-                            <div class="text-end">
-                                <div class="${color} fw-bold font-monospace mb-1" style="font-size: 0.9rem;">
-                                    ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} TND
-                                </div>
-                                <div class="text-info" style="font-size: 0.7rem;">${icon}</div>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-            
-            html += '</div>';
-            container.innerHTML = html;
+            allTransactionsCache = await res.json();
+            renderTransactionsUI(); // رسم واجهة البحث بعد جلب البيانات
         } else {
             container.innerHTML = '<div class="text-center p-4 text-danger fw-bold" style="font-size: 0.85rem;">فشل جلب المعاملات ❌</div>';
         }
     } catch(e) {
         container.innerHTML = '<div class="text-center p-4 text-danger fw-bold" style="font-size: 0.85rem;">خطأ في الاتصال بالسيرفر ❌</div>';
     }
+}
+
+// --- 2. بناء واجهة البحث وعرض التواريخ ---
+function renderTransactionsUI() {
+    const container = document.getElementById('panel-sadmin-transaction');
+    
+    // تصميم فلتر التواريخ
+    let html = `
+        <div class="text-secondary fw-bold text-uppercase mb-2" style="font-size: 0.75rem;">📊 Historique de transaction :</div>
+        
+        <!-- صندوق البحث بالتاريخ -->
+        <div class="row g-2 mb-3 bg-card-blue border border-blue-custom p-2 rounded shadow-sm align-items-center">
+            <div class="col-5">
+                <label class="text-secondary mb-1" style="font-size: 0.65rem;">من تاريخ:</label>
+                <input type="date" id="tx-start-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+            </div>
+            <div class="col-5">
+                <label class="text-secondary mb-1" style="font-size: 0.65rem;">إلى تاريخ:</label>
+                <input type="date" id="tx-end-date" class="form-control input-blue p-1 text-center" style="font-size: 0.75rem;">
+            </div>
+            <div class="col-2 mt-auto">
+                <button onclick="applyDateFilter()" class="btn btn-info w-100 fw-bold p-1" style="font-size: 0.75rem;">🔍</button>
+            </div>
+        </div>
+        
+        <!-- الحاوية التي ستظهر فيها الكروت -->
+        <div id="tx-list-container" class="d-flex flex-column gap-2"></div>
+    `;
+    
+    container.innerHTML = html;
+    displayFilteredTransactions(allTransactionsCache); // عرض الكل في البداية
+}
+
+// --- 3. تشغيل الفلتر عند الضغط على زر البحث ---
+function applyDateFilter() {
+    const startDate = document.getElementById('tx-start-date').value;
+    const endDate = document.getElementById('tx-end-date').value;
+    
+    let filtered = allTransactionsCache;
+
+    // إذا اختار المستخدم تواريخ، نقوم بفرز البيانات
+    if (startDate || endDate) {
+        filtered = allTransactionsCache.filter(t => {
+            // استخراج تاريخ المعاملة فقط (مثال: "2026-07-04" من "2026-07-04 15:30")
+            const txDate = t.date ? t.date.split(' ')[0] : '';
+            if (!txDate) return false;
+            
+            let isAfterStart = true;
+            let isBeforeEnd = true;
+
+            if (startDate) isAfterStart = txDate >= startDate;
+            if (endDate) isBeforeEnd = txDate <= endDate;
+
+            return isAfterStart && isBeforeEnd;
+        });
+    }
+    
+    // عرض البيانات بعد التصفية
+    displayFilteredTransactions(filtered);
+}
+
+// --- 4. رسم الكروت ---
+function displayFilteredTransactions(transactions) {
+    const listContainer = document.getElementById('tx-list-container');
+    
+    if (!transactions || transactions.length === 0) {
+        listContainer.innerHTML = '<div class="bg-card-blue border border-blue-custom rounded p-4 text-center text-secondary fw-bold" style="font-size: 0.8rem;">لا توجد معاملات في هذه الفترة.</div>';
+        return;
+    }
+
+    let html = '';
+    transactions.forEach(t => {
+        const isCharge = t.action === 'charge'; 
+        const color = isCharge ? 'text-success' : 'text-danger';
+        const icon = isCharge ? '⬆️ شحن' : '⬇️ سحب';
+        const targetName = t.target_username || t.target || 'مجهول';
+        const date = t.date || 'بدون تاريخ';
+        
+        html += `
+            <div class="card bg-card-blue border-blue-custom shadow-sm">
+                <div class="card-body p-3 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-white fw-bold mb-1" style="font-size: 0.9rem;">👤 ${targetName}</div>
+                        <div class="text-secondary font-monospace" style="font-size: 0.7rem;">🕒 ${date}</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="${color} fw-bold font-monospace mb-1" style="font-size: 0.9rem;">
+                            ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)} TND
+                        </div>
+                        <div class="text-info" style="font-size: 0.7rem;">${icon}</div>
+                    </div>
+                </div>
+            </div>`;
+    });
+    
+    listContainer.innerHTML = html;
 }
         // --- جلب التذاكر الرياضية ---
         async function loadSportTickets() {
