@@ -247,6 +247,22 @@
         </div>
     </div>
 
+    <!-- نافذة التسجيل (Register Modal) -->
+<div id="register-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
+    <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
+        <!-- زر الإغلاق -->
+        <button onclick="document.getElementById('register-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+        
+        <h2 class="text-white text-xl font-bold mb-4">إنشاء حساب جديد</h2>
+        
+        <div class="space-y-4">
+            <input type="text" id="reg-username" placeholder="Nom d'utilisateur" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
+            <input type="password" id="reg-password" placeholder="Mot de passe" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
+            
+            <button onclick="registerPlayer()" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-bold p-4 rounded-xl transition-all">S'inscrire</button>
+        </div>
+    </div>
+</div>
     <!-- السايدبار العادي للكمبيوتر -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
