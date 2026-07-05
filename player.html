@@ -329,7 +329,7 @@
         
     <div class="flex items-center gap-3 -mt-6">
     <!-- حاوية الرصيد وزر الإيداع -->
-    <div class="bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg flex items-center gap-2 font-mono">
+    <div id="main-balance-container" class="hidden bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg flex items-center gap-2 font-mono">
         <span class="text-[#14b8a6] font-black text-xs" id="player-balance-val">0.00</span>
         <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px]" id="eye-icon-btn">👁️</button>
         
@@ -822,7 +822,9 @@
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
             document.getElementById('top-login-btn')?.classList.add('hidden');
             document.getElementById('auth-buttons-container').classList.add('hidden');
-            
+            document.getElementById('main-balance-container')?.classList.remove('hidden');
+            document.getElementById('deposit-btn-container')?.classList.remove('hidden');
+
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('hidden'); topProfile.classList.add('flex'); }
             const headerName = document.getElementById('header-username-display');
@@ -1325,6 +1327,8 @@
             if(playerDisplay) { playerDisplay.innerText = "Visitor"; playerDisplay.classList.add('hidden'); }
             
             document.getElementById('player-balance-val').innerText = "0.00";
+            document.getElementById('main-balance-container')?.classList.add('hidden');
+            document.getElementById('deposit-btn-container')?.classList.add('hidden');
             
             document.getElementById('top-login-btn')?.classList.remove('hidden');
             const topProfile = document.getElementById('top-user-profile');
