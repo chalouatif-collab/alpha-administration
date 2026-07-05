@@ -817,13 +817,21 @@
             }
         }
 
-        function setupLoggedInUI() {
+       function setupLoggedInUI() {
             closeLoginModal();
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
             document.getElementById('top-login-btn')?.classList.add('hidden');
             document.getElementById('auth-buttons-container').classList.add('hidden');
+            
+            // 1. إظهار الرصيد لجميع المستخدمين الذين سجلوا دخولهم
             document.getElementById('main-balance-container')?.classList.remove('hidden');
-            document.getElementById('deposit-btn-container')?.classList.remove('hidden');
+
+            // 2. الشرط: إظهار زر "الإيداع" حصراً لمن سجلوا بأنفسهم من الموقع
+            if (playerSession.created_by === "Self-Register") {
+                document.getElementById('deposit-btn-container')?.classList.remove('hidden');
+            } else {
+                document.getElementById('deposit-btn-container')?.classList.add('hidden');
+            }
 
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('hidden'); topProfile.classList.add('flex'); }
