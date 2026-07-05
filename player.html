@@ -1089,52 +1089,34 @@
             } catch(e) { injectBackupMatches(); }
         }
 
-       function renderMatchesList(matches) {
-        const container = document.getElementById('matches-list-container');
-        container.innerHTML = matches.map((m, index) => {
-            const bookmaker = m.bookmakers?.[0];
-            if (!bookmaker) return '';
-            
-            const markets = bookmaker.markets;
-            const h2h = markets.find(mk => mk.key === 'h2h')?.outcomes || [];
-            const totals = markets.find(mk => mk.key === 'totals')?.outcomes || [];
-            
-            // استخراج احتمالات الفوز
-            const home = h2h.find(o => o.name === m.home_team)?.price || 1.85;
-            const draw = h2h.find(o => o.name === "Draw")?.price || 3.20;
-            const away = h2h.find(o => o.name === m.away_team)?.price || 2.10;
-
-            return `
-            <div class="bg-[#090f24] border border-slate-800 p-3 rounded-2xl mb-3 shadow-lg">
-                <div class="d-flex justify-content-between text-[10px] text-slate-400 mb-2">
-                    <span>🏆 ${m.sport_title}</span>
-                    <span>${new Date(m.commence_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-                <div class="text-white fw-bold mb-3 text-sm">${m.home_team} vs ${m.away_team}</div>
-                
-                <!-- احتمالات الفوز (الأساسية) -->
-                <div class="grid grid-cols-3 gap-2 mb-3">
-                    <button onclick="selectBetOutcome('1', ${home}, '${m.home_team} vs ${m.away_team}', '${m.id}')" class="bg-[#050814] border border-slate-700 py-1.5 rounded-lg text-teal-400 text-xs font-bold">1: ${home}</button>
-                    <button onclick="selectBetOutcome('X', ${draw}, '${m.home_team} vs ${m.away_team}', '${m.id}')" class="bg-[#050814] border border-slate-700 py-1.5 rounded-lg text-white text-xs font-bold">X: ${draw}</button>
-                    <button onclick="selectBetOutcome('2', ${away}, '${m.home_team} vs ${m.away_team}', '${m.id}')" class="bg-[#050814] border border-slate-700 py-1.5 rounded-lg text-teal-400 text-xs font-bold">2: ${away}</button>
-                </div>
-                
-                <!-- قسم الأسواق الإضافية (Totals) -->
-                ${totals.length > 0 ? `
-                <button class="text-[10px] text-slate-500 w-100 mb-2" type="button" data-bs-toggle="collapse" data-bs-target="#markets-${index}">
-                    Plus de marchés (Totals) ▼
-                </button>
-                <div class="collapse" id="markets-${index}">
-                    <div class="grid grid-cols-2 gap-2 bg-[#050814] p-2 rounded-lg border border-slate-800">
-                        ${totals.map(o => `
-                            <button onclick="selectBetOutcome('${o.name}', ${o.price}, '${m.home_team} vs ${m.away_team}', '${m.id}')" 
-                                    class="btn btn-sm btn-dark text-[10px] border-slate-700">${o.name}: ${o.price}</button>
-                        `).join('')}
-                    </div>
-                </div>` : ''}
-            </div>`;
-        }).join('');
+      function renderMatchesList(matches) {
+    const container = document.getElementById('matches-list-container');
+    if (!matches || matches.length === 0) {
+        container.innerHTML = '<div class="text-center text-slate-500 p-4">لا توجد مباريات متاحة.</div>';
+        return;
     }
+
+    container.innerHTML = matches.map((m, index) => {
+        const bookmaker = m.bookmakers?.[0];
+        if (!bookmaker) return '';
+
+        const marketData = bookmaker.markets.find(mk => mk.key === currentActiveMarket);
+        const outcomes = marketData ? marketData.outcomes : [];
+
+        return `
+        <div class="bg-[#090f24] border border-slate-800 p-3 rounded-2xl mb-3 shadow-lg">
+            <div class="text-white fw-bold mb-3 text-sm">${m.home_team} vs ${m.away_team}</div>
+            <div class="grid grid-cols-${outcomes.length > 2 ? '3' : '2'} gap-2">
+                ${outcomes.map(o => `
+                    <button onclick="selectBetOutcome('${o.name}', ${o.price}, '${m.home_team} vs ${m.away_team}', '${m.id}')" 
+                            class="bg-[#050814] border border-slate-700 py-2 rounded-lg text-teal-400 text-xs font-bold transition hover:bg-teal-900">
+                        ${o.name}<br><span class="text-white">${o.price}</span>
+                    </button>
+                `).join('')}
+            </div>
+        </div>`;
+    }).join('');
+}
         
 
         function injectBackupMatches() {
@@ -1647,7 +1629,6 @@ function toggleMarkets(index) {
         element.classList.add('hidden');
     }
 }
-
 // دالة تبديل الأسواق
 let currentActiveMarket = 'h2h'; 
 
@@ -1663,6 +1644,8 @@ function changeMarket(marketKey) {
     // تأكد أن لديك متغير اسمه matches في الكود يحتوي على البيانات
     renderMatchesList(matches); 
 }
+
+
     </script>
 </body>
 </html>
