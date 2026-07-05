@@ -1498,16 +1498,43 @@
             }
         }
 
-        let selectedMethod = "";
+       let selectedMethod = "";
+        
         function selectPaymentMethod(method) {
             selectedMethod = method;
             document.getElementById('payment-details').classList.remove('hidden');
             const inst = document.getElementById('payment-instructions');
+            
             if(method === 'd17') {
-                inst.innerHTML = `Veuillez envoyer via D17 au numéro: <br><strong class="text-teal-400 text-sm">55 123 456</strong><br>Puis entrez le montant et l'ID de transaction ci-dessous.`;
+                inst.innerHTML = `
+                    <div class="mb-2 text-slate-300">Veuillez envoyer via D17 au numéro:</div>
+                    <div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700">
+                        <strong class="text-teal-400 text-sm tracking-widest" id="d17-number">90 260 600</strong>
+                        <button onclick="copyToClipboard('d17-number')" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded md text-[10px] text-white transition-all cursor-pointer">Copier</button>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-400">Puis entrez le montant et l'ID de transaction ci-dessous.</div>
+                `;
             } else {
-                inst.innerHTML = `Envoyez USDT (TRC20) à l'adresse: <br><strong class="text-teal-400 text-[9px] break-all">TXYZ1234567890abcdefghijklmnopqrstuvwxyz</strong><br>Puis entrez le montant et le TXID ci-dessous.`;
+                inst.innerHTML = `
+                    <div class="mb-2 text-slate-300">Envoyez USDT <span class="text-amber-400 font-bold">(TRC20)</span> à l'adresse Binance:</div>
+                    <div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700 gap-2">
+                        <strong class="text-teal-400 text-[10px] break-all select-all" id="usdt-address">TTDRJEGzqsEnEBNZ7T64QcRkw4CXVCbqwq</strong>
+                        <button onclick="copyToClipboard('usdt-address')" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-md text-[10px] text-white shrink-0 transition-all cursor-pointer">Copier</button>
+                    </div>
+                    <div class="mt-2 text-[10px] text-slate-400">Puis entrez le montant et le TXID ci-dessous.</div>
+                `;
             }
+        }
+
+        // دالة جديدة لنسخ النص عند الضغط على زر Copier
+        function copyToClipboard(elementId) {
+            const textToCopy = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showNotification('تم النسخ بنجاح! (Copié avec succès)', 'success');
+            }).catch(err => {
+                console.error('فشل النسخ', err);
+                showNotification('حدث خطأ أثناء النسخ', 'error');
+            });
         }
 
        async function submitDeposit() {
