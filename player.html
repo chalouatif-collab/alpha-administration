@@ -404,7 +404,12 @@
                     <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
                     <span class="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20 font-bold" id="trans-sport-badge">COTES EN DIRECT</span>
                 </div>
-                
+                <!-- تبويبات اختيار السوق -->
+<div class="flex overflow-x-auto gap-2 p-2 bg-[#050814] mb-4 no-scrollbar border-b border-slate-800">
+    <button onclick="changeMarket('h2h')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition active:bg-teal-600">Résultat</button>
+    <button onclick="changeMarket('double_chance')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Double Chance</button>
+    <button onclick="changeMarket('totals')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Total Buts</button>
+</div>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
@@ -1643,6 +1648,21 @@ function toggleMarkets(index) {
     }
 }
 
+// دالة تبديل الأسواق
+let currentActiveMarket = 'h2h'; 
+
+function changeMarket(marketKey) {
+    currentActiveMarket = marketKey;
+    
+    // إزالة التفعيل عن كل الأزرار
+    document.querySelectorAll('.market-tab').forEach(btn => btn.classList.remove('bg-teal-600'));
+    // تفعيل الزر الذي ضغطت عليه
+    event.currentTarget.classList.add('bg-teal-600');
+    
+    // إعادة رسم قائمة المباريات بناءً على السوق الجديد
+    // تأكد أن لديك متغير اسمه matches في الكود يحتوي على البيانات
+    renderMatchesList(matches); 
+}
     </script>
 </body>
 </html>
