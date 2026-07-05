@@ -1634,6 +1634,14 @@
                 showNotification('خطأ في الاتصال بالسيرفر', 'error');
             }
         }
+function toggleMarkets(index) {
+    const element = document.getElementById(`markets-${index}`);
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+    } else {
+        element.classList.add('hidden');
+    }
+}
 
     </script>
 </body>
