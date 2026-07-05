@@ -421,34 +421,40 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
                     <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
 
-                    <!-- تذكرة الرهان المطورة -->
-<div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl p-4 shadow-xl">
-    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
-        <span class="text-teal-400 font-bold uppercase tracking-widest text-xs">📋 تذكرة الرهان</span>
-        <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-[10px] font-bold transition">مسح الكل</button>
+                  <!-- التذكرة العائمة -->
+<div id="main-ticket-slip" class="fixed bottom-0 right-4 w-72 bg-[#090f24] border-t border-x border-slate-800 rounded-t-2xl shadow-2xl z-50 transition-all duration-300">
+    
+    <!-- رأس التذكرة (أزرار التحكم) -->
+    <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl">
+        <span class="text-teal-400 font-bold text-xs uppercase">📋 تذكرة الرهان</span>
+        <div class="flex gap-3">
+            <button onclick="minimizeTicket()" class="text-white hover:text-teal-400 text-xs">➖</button>
+            <button onclick="closeTicket()" class="text-white hover:text-rose-400 text-xs">✖</button>
+            <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-xs">🗑️</button>
+        </div>
     </div>
 
-    <!-- قائمة الرهانات المضافة -->
-    <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-        <!-- الرهانات ستظهر هنا ديناميكياً -->
+    <!-- المحتوى الداخلي -->
+    <div id="ticket-content-body">
+        <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar">
+            <!-- الرهانات ستظهر هنا -->
+        </div>
+
+        <div class="p-3 border-t border-slate-800 bg-[#090f24]">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-slate-400 text-xs">إجمالي المعامل:</span>
+                <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
+            </div>
+            <div class="mb-3">
+                <label class="text-slate-400 text-[10px] mb-1 block">قيمة الرهان (TND):</label>
+                <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" 
+                       class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none">
+            </div>
+            <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition">
+                تأكيد الرهان 🚀
+            </button>
+        </div>
     </div>
-
-    <!-- مجموع الرهان -->
-    <div class="mt-4 pt-3 border-t border-slate-800">
-        <div class="flex justify-between items-center mb-3">
-            <span class="text-slate-400 text-xs">إجمالي المعامل:</span>
-            <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
-        </div>
-        
-        <div class="mb-3">
-            <label class="text-slate-400 text-[10px] mb-1 block">قيمة الرهان (TND):</label>
-            <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" 
-                   class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none">
-        </div>
-
-        <div class="flex justify-between items-center bg-[#050814] p-3 rounded-lg border border-slate-800">
-            <span class="text-slate-400 text-xs">الربح المحتمل:</span>
-            <span id="ticket-potential-gain" class="text-teal-400 font-bold text-lg font-mono">0.00 TND</span>
         </div>
 
         <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-900/20">
@@ -1659,7 +1665,23 @@ function changeMarket(marketKey) {
     renderMatchesList(matches); 
 }
 
+// وظيفة الإغلاق
+function closeTicket() {
+    document.getElementById('main-ticket-slip').style.display = 'none';
+}
 
+// وظيفة التصغير
+let isMinimized = false;
+function minimizeTicket() {
+    const body = document.getElementById('ticket-content-body');
+    if (!isMinimized) {
+        body.style.display = 'none';
+        isMinimized = true;
+    } else {
+        body.style.display = 'block';
+        isMinimized = false;
+    }
+}
     </script>
 </body>
 </html>
