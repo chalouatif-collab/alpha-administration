@@ -1528,43 +1528,46 @@
     }
 }
 // دالة فتح نافذة التسجيل
-function openRegisterModal() {
-    document.getElementById('register-modal').classList.remove('hidden');
-}
-
-// دالة إرسال بيانات التسجيل للسيرفر
-async function registerPlayer() {
-    const username = document.getElementById('reg-username').value;
-    const password = document.getElementById('reg-password').value;
-
-    if (!username || !password) {
-        alert('الرجاء تعمير جميع البيانات');
-        return;
-    }
-
-    try {
-        const response = await fetch('/api/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                username: username, 
-                password: password,
-                role: "user" 
-            })
-        });
-
-        if (response.ok) {
-            alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
-            document.getElementById('register-modal').classList.add('hidden');
-            openLoginModal(); // نفتح نافذة الدخول بعد التسجيل الناجح
-        } else {
-            const data = await response.json();
-            alert(data.detail || 'حدث خطأ أثناء التسجيل');
+        function openRegisterModal() {
+            const modal = document.getElementById('register-modal');
+            if(modal) modal.classList.remove('hidden');
         }
-    } catch (error) {
-        alert('خطأ في الاتصال بالسيرفر');
-    }
-}
+
+        // دالة إرسال بيانات التسجيل للسيرفر (تم تصحيح المسار والبيانات)
+        async function registerPlayer() {
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+
+            if (!username || !password) {
+                return showNotification('الرجاء تعمير جميع البيانات', 'error');
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/register`, { // تم تصحيح المسار ليرتبط بـ BACKEND_URL
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        username: username, 
+                        password: password,
+                        role: "player", 
+                        created_by: "Self-Register" // تم إضافتها لتجنب رفض السيرفر
+                    })
+                });
+
+                if (response.ok) {
+                    showNotification('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'success');
+                    document.getElementById('register-modal').classList.add('hidden');
+                    document.getElementById('reg-username').value = '';
+                    document.getElementById('reg-password').value = '';
+                    openLoginModal(); 
+                } else {
+                    const data = await response.json();
+                    showNotification(data.detail || 'حدث خطأ أثناء التسجيل (ربما الاسم مأخوذ)', 'error');
+                }
+            } catch (error) {
+                showNotification('خطأ في الاتصال بالسيرفر', 'error');
+            }
+        }
 
     </script>
 </body>
