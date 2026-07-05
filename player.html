@@ -408,20 +408,23 @@
             </div> <!-- إغلاق قسم pane-accueil بعد المباريات -->
 
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
-                    <span class="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20 font-bold" id="trans-sport-badge">COTES EN DIRECT</span>
-                </div>
-                <!-- تبويبات اختيار السوق -->
-<div class="flex overflow-x-auto gap-2 p-2 bg-[#050814] mb-4 no-scrollbar border-b border-slate-800">
-    <button onclick="changeMarket('h2h')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition active:bg-teal-600">Résultat</button>
-    <button onclick="changeMarket('double_chance')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Double Chance</button>
-    <button onclick="changeMarket('totals')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Total Buts</button>
+    <div class="flex justify-between items-center mb-2">
+        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
+        <span class="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20 font-bold" id="trans-sport-badge">COTES EN DIRECT</span>
+    </div>
+    
+    <!-- تبويبات اختيار السوق -->
+    <div class="flex overflow-x-auto gap-2 p-2 bg-[#050814] mb-4 no-scrollbar border-b border-slate-800">
+        <button onclick="changeMarket('h2h')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Résultat</button>
+        <button onclick="changeMarket('double_chance')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Double Chance</button>
+        <button onclick="changeMarket('totals')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Total Buts</button>
+    </div>
+
+    <!-- حاوية المباريات -->
+    <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container">
+        <!-- المباريات ستظهر هنا -->
+    </div>
 </div>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-                    <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container"></div>
-                </div>
-                </div>
             </div>
 
             <div id="pane-paris" class="player-view-section space-y-4 hidden">
@@ -591,46 +594,7 @@
             </div>
         </div>
     </div>
-      <!-- التذكرة العائمة -->
-<div id="main-ticket-slip" class="fixed bottom-0 right-4 w-72 bg-[#090f24] border-t border-x border-slate-800 rounded-t-2xl shadow-2xl z-50 transition-all duration-300">
-    
-    <!-- رأس التذكرة (أزرار التحكم) -->
-    <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl">
-        <span class="text-teal-400 font-bold text-xs uppercase">📋 تذكرة الرهان</span>
-        <div class="flex gap-3">
-            <button onclick="minimizeTicket()" class="text-white hover:text-teal-400 text-xs">➖</button>
-            <button onclick="closeTicket()" class="text-white hover:text-rose-400 text-xs">✖</button>
-            <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-xs">🗑️</button>
-        </div>
-    </div>
-    </div>
-    <!-- المحتوى الداخلي -->
-    <div id="ticket-content-body">
-        <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar">
-            <!-- الرهانات ستظهر هنا -->
-        </div>
-
-        <div class="p-3 border-t border-slate-800 bg-[#090f24]">
-            <div class="flex justify-between items-center mb-3">
-                <span class="text-slate-400 text-xs">إجمالي المعامل:</span>
-                <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
-            </div>
-            <div class="mb-3">
-                <label class="text-slate-400 text-[10px] mb-1 block">قيمة الرهان (TND):</label>
-                <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" 
-                       class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none">
-            </div>
-            <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition">
-                تأكيد الرهان 🚀
-            </button>
-        </div>
-    </div>
-        </div>
-
-        <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-900/20">
-            تأكيد الرهان 🚀
-        </button>
-    </div>
+   
 
     <script>
         function toggleMobileSidebar() {
@@ -1681,6 +1645,34 @@ function minimizeTicket() {
         isMinimized = false;
     }
 }
+
+<!-- التذكرة العائمة -->
+<div id="main-ticket-slip" class="fixed bottom-0 right-4 w-72 bg-[#090f24] border-t border-x border-slate-800 rounded-t-2xl shadow-2xl z-50 transition-all duration-300">
+    <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl">
+        <span class="text-teal-400 font-bold text-xs uppercase">📋 Bet Slip</span>
+        <div class="flex gap-3">
+            <button onclick="minimizeTicket()" class="text-white hover:text-teal-400 text-xs">➖</button>
+            <button onclick="closeTicket()" class="text-white hover:text-rose-400 text-xs">✖</button>
+            <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-xs">🗑️</button>
+        </div>
+    </div>
+    <div id="ticket-content-body">
+        <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar"></div>
+        <div class="p-3 border-t border-slate-800 bg-[#090f24]">
+            <div class="flex justify-between items-center mb-3">
+                <span class="text-slate-400 text-xs">Total Odds:</span>
+                <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
+            </div>
+            <div class="mb-3">
+                <label class="text-slate-400 text-[10px] mb-1 block">Stake (TND):</label>
+                <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none">/
+                </div>
+            <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition">
+                Place Bet 🚀
+            </button>
+        </div>
+    </div>
+</div>
     </script>
 </body>
 </html>
