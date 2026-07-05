@@ -28,7 +28,7 @@
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        /* 🏆 شريط الرابحين المباشر (Live Winners Ticker) */
+        /* 🏆 شريط الرابحين المباشر */
         .live-ticker-wrapper {
             width: 100%;
             background: linear-gradient(90deg, rgba(20, 184, 166, 0.05) 0%, rgba(20, 184, 166, 0.15) 50%, rgba(20, 184, 166, 0.05) 100%);
@@ -73,7 +73,7 @@
         .winner-card .w-game { color: #64748b; font-family: sans-serif; font-size: 0.7rem;}
         .winner-card .w-amount { color: #14b8a6; font-weight: 900; text-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
       
-        /* 🔥 السحر البرمجي للهاتف 🔥 */
+        /* 🔥 إعدادات الهاتف */
         @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
@@ -113,49 +113,13 @@
                 flex-direction: column !important;
                 gap: 4px !important;
             }
-
-            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
-        /* 🎡 كود العجلة الجديد */
-        .wheel-container {
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 20px;
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-
-        .wheel {
-            width: 250px;
-            height: 250px;
-            border-radius: 50%;
-            border: 10px solid #fbbf24;
-            background: conic-gradient(
-                #ef4444 0deg 45deg, #f59e0b 45deg 90deg, 
-                #ef4444 90deg 135deg, #f59e0b 135deg 180deg, 
-                #ef4444 180deg 225deg, #f59e0b 225deg 270deg, 
-                #ef4444 270deg 315deg, #f59e0b 315deg 360deg
-            );
-            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-        }
-
-        /* 💰 أنيماسيون الجاكبوت (نبض ضوئي) */
-        .jackpot-card {
-            position: relative;
-            transition: all 0.3s ease;
-            animation: pulse-glow 3s infinite alternate;
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
-            100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-        }
-
-        /* تأثير لمعة خفيفة عند المرور */
-        .jackpot-card:hover {
-            transform: scale(1.05);
-            cursor: pointer;
-        }
+        /* 🎡 كود العجلة */
+        .wheel-container { background: rgba(30, 41, 59, 0.5); border-radius: 20px; margin-bottom: 20px; padding: 20px; }
+        .wheel { width: 250px; height: 250px; border-radius: 50%; border: 10px solid #fbbf24; background: conic-gradient( #ef4444 0deg 45deg, #f59e0b 45deg 90deg, #ef4444 90deg 135deg, #f59e0b 135deg 180deg, #ef4444 180deg 225deg, #f59e0b 225deg 270deg, #ef4444 270deg 315deg, #f59e0b 315deg 360deg ); transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99); }
+        .jackpot-card { position: relative; transition: all 0.3s ease; animation: pulse-glow 3s infinite alternate; }
+        @keyframes pulse-glow { 0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); } 50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); } 100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); } }
+        .jackpot-card:hover { transform: scale(1.05); cursor: pointer; }
     </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
@@ -228,6 +192,7 @@
         </div>
     </div>
 
+    <!-- نافذة تسجيل الدخول -->
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
@@ -254,23 +219,20 @@
         </div>
     </div>
 
-    <!-- نافذة التسجيل (Register Modal) -->
-<div id="register-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
-    <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-        <!-- زر الإغلاق -->
-        <button onclick="document.getElementById('register-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
-        
-        <h2 class="text-white text-xl font-bold mb-4">إنشاء حساب جديد</h2>
-        
-        <div class="space-y-4">
-            <input type="text" id="reg-username" placeholder="Nom d'utilisateur" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
-            <input type="password" id="reg-password" placeholder="Mot de passe" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
-            
-            <button onclick="registerPlayer()" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-bold p-4 rounded-xl transition-all">S'inscrire</button>
+    <!-- نافذة التسجيل -->
+    <div id="register-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
+        <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
+            <button onclick="document.getElementById('register-modal').classList.add('hidden')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+            <h2 class="text-white text-xl font-bold mb-4">إنشاء حساب جديد</h2>
+            <div class="space-y-4">
+                <input type="text" id="reg-username" placeholder="Nom d'utilisateur" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
+                <input type="password" id="reg-password" placeholder="Mot de passe" class="w-full p-3 rounded-xl bg-[#050814] border border-slate-800 text-white">
+                <button onclick="registerPlayer()" class="w-full bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-bold p-4 rounded-xl transition-all">S'inscrire</button>
+            </div>
         </div>
     </div>
-</div>
-    <!-- السايدبار العادي للكمبيوتر -->
+
+    <!-- السايدبار للكمبيوتر -->
     <aside id="main-sidebar" class="w-full md:w-64 bg-[#060914] p-4 flex flex-col justify-between shrink-0 h-auto md:h-screen z-40 shadow-2xl">
         <div class="space-y-6">
             <div class="flex items-center gap-3 px-2 py-2 border-b border-slate-900/60">
@@ -282,32 +244,25 @@
                 <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
                     <span>🏠</span> <span id="menu-accueil">Accueil</span>
                 </button>
-
                 <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🏆</span> <span id="menu-sport">Sport</span>
                 </button>
-
                 <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left relative">
                     <div class="flex items-center gap-4"><span>📄</span> <span id="menu-paris">Mes Paris</span></div>
                     <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black" id="my-bets-badge-count">0</span>
                 </button>
-
                 <button onclick="switchSection('casino')" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🎰</span> <span id="menu-casino">Le casino</span>
                 </button>
-
                 <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>🤵</span> <span id="menu-live">Casino en direct</span>
                 </button>
-
                 <button onclick="switchSection('crash')" id="btn-menu-crash" class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🚀</span> <span id="menu-crash">Jeux de crash</span>
                 </button>
-
                 <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>🔥</span> <span id="menu-meilleurs">Meilleurs games</span>
                 </button>
-
                 <button class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>🎁</span> <span id="menu-promotions">Promotions</span>
                 </button>
@@ -327,279 +282,218 @@
     </aside>
 
     <div id="main-content-area" class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        
-       <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
-        <div class="flex items-center -mt-4">
-            <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
-            <img src="image/logo.png" alt="Logo" class="h-22 w-auto object-contain">
-        </div>
-        
-   <!-- الجانب الأيمن من الهيدر بالكامل (أزرار الزوار + بروفايل اللاعب) -->
-        <div class="flex flex-col items-end gap-1 -mt-2 relative z-50">
-            
-            <!-- أزرار الدخول والتسجيل للزوار (تختفي عند الدخول) -->
-            <div id="auth-buttons-container" class="flex flex-col gap-1 items-end">
-                <button onclick="openLoginModal()" id="top-login-btn" class="bg-slate-800 hover:bg-slate-700 text-white text-[9px] font-bold px-2 py-1 rounded-md transition-all w-16 text-center cursor-pointer">Connexion</button>
-                <button onclick="openRegisterModal()" class="bg-teal-500 hover:bg-teal-600 text-slate-950 text-[9px] font-black px-2 py-1 rounded-md transition-all w-16 text-center cursor-pointer">S'inscrire</button>
-            </div>
-
-            <!-- قائمة اللاعب بعد الدخول (اسم المستخدم + حاوية الرصيد تحته) -->
-            <div id="top-user-profile" class="hidden flex-col items-end gap-1">
-                
-                <!-- اسم المستخدم وزر القائمة -->
-                <button onclick="toggleUserMenu()" class="flex items-center gap-1.5 text-xs font-bold hover:text-teal-400 transition-all text-white cursor-pointer">
-                    <span id="header-username-display">User</span>
-                    <span class="text-[8px] text-slate-400">▼</span>
-                </button>
-
-                <!-- حاوية الرصيد المصغرة (تظهر بالضبط تحت اسم المستخدم) -->
-                <div id="main-balance-container" class="hidden bg-[#050814] border border-slate-800 px-1.5 py-0.5 rounded-md flex items-center gap-1 font-mono">
-                    <span class="text-[#14b8a6] font-black text-[10px]" id="player-balance-val">0.00</span>
-                    <button onclick="toggleBalanceVisibility()" class="text-slate-500 hover:text-white text-[9px] cursor-pointer" id="eye-icon-btn">👁️</button>
-                    
-                    <!-- زر الإيداع المصغر -->
-                    <div id="deposit-btn-container" class="hidden ml-0.5 border-l border-slate-800 pl-1.5">
-                        <button onclick="toggleCashier()" class="bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950 font-black px-1.5 py-0.5 rounded text-[8px] uppercase transition-all cursor-pointer">Dépôt</button>
-                    </div>
-                </div>
-
-                <!-- القائمة المنسدلة (تظهر عند الضغط على اسم المستخدم) -->
-                <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-left">
-                    <button onclick="switchSection('history-transfer'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs cursor-pointer">💸 Historique de transfert</button>
-                    <button onclick="switchSection('history-casino'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs cursor-pointer">📜 Historique de casino</button>
-                    <div class="h-px bg-slate-700 my-1"></div>
-                    <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold cursor-pointer">🚪 Déconnexion</button>
-                </div>
-            </div>
-        </div>
-    </header>
-            <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
-            <!-- شريط الرابحين المتحرك -->
-            <div class="live-ticker-wrapper">
-                <div class="live-ticker-track" id="winners-ticker-track">
-                    <!-- سيتم توليد الرابحين هنا -->
-                </div>
-            </div>
-
-            <!-- تم تعديل وسم الإغلاق هنا ليكون القسم الرئيسي محيطاً بالعناصر -->
-            <div id="pane-accueil" class="player-view-section space-y-4">
-                <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
-                    <div class="jackpot-card bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
-                        <div class="text-amber-400 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mega 🥇</div>
-                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mega">124,567.89</div>
-                    </div>
-                   <div class="jackpot-card bg-gradient-to-b from-slate-300/20 to-[#090f24] border border-slate-300/40 rounded-2xl p-3 text-center shadow-lg">
-                        <div class="text-slate-300 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Major 🥈</div>
-                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-major">14,230.50</div>
-                    </div>
-                    <div class="jackpot-card bg-gradient-to-b from-orange-600/20 to-[#090f24] border border-orange-600/40 rounded-2xl p-3 text-center shadow-lg">
-                        <div class="text-orange-500 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mini 🥉</div>
-                        <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mini">1,850.25</div>
-                    </div>
-                </div>
-
-                <div class="mt-6">
-                    <div class="flex justify-between items-center mb-3">
-                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">🔥 Matchs Populaires (مباريات اليوم)</h3>
-                    </div>
-                    <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                </div>
-            </div> <!-- إغلاق قسم pane-accueil بعد المباريات -->
-
-           <div id="pane-sport" class="player-view-section space-y-4 hidden">
-    <div class="flex justify-between items-center mb-2">
-        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
-        <span class="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20 font-bold" id="trans-sport-badge">COTES EN DIRECT</span>
-    </div>
-    
-    <!-- تبويبات اختيار السوق -->
-    <div class="flex overflow-x-auto gap-2 p-2 bg-[#050814] mb-4 no-scrollbar border-b border-slate-800">
-        <button onclick="changeMarket('h2h')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition active:bg-teal-600">Résultat</button>
-        <button onclick="changeMarket('double_chance')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Double Chance</button>
-        <button onclick="changeMarket('totals')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Total Buts</button>
-    </div>
-
-    <!-- حاوية المباريات والتذكرة الثابتة (جنباً إلى جنب) -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
-        
-        <!-- عمود المباريات (يأخذ ثلثي المساحة) -->
-        <div class="lg:col-span-2 space-y-3 max-h-[500px] overflow-y-auto no-scrollbar pr-1" id="matches-list-container">
-            <!-- المباريات ستظهر هنا -->
-        </div>
-
-        <!-- عمود التذكرة (ثابت على اليمين ولا يطفو فوق الشاشة) -->
-        <div id="main-ticket-slip" class="bg-[#090f24] border border-slate-800 rounded-2xl shadow-xl w-full sticky top-4">
-            <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl">
-                <span class="text-teal-400 font-bold text-xs uppercase">📋 Bet Slip</span>
-                <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-xs font-bold">🗑️ مسح الكل</button>
+        <header class="bg-[#090f24]/80 border-b border-slate-800/60 p-4 flex justify-between items-center shadow-md shrink-0">
+            <div class="flex items-center -mt-4">
+                <button onclick="toggleMobileSidebar()" class="md:hidden text-teal-400 text-2xl font-bold px-2 py-1 mr-1 active:scale-95 transition-all cursor-pointer rounded-lg bg-slate-900/50 border border-slate-800 hover:bg-slate-800">☰</button>
+                <img src="image/logo.png" alt="Logo" class="h-22 w-auto object-contain">
             </div>
             
-            <div id="ticket-content-body">
-                <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar">
-                    <!-- الرهانات ستظهر هنا -->
+            <div class="flex flex-col items-end gap-1 -mt-2 relative z-50">
+                <div id="auth-buttons-container" class="flex flex-col gap-1 items-end">
+                    <button onclick="openLoginModal()" id="top-login-btn" class="bg-slate-800 hover:bg-slate-700 text-white text-[9px] font-bold px-2 py-1 rounded-md transition-all w-16 text-center cursor-pointer">Connexion</button>
+                    <button onclick="openRegisterModal()" class="bg-teal-500 hover:bg-teal-600 text-slate-950 text-[9px] font-black px-2 py-1 rounded-md transition-all w-16 text-center cursor-pointer">S'inscrire</button>
                 </div>
-                
-                <div class="p-3 border-t border-slate-800 bg-[#090f24] rounded-b-2xl">
-                    <div class="flex justify-between items-center mb-3">
-                        <span class="text-slate-400 text-xs">Total Odds:</span>
-                        <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-slate-400 text-[10px] mb-1 block">Stake (TND):</label>
-                        <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none" />
-                    </div>
-                    <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition-all shadow-lg">
-                        Place Bet 🚀
+
+                <div id="top-user-profile" class="hidden flex-col items-end gap-1">
+                    <button onclick="toggleUserMenu()" class="flex items-center gap-1.5 text-xs font-bold hover:text-teal-400 transition-all text-white cursor-pointer">
+                        <span id="header-username-display">User</span>
+                        <span class="text-[8px] text-slate-400">▼</span>
                     </button>
-                </div>
-            </div>
-        </div>
-        
-    </div>
-</div>
-            <div id="pane-paris" class="player-view-section space-y-4 hidden">
-                <div class="flex border-b border-slate-800/80 gap-1 overflow-x-auto no-scrollbar">
-                    <button onclick="switchBetsSubTab('encours')" id="sub-tab-encours" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer active-sub-tab">⏳ En cours</button>
-                    <button onclick="switchBetsSubTab('gagne')" id="sub-tab-gagne" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">✅ Gagné</button>
-                    <button onclick="switchBetsSubTab('perdu')" id="sub-tab-perdu" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">❌ Perdu</button>
-                    <button onclick="switchBetsSubTab('cashout')" id="sub-tab-cashout" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">💸 Cashout</button>
-                </div>
-                <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
-            </div>
-
-            <div id="pane-crash" class="player-view-section space-y-6 hidden">
-                <div class="max-w-2xl mx-auto bg-[#090f24] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
-                    <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
-                        <div class="flex items-center gap-2">
-                            <span class="text-lg">🚀</span>
-                            <h2 class="text-sm font-black text-teal-400 tracking-wider uppercase">Alphabet Aviator Real-Time</h2>
-                        </div>
-                        <span id="crash-status-badge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase">Waiting</span>
-                    </div>
-
-                    <div class="h-64 bg-[#050814] border border-slate-800 rounded-2xl relative overflow-hidden crash-graph-grid flex items-center justify-center">
-                        <div id="crash-multiplier-display" class="text-5xl md:text-6xl font-black text-white font-mono tracking-tight z-10 drop-shadow-md">1.00x</div>
-                        <div id="crash-airplane-icon" class="absolute bottom-6 left-6 text-4xl opacity-0 transition-all duration-100 ease-out z-20">🚀</div>
-                        <div id="crash-blast-screen" class="absolute inset-0 bg-rose-950/80 backdrop-blur-sm flex flex-col items-center justify-center scale-0 transition-all duration-300 z-30">
-                            <span class="text-4xl">💥</span>
-                            <span class="text-rose-400 font-black text-sm uppercase tracking-widest mt-2">FLEW AWAY @ <span id="blast-multiplier-val">0.00</span>x</span>
+                    <div id="main-balance-container" class="hidden bg-[#050814] border border-slate-800 px-1.5 py-0.5 rounded-md flex items-center gap-1 font-mono">
+                        <span class="text-[#14b8a6] font-black text-[10px]" id="player-balance-val">0.00</span>
+                        <button onclick="toggleBalanceVisibility()" class="text-slate-500 hover:text-white text-[9px] cursor-pointer" id="eye-icon-btn">👁️</button>
+                        <div id="deposit-btn-container" class="hidden ml-0.5 border-l border-slate-800 pl-1.5">
+                            <button onclick="toggleCashier()" class="bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950 font-black px-1.5 py-0.5 rounded text-[8px] uppercase transition-all cursor-pointer">Dépôt</button>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-[#050814]/60 p-4 rounded-xl border border-slate-800/80 font-bold text-xs">
-                        <div class="space-y-1.5">
-                            <label class="text-slate-400 block">Mise du Crash (رهان الطيارة):</label>
-                            <input type="number" id="crash-stake-input" value="10" min="1" class="w-full bg-[#050814] border border-slate-800 rounded-xl p-3 text-teal-400 font-mono focus:outline-none">
-                        </div>
-                        <div class="pt-5">
-                            <button onclick="startCrashBetRound()" id="crash-action-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg">
-                                Placer le Pari 🚀
-                            </button>
-                        </div>
+                    <div id="user-dropdown" class="hidden absolute top-full right-0 mt-2 w-48 bg-[#0f172a] border border-slate-700 rounded-xl shadow-2xl z-50 p-2 text-left">
+                        <button onclick="switchSection('history-transfer'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs cursor-pointer">💸 Historique de transfert</button>
+                        <button onclick="switchSection('history-casino'); toggleUserMenu();" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-800 rounded text-xs cursor-pointer">📜 Historique de casino</button>
+                        <div class="h-px bg-slate-700 my-1"></div>
+                        <button onclick="logoutPlayer()" class="w-full text-left px-3 py-2 text-rose-400 hover:bg-rose-900/20 rounded text-xs font-bold cursor-pointer">🚪 Déconnexion</button>
                     </div>
                 </div>
             </div>
+        </header>
 
-            <div id="pane-casino" class="player-view-section space-y-6 hidden">
-                <div class="space-y-2">
-                    <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
-                    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold">
-                        <button class="px-4 py-2 rounded-xl active-filter-btn border border-teal-500/20 shadow transition-all cursor-pointer" id="trans-cas-all">Tout</button>
-                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Pragmatic</button>
-                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Evolution</button>
-                        <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Hacksaw</button>
-                    </div>
-                </div>
-                <div class="space-y-3">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2" id="trans-cas-hall">🎰 صالة ألعاب الكازينو الرقمية</h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="games-grid-container"></div>
-                </div>
-            </div>
-
-            <div id="pane-history-casino" class="player-view-section space-y-4 hidden">
-                <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">📜 Historique de Casino</h3>
-                <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
-                    <span class="text-4xl block mb-2 opacity-50">📂</span>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
-                </div>
-            </div>
+        <!-- تقسيم الشاشة الرئيسي (المحتوى المتغير + التذكرة الثابتة) -->
+        <main class="flex-1 overflow-hidden p-4 md:p-6 flex flex-col lg:flex-row gap-6 relative">
             
-            <div id="pane-history-transfer" class="player-view-section space-y-4 hidden">
-                <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">💸 Historique de Transfére</h3>
-                <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
-                    <span class="text-4xl block mb-2 opacity-50">📂</span>
-                    <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
+            <!-- العمود الأيسر (الأقسام المتغيرة، قابلة للتمرير) -->
+            <div class="flex-1 h-full overflow-y-auto no-scrollbar space-y-4 pb-20 pr-2">
+                
+                <div class="live-ticker-wrapper">
+                    <div class="live-ticker-track" id="winners-ticker-track"></div>
                 </div>
-            </div>
 
-            <div id="floating-mini-ticket" onclick="maximizeTicket()" class="fixed z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group">
-                <span class="text-lg">📋</span>
-                <span class="absolute -top-1 -right-1 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center border border-slate-900" id="mini-ticket-badge">0</span>
-            </div>
-
-            <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
-                <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
-                    <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
-                    <h3 class="text-xs font-black text-teal-400 tracking-wider uppercase" id="modal-game-title">GATES OF OLYMPUS</h3>
-                    <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800/80 rounded-2xl shadow-md mx-auto">
-                        <div id="slot-reel-1" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
-                        <div id="slot-reel-2" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
-                        <div id="slot-reel-3" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
-                    </div>
-                    <div class="flex items-center justify-center gap-4 text-xs font-bold">
-                        <div class="flex items-center gap-2 bg-[#050814] border border-slate-800 px-3 py-2 rounded-xl">
-                            <span id="trans-slot-bet">BET TND:</span>
-                            <select id="player-bet-select" class="bg-[#090f24] border border-slate-700 rounded text-teal-400 font-mono">
-                                <option value="1">1.00</option>
-                                <option value="5">5.00</option>
-                                <option value="10">10.00</option>
-                            </select>
+                <div id="pane-accueil" class="player-view-section space-y-4">
+                    <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
+                        <div class="jackpot-card bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
+                            <div class="text-amber-400 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mega 🥇</div>
+                            <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mega">124,567.89</div>
                         </div>
-                        <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
+                       <div class="jackpot-card bg-gradient-to-b from-slate-300/20 to-[#090f24] border border-slate-300/40 rounded-2xl p-3 text-center shadow-lg">
+                            <div class="text-slate-300 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Major 🥈</div>
+                            <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-major">14,230.50</div>
+                        </div>
+                        <div class="jackpot-card bg-gradient-to-b from-orange-600/20 to-[#090f24] border border-orange-600/40 rounded-2xl p-3 text-center shadow-lg">
+                            <div class="text-orange-500 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mini 🥉</div>
+                            <div class="text-white font-mono font-black text-[11px] md:text-xl" id="jackpot-mini">1,850.25</div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2">🔥 Matchs Populaires (مباريات اليوم)</h3>
+                        </div>
+                        <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
                 </div>
-            </div>
+
+                <div id="pane-sport" class="player-view-section space-y-4 hidden">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-2" id="trans-sport-title">⚽ MATCHES EN DIRECT & À VENIR</h3>
+                        <span class="text-[10px] bg-teal-500/10 text-teal-400 px-2 py-0.5 rounded border border-teal-500/20 font-bold" id="trans-sport-badge">COTES EN DIRECT</span>
+                    </div>
+                    <div class="flex overflow-x-auto gap-2 p-2 bg-[#050814] mb-4 no-scrollbar border-b border-slate-800">
+                        <button onclick="changeMarket('h2h')" class="market-tab whitespace-nowrap px-4 py-2 bg-teal-600 rounded-lg text-xs font-bold text-white transition">Résultat</button>
+                        <button onclick="changeMarket('double_chance')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Double Chance</button>
+                        <button onclick="changeMarket('totals')" class="market-tab whitespace-nowrap px-4 py-2 bg-slate-800 rounded-lg text-xs font-bold text-white hover:bg-teal-600 transition">Total Buts</button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start" id="matches-list-container">
+                        <!-- المباريات ستظهر هنا -->
+                    </div>
+                </div>
+
+                <div id="pane-paris" class="player-view-section space-y-4 hidden">
+                    <div class="flex border-b border-slate-800/80 gap-1 overflow-x-auto no-scrollbar">
+                        <button onclick="switchBetsSubTab('encours')" id="sub-tab-encours" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer active-sub-tab">⏳ En cours</button>
+                        <button onclick="switchBetsSubTab('gagne')" id="sub-tab-gagne" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">✅ Gagné</button>
+                        <button onclick="switchBetsSubTab('perdu')" id="sub-tab-perdu" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">❌ Perdu</button>
+                        <button onclick="switchBetsSubTab('cashout')" id="sub-tab-cashout" class="text-xs font-bold px-4 py-2 border-b-2 border-transparent text-slate-400 hover:text-white transition-all cursor-pointer">💸 Cashout</button>
+                    </div>
+                    <div id="my-bets-history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2"></div>
+                </div>
+
+                <div id="pane-crash" class="player-view-section space-y-6 hidden">
+                    <div class="max-w-2xl mx-auto bg-[#090f24] border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-6">
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="text-lg">🚀</span>
+                                <h2 class="text-sm font-black text-teal-400 tracking-wider uppercase">Alphabet Aviator Real-Time</h2>
+                            </div>
+                            <span id="crash-status-badge" class="bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase">Waiting</span>
+                        </div>
+                        <div class="h-64 bg-[#050814] border border-slate-800 rounded-2xl relative overflow-hidden crash-graph-grid flex items-center justify-center">
+                            <div id="crash-multiplier-display" class="text-5xl md:text-6xl font-black text-white font-mono tracking-tight z-10 drop-shadow-md">1.00x</div>
+                            <div id="crash-airplane-icon" class="absolute bottom-6 left-6 text-4xl opacity-0 transition-all duration-100 ease-out z-20">🚀</div>
+                            <div id="crash-blast-screen" class="absolute inset-0 bg-rose-950/80 backdrop-blur-sm flex flex-col items-center justify-center scale-0 transition-all duration-300 z-30">
+                                <span class="text-4xl">💥</span>
+                                <span class="text-rose-400 font-black text-sm uppercase tracking-widest mt-2">FLEW AWAY @ <span id="blast-multiplier-val">0.00</span>x</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center bg-[#050814]/60 p-4 rounded-xl border border-slate-800/80 font-bold text-xs">
+                            <div class="space-y-1.5">
+                                <label class="text-slate-400 block">Mise du Crash (رهان الطيارة):</label>
+                                <input type="number" id="crash-stake-input" value="10" min="1" class="w-full bg-[#050814] border border-slate-800 rounded-xl p-3 text-teal-400 font-mono focus:outline-none">
+                            </div>
+                            <div class="pt-5">
+                                <button onclick="startCrashBetRound()" id="crash-action-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg">
+                                    Placer le Pari 🚀
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="pane-casino" class="player-view-section space-y-6 hidden">
+                    <div class="space-y-2">
+                        <span class="text-[10px] text-slate-400 font-bold flex items-center gap-1" id="trans-cas-prov">🎮 مزودي الألعاب العالميين</span>
+                        <div class="flex gap-2 overflow-x-auto no-scrollbar py-1 text-[11px] font-bold">
+                            <button class="px-4 py-2 rounded-xl active-filter-btn border border-teal-500/20 shadow transition-all cursor-pointer" id="trans-cas-all">Tout</button>
+                            <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-red-500"></span> Pragmatic</button>
+                            <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Evolution</button>
+                            <button class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition-all cursor-pointer flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-orange-500"></span> Hacksaw</button>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider flex items-center gap-2" id="trans-cas-hall">🎰 صالة ألعاب الكازينو الرقمية</h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="games-grid-container"></div>
+                    </div>
+                </div>
+
+                <div id="pane-history-casino" class="player-view-section space-y-4 hidden">
+                    <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">📜 Historique de Casino</h3>
+                    <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
+                        <span class="text-4xl block mb-2 opacity-50">📂</span>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
+                    </div>
+                </div>
+                
+                <div id="pane-history-transfer" class="player-view-section space-y-4 hidden">
+                    <h3 class="text-sm font-black text-teal-400 uppercase tracking-wider">💸 Historique de Transfére</h3>
+                    <div class="bg-[#090f24] border border-slate-800 p-8 rounded-2xl text-center shadow-md">
+                        <span class="text-4xl block mb-2 opacity-50">📂</span>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Aucun historique disponible pour le moment.</p>
+                    </div>
+                </div>
+
+            </div> <!-- نهاية الجانب الأيسر (الأقسام المتغيرة) -->
+
+            <!-- العمود الأيمن الثابت (التذكرة) -->
+            <div id="main-ticket-slip" class="w-full lg:w-[320px] shrink-0 bg-[#090f24] border border-slate-800 rounded-2xl shadow-xl flex flex-col max-h-[85vh] lg:max-h-full">
+                <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl shrink-0">
+                    <span class="text-teal-400 font-bold text-xs uppercase">📋 Bet Slip</span>
+                    <button onclick="clearTicket()" class="text-rose-500 hover:text-rose-400 text-xs font-bold cursor-pointer">🗑️ مسح الكل</button>
+                </div>
+                <div class="flex-1 overflow-y-auto custom-scrollbar flex flex-col" id="ticket-content-body">
+                    <div id="ticket-odds-box" class="p-3 space-y-2 flex-1">
+                        <!-- الرهانات ستظهر هنا -->
+                    </div>
+                    <div class="p-3 border-t border-slate-800 bg-[#050814] shrink-0 rounded-b-2xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-slate-400 text-xs">Total Odds:</span>
+                            <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-slate-400 text-[10px] mb-1 block">Stake (TND):</label>
+                            <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none" />
+                        </div>
+                        <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl transition shadow-lg cursor-pointer">
+                            Place Bet 🚀
+                        </button>
+                    </div>
+                </div>
+            </div> <!-- نهاية التذكرة -->
 
         </main>
     </div>
-    <!-- 💰 نافذة الكاشير (الإيداع والسحب) -->
+
+    <!-- 💰 نوافذ الكاشير وألعاب الكازينو (مخفية) -->
     <div id="cashier-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-[#0b1124] border border-slate-800 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">
             <button onclick="toggleCashier()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
-            
             <h2 class="text-lg font-black text-white mb-4 flex items-center gap-2">💳 Caisse (الكاشير)</h2>
-            
-            <!-- أزرار التبديل بين الإيداع والسحب -->
             <div class="flex gap-2 mb-6 bg-[#050814] p-1 rounded-xl border border-slate-800">
                 <button onclick="switchCashierTab('deposit')" id="tab-deposit" class="flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all">Dépôt (إيداع)</button>
                 <button onclick="switchCashierTab('withdraw')" id="tab-withdraw" class="flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all">Retrait (سحب)</button>
             </div>
-
-            <!-- قسم الإيداع -->
             <div id="deposit-section" class="space-y-4">
                 <label class="text-xs text-slate-400 font-bold">Choisissez la méthode:</label>
                 <div class="grid grid-cols-2 gap-3">
                     <button onclick="selectPaymentMethod('d17')" class="border border-slate-700 bg-slate-800/50 hover:border-teal-500 hover:bg-slate-800 p-3 rounded-xl flex flex-col items-center gap-2 transition-all cursor-pointer">
-                        <span class="text-xl">📱</span>
-                        <span class="text-[10px] font-bold text-white">D17 / Flouci</span>
+                        <span class="text-xl">📱</span><span class="text-[10px] font-bold text-white">D17 / Flouci</span>
                     </button>
                     <button onclick="selectPaymentMethod('usdt')" class="border border-slate-700 bg-slate-800/50 hover:border-teal-500 hover:bg-slate-800 p-3 rounded-xl flex flex-col items-center gap-2 transition-all cursor-pointer">
-                        <span class="text-xl">🪙</span>
-                        <span class="text-[10px] font-bold text-white">USDT (Binance)</span>
+                        <span class="text-xl">🪙</span><span class="text-[10px] font-bold text-white">USDT (Binance)</span>
                     </button>
                 </div>
-
                 <div id="payment-details" class="hidden bg-[#050814] border border-slate-800 p-4 rounded-xl mt-4 space-y-3">
-                    <div class="text-[11px] text-slate-300 font-mono" id="payment-instructions">
-                        <!-- التعليمات ستظهر هنا -->
-                    </div>
+                    <div class="text-[11px] text-slate-300 font-mono" id="payment-instructions"></div>
                     <input type="number" id="deposit-amount" placeholder="Montant (المبلغ TND)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-teal-400 text-sm font-mono focus:outline-none focus:border-teal-500">
                     <input type="text" id="deposit-tx" placeholder="ID de transaction (رقم العملية)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-white text-sm font-mono focus:outline-none focus:border-teal-500">
                     <button onclick="submitDeposit()" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all mt-2 cursor-pointer">Confirmer le Dépôt</button>
                 </div>
             </div>
-
-            <!-- قسم السحب (مخفي افتراضياً) -->
             <div id="withdraw-section" class="hidden space-y-4">
                 <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl text-[10px] text-amber-400 font-bold mb-4">
                     Solde disponible: <span id="cashier-balance-display">0.00</span> TND
@@ -611,16 +505,35 @@
         </div>
     </div>
 
-    <!-- النافذة المنبثقة للعجلة (مخفية افتراضياً) -->
     <div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="bg-slate-900 p-8 rounded-3xl border border-amber-500 shadow-2xl relative">
             <button onclick="toggleWheelModal()" class="absolute top-4 right-4 text-white hover:text-red-500 text-xl font-bold">X</button>
-            
             <div class="wheel-container flex flex-col items-center">
                 <div id="wheel" class="wheel"></div>
-                <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">
-                    دوران العجلة! 🎰
-                </button>
+                <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">دوران العجلة! 🎰</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+        <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
+            <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+            <h3 class="text-xs font-black text-teal-400 tracking-wider uppercase" id="modal-game-title">GATES OF OLYMPUS</h3>
+            <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800/80 rounded-2xl shadow-md mx-auto">
+                <div id="slot-reel-1" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
+                <div id="slot-reel-2" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
+                <div id="slot-reel-3" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
+            </div>
+            <div class="flex items-center justify-center gap-4 text-xs font-bold">
+                <div class="flex items-center gap-2 bg-[#050814] border border-slate-800 px-3 py-2 rounded-xl">
+                    <span id="trans-slot-bet">BET TND:</span>
+                    <select id="player-bet-select" class="bg-[#090f24] border border-slate-700 rounded text-teal-400 font-mono">
+                        <option value="1">1.00</option>
+                        <option value="5">5.00</option>
+                        <option value="10">10.00</option>
+                    </select>
+                </div>
+                <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
             </div>
         </div>
     </div>
@@ -695,7 +608,6 @@
         function toggleBalanceVisibility() {
             const balSpan = document.getElementById('player-balance-val');
             const eyeBtn = document.getElementById('eye-icon-btn');
-            
             if (balSpan.style.filter === 'blur(4px)') {
                 balSpan.style.filter = 'none';
                 eyeBtn.innerText = '👁️';
@@ -712,26 +624,6 @@
             renderMyBetsHistoryPane();
         }
 
-        function minimizeTicket() {
-            if(comboTicketMatchesList.length === 0) return;
-            document.getElementById('main-ticket-slip').classList.add('hidden');
-            const floater = document.getElementById('floating-mini-ticket');
-            floater.classList.remove('scale-0');
-            floater.classList.add('scale-100');
-            document.getElementById('mini-ticket-badge').innerText = comboTicketMatchesList.length;
-        }
-
-        function maximizeTicket() {
-            switchSection('sport');
-            document.getElementById('main-ticket-slip').classList.remove('hidden');
-            const floater = document.getElementById('floating-mini-ticket');
-            floater.classList.remove('scale-100');
-            floater.classList.add('scale-0');
-            setTimeout(() => {
-                document.getElementById('main-ticket-slip').scrollIntoView({ behavior: 'smooth', block: 'end' });
-            }, 300);
-        }
-
         async function refreshPlayerBalance() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -739,28 +631,16 @@
                     method: 'GET',
                     headers: getAuthHeaders(),
                 });
-                
                 if (res.ok) {
                     const users = await res.json();
                     const currentMe = users.find(u => u.username === playerSession.username);
-                    
                     if (currentMe) {
                         playerSession.balance = currentMe.balance;
                         localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
-                        
                         document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-                        
-                        const dropBalance = document.getElementById('header-balance-display');
-                        if(dropBalance) {
-                            dropBalance.innerText = `${parseFloat(playerSession.balance).toFixed(2)} TND`;
-                        }
                     }
-                } else {
-                    console.error("السيرفر رفض تحديث الرصيد! رمز الخطأ:", res.status);
                 }
-            } catch (e) { 
-                console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); 
-            }
+            } catch (e) { console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); }
         }
         
         async function fetchPlayerTicketsFromServer() {
@@ -774,21 +654,12 @@
                     const tickets = await res.json();
                     if (tickets) {
                         myActiveBetsList = tickets.map(t => ({
-                            id: t.ticket_id,
-                            status: t.status,
-                            gamesCount: t.games_count,
-                            detailsList: t.details_list,
-                            totalCote: t.total_cote,
-                            mise: t.mise,
-                            gain: t.gain,
-                            cashOutAmount: t.mise * 0.90, 
-                            finalCashoutPaid: t.final_cashout_paid || 0,
-                            date: t.date
+                            id: t.ticket_id, status: t.status, gamesCount: t.games_count,
+                            detailsList: t.details_list, totalCote: t.total_cote, mise: t.mise,
+                            gain: t.gain, cashOutAmount: t.mise * 0.90, finalCashoutPaid: t.final_cashout_paid || 0, date: t.date
                         }));
                         updateActiveBetsBadgeCount();
-                        if (!document.getElementById('pane-paris').classList.contains('hidden')) {
-                            renderMyBetsHistoryPane();
-                        }
+                        if (!document.getElementById('pane-paris').classList.contains('hidden')) { renderMyBetsHistoryPane(); }
                     }
                 }
             } catch (e) { console.error("Error syncing tickets from database", e); }
@@ -797,7 +668,6 @@
        async function handlePlayerAuth() {
             const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
             const password = document.getElementById('p-auth-password').value;
-            
             if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
             try {
@@ -806,43 +676,28 @@
                     headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify({ username, password })
                 });
-                
                 const responseText = await res.text(); 
                 let data;
-                try {
-                    data = JSON.parse(responseText);
-                } catch(parseError) {
-                    console.error("Server Error Response:", responseText);
-                    return showNotification('السيرفر يواجه مشكلة داخلية، تفقد الـ Logs', 'error');
-                }
+                try { data = JSON.parse(responseText); } catch(e) { return showNotification('السيرفر يواجه مشكلة داخلية', 'error'); }
 
                 if(res.ok) {
                     if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
-                        showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
-                        return;
+                        return showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
                     }
-
                     playerSession = data;
                     localStorage.setItem('alpha_player_session', JSON.stringify(data));
                     localStorage.setItem('token', data.access_token); 
-
                     setupLoggedInUI();
                     await fetchPlayerTicketsFromServer();
                 } else { 
                     showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
                 }
-            } catch(e) { 
-                console.error("Network Error:", e);
-                showNotification('السيرفر قيد التشغيل، جرب مرة أخرى بعد ثوانٍ', 'error'); 
-            }
+            } catch(e) { showNotification('السيرفر قيد التشغيل، جرب مرة أخرى', 'error'); }
         }
 
        function setupLoggedInUI() {
             closeLoginModal();
-            document.getElementById('sidebar-login-btn')?.classList.add('hidden');
-            document.getElementById('top-login-btn')?.classList.add('hidden');
             document.getElementById('auth-buttons-container').classList.add('hidden');
-            
             document.getElementById('main-balance-container')?.classList.remove('hidden');
 
             if (playerSession.created_by === "Self-Register") {
@@ -866,17 +721,16 @@
             if(!balanceInterval) balanceInterval = setInterval(refreshPlayerBalance, 4000);
         }
 
+        // تم حذف وظيفة التصغير التلقائي (Minimize) من هنا لتبقى التذكرة ظاهرة دائماً!
         function selectBetOutcome(outcome, odds, matchName, matchId) {
             comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
             comboTicketMatchesList.push({ matchId, matchName, outcome, odds });
             renderComboTicketUI();
-            setTimeout(minimizeTicket, 600);
         }
 
         function removeMatchFromCombo(matchId) {
             comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
             renderComboTicketUI();
-            if(comboTicketMatchesList.length === 0) maximizeTicket();
         }
 
         function renderComboTicketUI() {
@@ -908,13 +762,11 @@
         function clearTicket() {
             comboTicketMatchesList = [];
             renderComboTicketUI();
-            document.getElementById('floating-mini-ticket').classList.add('scale-0');
         }
 
         function calculatePotentialGain() {
             const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
             const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText) || 1.00;
-            document.getElementById('ticket-potential-gain').innerText = `${(stake * totalOdds).toFixed(2)} TND`;
         }
 
         async function submitSportTicket() {
@@ -946,31 +798,21 @@
 
                     const betTicketObject = {
                         id: Math.floor(100000 + Math.random() * 900000),
-                        status: "encours", 
-                        gamesCount: comboTicketMatchesList.length,
-                        detailsList: [...comboTicketMatchesList],
-                        totalCote: totalOdds,
-                        mise: stake,
-                        gain: calculatedGain,
-                        cashOutAmount: cashOutValueCalculated, 
+                        status: "encours", gamesCount: comboTicketMatchesList.length,
+                        detailsList: [...comboTicketMatchesList], totalCote: totalOdds,
+                        mise: stake, gain: calculatedGain, cashOutAmount: cashOutValueCalculated, 
                         date: new Date().toLocaleTimeString('fr-FR')
                     };
 
                     await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
-                        method: 'POST',
-                        headers: getAuthHeaders(),
-                        body: JSON.stringify({
-                            username: playerSession.username,
-                            ticket_data: betTicketObject
-                        })
+                        method: 'POST', headers: getAuthHeaders(),
+                        body: JSON.stringify({ username: playerSession.username, ticket_data: betTicketObject })
                     }).catch(err => console.error("Sync backup server ticket error"));
 
                     myActiveBetsList.push(betTicketObject);
                     updateActiveBetsBadgeCount();
-
                     showNotification(dictionary_translations[currentLangCode].ticket_success);
                     clearTicket();
-                    maximizeTicket();
                 } else { showNotification('خطأ في معالجة رصيد السيرفر', 'error'); }
             } catch(e) { showNotification('خطأ شبكة مالي', 'error'); }
             btn.disabled = false;
@@ -980,31 +822,21 @@
             if(!playerSession) return;
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: getAuthHeaders(),
+                    method: 'POST', headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: parseFloat(cashOutAmount) })
                 });
-
                 if(res.ok) {
                     const data = await res.json();
                     playerSession.balance = data.balance;
                     document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
                     
                     const targetTicket = myActiveBetsList.find(b => b.id === ticketId);
-                    if(targetTicket) {
-                        targetTicket.status = "cashout";
-                        targetTicket.finalCashoutPaid = cashOutAmount; 
-                    }
+                    if(targetTicket) { targetTicket.status = "cashout"; targetTicket.finalCashoutPaid = cashOutAmount; }
 
                     await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
-                        method: 'POST',
-                        headers: getAuthHeaders(),
-                        body: JSON.stringify({
-                            ticket_id: ticketId,
-                            status: "cashout",
-                            amount_paid: cashOutAmount
-                        })
-                    }).catch(err => console.error("Sync update status error"));
+                        method: 'POST', headers: getAuthHeaders(),
+                        body: JSON.stringify({ ticket_id: ticketId, status: "cashout", amount_paid: cashOutAmount })
+                    }).catch(err => console.error("Sync error"));
                     
                     updateActiveBetsBadgeCount();
                     showNotification(dictionary_translations[currentLangCode].cashout_success);
@@ -1030,7 +862,6 @@
             container.innerHTML = filteredTickets.map(b => {
                 let statusBadgeStyle = "bg-amber-500/10 text-amber-400 border-amber-500/20";
                 let bottomBoxContent = "";
-
                 if(b.status === "encours") {
                     statusBadgeStyle = "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
                     bottomBoxContent = `
@@ -1039,8 +870,7 @@
                             <button onclick="executeTicketCashOut(${b.id}, ${b.cashOutAmount.toFixed(2)})" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-sans font-black text-[10px] px-2.5 py-1.5 rounded-xl transition-all cursor-pointer shadow">
                                 Cash Out (${b.cashOutAmount.toFixed(2)} TND)
                             </button>
-                        </div>
-                    `;
+                        </div>`;
                 } else if(b.status === "gagne") {
                     statusBadgeStyle = "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
                     bottomBoxContent = `<div class="bg-emerald-950/20 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-400 font-bold text-center">🏆 ورقة رابحة: +${b.gain.toFixed(2)} TND شُحنت للرصيد</div>`;
@@ -1071,8 +901,7 @@
                             <span>Mise: <span class="text-white font-bold">${b.mise.toFixed(2)} TND</span></span>
                         </div>
                         ${bottomBoxContent}
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         }
 
@@ -1083,12 +912,8 @@
         }
 
         async function loadLiveMatchesData() {
-            const container = document.getElementById('matches-list-container');
             try {
-                const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
-                    method: 'GET',
-                    headers: getAuthHeaders(), 
-                });
+                const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, { method: 'GET', headers: getAuthHeaders() });
                 if(res.ok) {
                     const matches = await res.json();
                     if(matches && matches.length > 0) { return renderMatchesList(matches); }
@@ -1097,27 +922,24 @@
             } catch(e) { injectBackupMatches(); }
         }
 
-      function renderMatchesList(matches) {
+        function renderMatchesList(matches) {
             const container = document.getElementById('matches-list-container');
             if (!matches || matches.length === 0) {
                 container.innerHTML = '<div class="text-center text-slate-500 p-4">لا توجد مباريات متاحة.</div>';
                 return;
             }
-
-            container.innerHTML = matches.map((m, index) => {
+            container.innerHTML = matches.map((m) => {
                 const bookmaker = m.bookmakers?.[0];
                 if (!bookmaker) return '';
-
                 const marketData = bookmaker.markets.find(mk => mk.key === currentActiveMarket);
                 const outcomes = marketData ? marketData.outcomes : [];
-
                 return `
                 <div class="bg-[#090f24] border border-slate-800 p-3 rounded-2xl mb-3 shadow-lg">
                     <div class="text-white fw-bold mb-3 text-sm">${m.home_team} vs ${m.away_team}</div>
                     <div class="grid grid-cols-${outcomes.length > 2 ? '3' : '2'} gap-2">
                         ${outcomes.map(o => `
                             <button onclick="selectBetOutcome('${o.name}', ${o.price}, '${m.home_team} vs ${m.away_team}', '${m.id}')" 
-                                    class="bg-[#050814] border border-slate-700 py-2 rounded-lg text-teal-400 text-xs font-bold transition hover:bg-teal-900">
+                                    class="bg-[#050814] border border-slate-700 py-2 rounded-lg text-teal-400 text-xs font-bold transition hover:bg-teal-900 cursor-pointer">
                                 ${o.name}<br><span class="text-white">${o.price}</span>
                             </button>
                         `).join('')}
@@ -1125,7 +947,6 @@
                 </div>`;
             }).join('');
         }
-        
 
         function injectBackupMatches() {
             const container = document.getElementById('matches-list-container');
@@ -1175,110 +996,68 @@
         async function startCrashBetRound() {
             if(!playerSession) { return openLoginModal(); }
             if(isCrashRoundRunning) { return triggerCrashCashOutEarly(); }
-
             await refreshPlayerBalance();
             const stakeInput = document.getElementById('crash-stake-input');
             const stakeAmount = parseFloat(stakeInput.value) || 0;
+            if(stakeAmount <= 0 || playerSession.balance < stakeAmount) { return showNotification('رصيدك غير كافٍ', 'error'); }
 
-            if(stakeAmount <= 0 || playerSession.balance < stakeAmount) {
-                return showNotification('رصيدك الحالي غير كافٍ لبدء جولة الكراش !', 'error');
-            }
-
-            stakeInput.disabled = true;
-            isCrashRoundRunning = true;
-            hasPlayerCashedOutFromCrash = false;
-            currentCrashStakeAmount = stakeAmount;
-            crashMultiplier = 1.00;
-
+            stakeInput.disabled = true; isCrashRoundRunning = true; hasPlayerCashedOutFromCrash = false;
+            currentCrashStakeAmount = stakeAmount; crashMultiplier = 1.00;
             document.getElementById('crash-blast-screen').classList.add('scale-0');
             document.getElementById('crash-blast-screen').classList.remove('scale-100');
             document.getElementById('crash-status-badge').innerText = "LIVE FLYING";
-            document.getElementById('crash-status-badge').className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
 
             try {
               const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: getAuthHeaders(),
+                    method: 'POST', headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "system", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
                 });
-
-                if(!deductRes.ok) {
-                    isCrashRoundRunning = false;
-                    stakeInput.disabled = false;
-                    return showNotification('فشلت المعاملة المالية للجولة', 'error');
-                }
+                if(!deductRes.ok) { isCrashRoundRunning = false; stakeInput.disabled = false; return showNotification('فشلت المعاملة', 'error'); }
                 const deductData = await deductRes.json();
                 playerSession.balance = deductData.balance;
                 document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
-            } catch(e) {
-                isCrashRoundRunning = false;
-                stakeInput.disabled = false;
-                return showNotification('خطأ شبكة مالي', 'error');
-            }
+            } catch(e) { isCrashRoundRunning = false; stakeInput.disabled = false; return; }
 
             const actionBtn = document.getElementById('crash-action-btn');
-            actionBtn.innerText = "TAKE CASH OUT 💸";
-            actionBtn.className = "w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg animate-pulse";
-
-            const luckyCrashPointTarget = (Math.random() * 10) + 1.1; 
+            actionBtn.innerText = "TAKE CASH OUT 💸"; actionBtn.className = "w-full bg-amber-500 text-slate-950 font-black p-3.5 rounded-xl transition-all cursor-pointer shadow-lg animate-pulse";
+            
             const planeIcon = document.getElementById('crash-airplane-icon');
             planeIcon.style.opacity = "1";
+            const luckyCrashPointTarget = (Math.random() * 10) + 1.1; 
 
             crashLoopInterval = setInterval(() => {
                 crashMultiplier += 0.04;
                 document.getElementById('crash-multiplier-display').innerText = `${crashMultiplier.toFixed(2)}x`;
-
                 const progressPercent = Math.min((crashMultiplier - 1) * 20, 85);
-                planeIcon.style.left = `${6 + progressPercent}%`;
-                planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
-
+                planeIcon.style.left = `${6 + progressPercent}%`; planeIcon.style.bottom = `${6 + (progressPercent * 0.6)}%`;
                 if(crashMultiplier >= luckyCrashPointTarget) { triggerAirplaneCrashBlast(); }
             }, 80);
         }
 
        async function triggerCrashCashOutEarly() {
             if (!isCrashRoundRunning || hasPlayerCashedOutFromCrash) return;
-
-            hasPlayerCashedOutFromCrash = true;
-            clearInterval(crashLoopInterval);
-
+            hasPlayerCashedOutFromCrash = true; clearInterval(crashLoopInterval);
             const totalWinCalculated = currentCrashStakeAmount * crashMultiplier;
-
             try {
                 const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: getAuthHeaders(),
-                    body: JSON.stringify({ 
-                        admin_username: "System", 
-                        target_username: playerSession.username, 
-                        action: "charge", 
-                        amount: totalWinCalculated 
-                    })
+                    method: 'POST', headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: totalWinCalculated })
                 });
-
                 if (winRes.ok) {
                     const winData = await winRes.json();
                     playerSession.balance = winData.balance;
                     document.getElementById('player-balance-val').innerText = parseFloat(playerSession.balance).toFixed(2);
                     showNotification(`Félicitations! Gagne +${totalWinCalculated.toFixed(2)} TND 🚀🔥`, 'success');
-                } else {
-                    console.error("Failed to update balance on server");
                 }
-            } catch (e) {
-                console.error("Error pushing crash victory money", e);
-            }
-            
+            } catch (e) { console.error("Error pushing crash victory money", e); }
             resetCrashInterfaceToReady();
         }
 
         function triggerAirplaneCrashBlast() {
-            clearInterval(crashLoopInterval);
-            isCrashRoundRunning = false;
-
+            clearInterval(crashLoopInterval); isCrashRoundRunning = false;
             document.getElementById('blast-multiplier-val').innerText = crashMultiplier.toFixed(2);
             document.getElementById('crash-blast-screen').classList.remove('scale-0');
             document.getElementById('crash-blast-screen').classList.add('scale-100');
-
             showNotification('FLEW AWAY! الرفعة طارت وانفجرت الطائرة', 'error');
             resetCrashInterfaceToReady();
         }
@@ -1287,11 +1066,8 @@
             isCrashRoundRunning = false;
             document.getElementById('crash-stake-input').disabled = false;
             document.getElementById('crash-status-badge').innerText = "Waiting Round";
-            document.getElementById('crash-status-badge').className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px] font-black px-2 py-0.5 rounded uppercase";
-
             const actionBtn = document.getElementById('crash-action-btn');
-            actionBtn.innerText = "Placer le Pari 🚀";
-            actionBtn.className = "w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black p-3.5 rounded-xl text-center cursor-pointer transition-all uppercase tracking-wider shadow-lg";
+            actionBtn.innerText = "Placer le Pari 🚀"; actionBtn.className = "w-full bg-teal-500 text-slate-950 font-black p-3.5 rounded-xl cursor-pointer shadow-lg";
             document.getElementById('crash-airplane-icon').style.opacity = "0";
         }
 
@@ -1300,18 +1076,14 @@
             await refreshPlayerBalance();
             const betAmount = parseFloat(document.getElementById('player-bet-select').value);
             if(playerSession.balance < betAmount) return showNotification('رصيدك غير كافٍ !', 'error');
-
             const spinBtn = document.getElementById('spin-btn');
             spinBtn.disabled = true;
-
             try {
                 const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                    method: 'POST',
-                    headers: getAuthHeaders(),
+                    method: 'POST', headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: betAmount })
                 });
                 if(!deductRes.ok) { spinBtn.disabled = false; return; }
-
                 const deductData = await deductRes.json();
                 playerSession.balance = deductData.balance;
                 document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
@@ -1329,8 +1101,7 @@
                     if(res1 === res2 && res2 === res3) {
                         const winAmount = betAmount * (res1 === "👑" ? 10 : 5);
                         const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
-                            method: 'POST',
-                            headers: getAuthHeaders(),
+                            method: 'POST', headers: getAuthHeaders(),
                             body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: winAmount })
                         });
                         const winData = await winRes.json();
@@ -1346,25 +1117,17 @@
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
-            
-            localStorage.removeItem('token');
-            localStorage.removeItem('alpha_player_session');
-            
+            localStorage.removeItem('token'); localStorage.removeItem('alpha_player_session');
             playerSession = null; myActiveBetsList = [];
             document.getElementById('my-bets-badge-count').innerText = "0";
-            
             const playerDisplay = document.getElementById('player-name-display');
             if(playerDisplay) { playerDisplay.innerText = "Visitor"; playerDisplay.classList.add('hidden'); }
-            
             document.getElementById('player-balance-val').innerText = "0.00";
             document.getElementById('main-balance-container')?.classList.add('hidden');
             document.getElementById('deposit-btn-container')?.classList.add('hidden');
-            
             document.getElementById('top-login-btn')?.classList.remove('hidden');
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('flex'); topProfile.classList.add('hidden'); }
-            
-            document.getElementById('sidebar-login-btn')?.classList.remove('hidden');
             switchSection('accueil');
             document.getElementById('auth-buttons-container').classList.remove('hidden');
         }
@@ -1388,7 +1151,6 @@
                 setInterval(() => {
                     const sportMatches = document.getElementById('matches-list-container');
                     const homeMatches = document.getElementById('home-matches-container');
-                    
                     if (sportMatches && homeMatches && sportMatches.innerHTML !== "Chargement...") {
                         homeMatches.innerHTML = sportMatches.innerHTML;
                     }
@@ -1399,181 +1161,79 @@
         function startJackpots() {
             setInterval(() => {
                 const now = new Date();
-                
                 let miniProgress = (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) / 86400;
-                let miniVal = miniProgress * 120;
-
-                let dayOfWeek = (now.getDay() === 0) ? 7 : now.getDay();
-                let majorProgress = ((dayOfWeek - 1) * 86400 + (now.getHours() * 3600 + now.getMinutes() * 60)) / 604800;
-                let majorVal = majorProgress * 350;
-
-                let dayOfMonth = now.getDate();
-                let megaProgress = ((dayOfMonth - 1) * 86400 + (now.getHours() * 3600)) / 2592000;
-                let megaVal = megaProgress * 1000;
-
-                document.getElementById('jackpot-mega').innerText = megaVal.toFixed(2);
-                document.getElementById('jackpot-major').innerText = majorVal.toFixed(2);
-                document.getElementById('jackpot-mini').innerText = miniVal.toFixed(2);
+                document.getElementById('jackpot-mega').innerText = (((now.getDate() - 1) * 86400 + (now.getHours() * 3600)) / 2592000 * 1000).toFixed(2);
+                document.getElementById('jackpot-major').innerText = ((((now.getDay() === 0 ? 7 : now.getDay()) - 1) * 86400 + (now.getHours() * 3600 + now.getMinutes() * 60)) / 604800 * 350).toFixed(2);
+                document.getElementById('jackpot-mini').innerText = (miniProgress * 120).toFixed(2);
             }, 1000); 
         }
 
-        function toggleUserMenu() {
-            document.getElementById('user-dropdown').classList.toggle('hidden');
-        }
+        function toggleUserMenu() { document.getElementById('user-dropdown').classList.toggle('hidden'); }
 
-        // --- نظام شريط الرابحين المباشر ---
         function generateLiveWinnersTicker() {
             const track = document.getElementById('winners-ticker-track');
             if(!track) return;
-
-            const fakeNames = ["fethi", "ahmed", "samir", "karim", "yassine", "mohamed", "ali", "hassen", "rami", "anis", "wael"];
-            const gamesList = ["Aviator 🚀", "Gates of Olympus ⚡", "Sport ⚽", "Live Roulette 🎡", "Sweet Bonanza 🍭", "Blackjack 🃏"];
-            
-            const maskName = (name) => {
-                const visibleLen = Math.ceil(name.length / 2);
-                return name.substring(0, visibleLen) + "***";
-            };
-
+            const fakeNames = ["fethi", "ahmed", "samir", "karim", "yassine", "mohamed", "ali", "hassen", "rami"];
+            const gamesList = ["Aviator 🚀", "Gates of Olympus ⚡", "Sport ⚽", "Live Roulette 🎡", "Sweet Bonanza 🍭"];
             let tickerHTML = '';
-            
             for(let i = 0; i < 15; i++) {
-                const randomBaseName = fakeNames[Math.floor(Math.random() * fakeNames.length)];
-                const randomNumbers = Math.floor(Math.random() * 99);
-                const fullName = randomBaseName + randomNumbers;
-                
-                const maskedUsername = maskName(fullName);
-                const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
-                const randomAmount = (Math.random() * 800 + 15).toFixed(2);
-                
-                tickerHTML += `
-                    <div class="winner-card">
-                        <span class="w-icon">🎉</span>
-                        <span class="w-name">${maskedUsername}</span>
-                        <span class="w-game">gagné sur ${randomGame}</span>
-                        <span class="w-amount">+${randomAmount} TND</span>
-                    </div>
-                `;
+                const name = fakeNames[Math.floor(Math.random() * fakeNames.length)] + Math.floor(Math.random() * 99);
+                tickerHTML += `<div class="winner-card"><span class="w-icon">🎉</span><span class="w-name">${name.substring(0, Math.ceil(name.length / 2)) + "***"}</span><span class="w-game">gagné sur ${gamesList[Math.floor(Math.random() * gamesList.length)]}</span><span class="w-amount">+${(Math.random() * 800 + 15).toFixed(2)} TND</span></div>`;
             }
-            
             track.innerHTML = tickerHTML;
         }
 
-        function toggleWheelModal() {
-            const modal = document.getElementById('wheel-modal');
-            modal.classList.toggle('hidden');
-        }
+        function toggleWheelModal() { document.getElementById('wheel-modal').classList.toggle('hidden'); }
 
         async function spinWheel() {
             const wheel = document.getElementById('wheel');
-            
             try {
-                const response = await fetch(`${BACKEND_URL}/api/spin`, { 
-                    method: 'POST',
-                    headers: getAuthHeaders()
-                });
-                
+                const response = await fetch(`${BACKEND_URL}/api/spin`, { method: 'POST', headers: getAuthHeaders() });
                 const result = await response.json();
-
-                let degrees = 3600;
-                wheel.style.transform = `rotate(${degrees}deg)`;
-                
-                setTimeout(() => {
-                    if (result.status === 'win') {
-                        alert(result.message);
-                        location.reload(); 
-                    } else {
-                        alert(result.message);
-                    }
-                }, 5000);
-
-            } catch (error) {
-                console.error("Error:", error);
-                alert("حدث خطأ في الاتصال بالسيرفر");
-            }
+                wheel.style.transform = `rotate(3600deg)`;
+                setTimeout(() => { alert(result.message); if(result.status === 'win') location.reload(); }, 5000);
+            } catch (error) { alert("حدث خطأ في الاتصال بالسيرفر"); }
         }
         
         function toggleCashier() {
             if(!playerSession) return openLoginModal();
             const modal = document.getElementById('cashier-modal');
             modal.classList.toggle('hidden');
-            if(!modal.classList.contains('hidden')) {
-                document.getElementById('cashier-balance-display').innerText = playerSession.balance.toFixed(2);
-            }
+            if(!modal.classList.contains('hidden')) { document.getElementById('cashier-balance-display').innerText = playerSession.balance.toFixed(2); }
         }
 
         function switchCashierTab(tab) {
             if(tab === 'deposit') {
-                document.getElementById('deposit-section').classList.remove('hidden');
-                document.getElementById('withdraw-section').classList.add('hidden');
-                document.getElementById('tab-deposit').className = "flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all";
-                document.getElementById('tab-withdraw').className = "flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all";
+                document.getElementById('deposit-section').classList.remove('hidden'); document.getElementById('withdraw-section').classList.add('hidden');
             } else {
-                document.getElementById('deposit-section').classList.add('hidden');
-                document.getElementById('withdraw-section').classList.remove('hidden');
-                document.getElementById('tab-withdraw').className = "flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all";
-                document.getElementById('tab-deposit').className = "flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all";
+                document.getElementById('deposit-section').classList.add('hidden'); document.getElementById('withdraw-section').classList.remove('hidden');
             }
         }
 
-       let selectedMethod = "";
-        
         function selectPaymentMethod(method) {
-            selectedMethod = method;
             document.getElementById('payment-details').classList.remove('hidden');
             const inst = document.getElementById('payment-instructions');
-            
             if(method === 'd17') {
-                inst.innerHTML = `
-                    <div class="mb-2 text-slate-300">Veuillez envoyer via D17 au numéro:</div>
-                    <div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700">
-                        <strong class="text-teal-400 text-sm tracking-widest" id="d17-number">90 260 600</strong>
-                        <button onclick="copyToClipboard('d17-number')" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded md text-[10px] text-white transition-all cursor-pointer">Copier</button>
-                    </div>
-                    <div class="mt-2 text-[10px] text-slate-400">Puis entrez le montant et l'ID de transaction ci-dessous.</div>
-                `;
+                inst.innerHTML = `<div class="mb-2 text-slate-300">Veuillez envoyer via D17 au numéro:</div><div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700"><strong class="text-teal-400 text-sm tracking-widest" id="d17-number">90 260 600</strong></div><div class="mt-2 text-[10px] text-slate-400">Puis entrez le montant et l'ID de transaction ci-dessous.</div>`;
             } else {
-                inst.innerHTML = `
-                    <div class="mb-2 text-slate-300">Envoyez USDT <span class="text-amber-400 font-bold">(TRC20)</span> à l'adresse Binance:</div>
-                    <div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700 gap-2">
-                        <strong class="text-teal-400 text-[10px] break-all select-all" id="usdt-address">TTDRJEGzqsEnEBNZ7T64QcRkw4CXVCbqwq</strong>
-                        <button onclick="copyToClipboard('usdt-address')" class="bg-slate-700 hover:bg-slate-600 px-3 py-1 rounded-md text-[10px] text-white shrink-0 transition-all cursor-pointer">Copier</button>
-                    </div>
-                    <div class="mt-2 text-[10px] text-slate-400">Puis entrez le montant et le TXID ci-dessous.</div>
-                `;
+                inst.innerHTML = `<div class="mb-2 text-slate-300">Envoyez USDT <span class="text-amber-400 font-bold">(TRC20)</span> à l'adresse Binance:</div><div class="bg-slate-900/80 p-2 rounded-lg flex justify-between items-center border border-slate-700 gap-2"><strong class="text-teal-400 text-[10px] break-all select-all" id="usdt-address">TTDRJEGzqsEnEBNZ7T64QcRkw4CXVCbqwq</strong></div>`;
             }
-        }
-
-        function copyToClipboard(elementId) {
-            const textToCopy = document.getElementById(elementId).innerText;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showNotification('تم النسخ بنجاح! (Copié avec succès)', 'success');
-            }).catch(err => {
-                console.error('فشل النسخ', err);
-                showNotification('حدث خطأ أثناء النسخ', 'error');
-            });
         }
 
        async function submitDeposit() {
             const amount = document.getElementById('deposit-amount').value;
             const txId = document.getElementById('deposit-tx').value;
             if(!amount || !txId) return showNotification('الرجاء تعمير جميع البيانات', 'error');
-
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/request-transaction`, {
-                    method: 'POST',
-                    headers: getAuthHeaders(),
+                    method: 'POST', headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "admin", target_username: playerSession.username, action: "deposit_request", amount: amount })
                 });
-                if(res.ok) {
-                    showNotification('تم إرسال طلب الإيداع بنجاح!', 'success');
-                    toggleCashier();
-                } else {
-                    showNotification('حدث خطأ أثناء إرسال الطلب', 'error');
-                }
-            } catch(e) { 
-                showNotification('خطأ في الاتصال بالسيرفر', 'error'); 
-            }
+                if(res.ok) { showNotification('تم إرسال طلب الإيداع بنجاح!', 'success'); toggleCashier(); } 
+                else { showNotification('حدث خطأ أثناء إرسال الطلب', 'error'); }
+            } catch(e) { showNotification('خطأ في الاتصال بالسيرفر', 'error'); }
         }
+
         function submitWithdraw() {
             showNotification('تم تسجيل طلب السحب، ستتم المعالجة قريباً', 'success');
             setTimeout(toggleCashier, 1500);
@@ -1581,86 +1241,35 @@
         
         function openRegisterModal() {
             const modal = document.getElementById('register-modal');
-            if(modal) {
-                modal.classList.remove('hidden');
-            } else {
-                showNotification('نظام التسجيل قيد التحديث، يرجى التواصل مع الإدارة', 'info');
-            }
+            if(modal) { modal.classList.remove('hidden'); } 
+            else { showNotification('نظام التسجيل قيد التحديث', 'info'); }
         }
 
         async function registerPlayer() {
             const username = document.getElementById('reg-username').value.trim();
             const password = document.getElementById('reg-password').value;
-
-            if (!username || !password) {
-                return showNotification('الرجاء تعمير جميع البيانات', 'error');
-            }
-
+            if (!username || !password) return showNotification('الرجاء تعمير جميع البيانات', 'error');
             try {
                 const response = await fetch(`${BACKEND_URL}/api/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ 
-                        username: username, 
-                        password: password,
-                        role: "player", 
-                        created_by: "Self-Register"
-                    })
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username, password: password, role: "player", created_by: "Self-Register" })
                 });
-
                 if (response.ok) {
-                    showNotification('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.', 'success');
+                    showNotification('تم إنشاء الحساب بنجاح!', 'success');
                     document.getElementById('register-modal').classList.add('hidden');
-                    document.getElementById('reg-username').value = '';
-                    document.getElementById('reg-password').value = '';
                     openLoginModal(); 
                 } else {
-                    const data = await response.json();
-                    showNotification(data.detail || 'حدث خطأ أثناء التسجيل (ربما الاسم مأخوذ)', 'error');
+                    const data = await response.json(); showNotification(data.detail || 'حدث خطأ أثناء التسجيل', 'error');
                 }
-            } catch (error) {
-                showNotification('خطأ في الاتصال بالسيرفر', 'error');
-            }
-        }
-        
-        function toggleMarkets(index) {
-            const element = document.getElementById(`markets-${index}`);
-            if (element.classList.contains('hidden')) {
-                element.classList.remove('hidden');
-            } else {
-                element.classList.add('hidden');
-            }
+            } catch (error) { showNotification('خطأ في الاتصال بالسيرفر', 'error'); }
         }
 
         let currentActiveMarket = 'h2h'; 
-
         function changeMarket(marketKey) {
             currentActiveMarket = marketKey;
-            
             document.querySelectorAll('.market-tab').forEach(btn => btn.classList.remove('bg-teal-600'));
             event.currentTarget.classList.add('bg-teal-600');
-            
-            // Assuming matches variable is available globally or needs fetching
-            // renderMatchesList(matches); 
-        }
-
-        function closeTicket() {
-            document.getElementById('main-ticket-slip').style.display = 'none';
-        }
-
-        let isMinimized = false;
-        function minimizeTicket() {
-            const body = document.getElementById('ticket-content-body');
-            if (!isMinimized) {
-                body.style.display = 'none';
-                isMinimized = true;
-            } else {
-                body.style.display = 'block';
-                isMinimized = false;
-            }
         }
     </script>
-    
-  
 </body>
 </html>
