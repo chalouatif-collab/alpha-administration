@@ -1511,6 +1511,38 @@
         showNotification('نظام التسجيل قيد التحديث، يرجى التواصل مع الإدارة', 'info');
     }
 }
+async function registerPlayer() {
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+
+    if (!username || !password) {
+        return showNotification('الرجاء تعمير جميع البيانات', 'error');
+    }
+
+    try {
+        const res = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                username: username, 
+                password: password,
+                role: "user" // المستخدم العادي
+            })
+        });
+
+        if (res.ok) {
+            showNotification('تم إنشاء الحساب بنجاح! يمكنك الدخول الآن', 'success');
+            // أغلق نافذة التسجيل وافتح نافذة الدخول
+            document.getElementById('register-modal').classList.add('hidden');
+            openLoginModal(); 
+        } else {
+            const data = await res.json();
+            showNotification(data.detail || 'خطأ في التسجيل', 'error');
+        }
+    } catch (e) {
+        showNotification('خطأ في الاتصال بالسيرفر', 'error');
+    }
+}
 
     </script>
 </body>
