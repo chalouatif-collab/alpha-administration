@@ -1527,36 +1527,42 @@
         showNotification('نظام التسجيل قيد التحديث، يرجى التواصل مع الإدارة', 'info');
     }
 }
+// دالة فتح نافذة التسجيل
+function openRegisterModal() {
+    document.getElementById('register-modal').classList.remove('hidden');
+}
+
+// دالة إرسال بيانات التسجيل للسيرفر
 async function registerPlayer() {
     const username = document.getElementById('reg-username').value;
     const password = document.getElementById('reg-password').value;
 
     if (!username || !password) {
-        return showNotification('الرجاء تعمير جميع البيانات', 'error');
+        alert('الرجاء تعمير جميع البيانات');
+        return;
     }
 
     try {
-        const res = await fetch('/api/register', {
+        const response = await fetch('/api/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
                 username: username, 
                 password: password,
-                role: "user" // المستخدم العادي
+                role: "user" 
             })
         });
 
-        if (res.ok) {
-            showNotification('تم إنشاء الحساب بنجاح! يمكنك الدخول الآن', 'success');
-            // أغلق نافذة التسجيل وافتح نافذة الدخول
+        if (response.ok) {
+            alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
             document.getElementById('register-modal').classList.add('hidden');
-            openLoginModal(); 
+            openLoginModal(); // نفتح نافذة الدخول بعد التسجيل الناجح
         } else {
-            const data = await res.json();
-            showNotification(data.detail || 'خطأ في التسجيل', 'error');
+            const data = await response.json();
+            alert(data.detail || 'حدث خطأ أثناء التسجيل');
         }
-    } catch (e) {
-        showNotification('خطأ في الاتصال بالسيرفر', 'error');
+    } catch (error) {
+        alert('خطأ في الاتصال بالسيرفر');
     }
 }
 
