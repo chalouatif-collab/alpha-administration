@@ -323,7 +323,7 @@
         </div>
     </div>
    <!-- أزرار الدخول والتسجيل (مرتبة عمودياً) -->
-  <div class="flex flex-col gap-1 items-end -mt-2">
+  <div id="auth-buttons-container" class="flex flex-col gap-1 items-end -mt-2">
     <button onclick="openLoginModal()" id="top-login-btn" class="bg-slate-800 hover:bg-slate-700 text-white text-[9px] font-bold px-2 py-1 rounded-md transition-all w-16 text-center">Connexion</button>
     <button onclick="openRegisterModal()" class="bg-teal-500 hover:bg-teal-600 text-slate-950 text-[9px] font-black px-2 py-1 rounded-md transition-all w-16 text-center">S'inscrire</button>
   
@@ -805,6 +805,7 @@
             closeLoginModal();
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
             document.getElementById('top-login-btn')?.classList.add('hidden');
+            document.getElementById('auth-buttons-container').classList.add('hidden');
             
             const topProfile = document.getElementById('top-user-profile');
             if(topProfile) { topProfile.classList.remove('hidden'); topProfile.classList.add('flex'); }
@@ -1315,6 +1316,7 @@
             
             document.getElementById('sidebar-login-btn')?.classList.remove('hidden');
             switchSection('accueil');
+            document.getElementById('auth-buttons-container').classList.remove('hidden');
         }
 
         window.onload = function() { 
