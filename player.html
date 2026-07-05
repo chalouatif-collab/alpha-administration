@@ -21,7 +21,7 @@
             background-image: linear-gradient(rgba(30, 41, 59, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-   /* 🏆 شريط الرابحين المباشر (Live Winners Ticker) */
+        /* 🏆 شريط الرابحين المباشر (Live Winners Ticker) */
         .live-ticker-wrapper {
             width: 100%;
             background: linear-gradient(90deg, rgba(20, 184, 166, 0.05) 0%, rgba(20, 184, 166, 0.15) 50%, rgba(20, 184, 166, 0.05) 100%);
@@ -42,7 +42,6 @@
             white-space: nowrap;
             animation: scroll-ticker 60s linear infinite;
         }
-
 
         @keyframes scroll-ticker {
             0% { transform: translateX(100vw); }
@@ -66,7 +65,6 @@
         .winner-card .w-name { color: #fff; font-weight: bold; }
         .winner-card .w-game { color: #64748b; font-family: sans-serif; font-size: 0.7rem;}
         .winner-card .w-amount { color: #14b8a6; font-weight: 900; text-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
-      
       
         /* 🔥 السحر البرمجي للهاتف 🔥 */
         @media (max-width: 768px) {
@@ -111,47 +109,46 @@
 
             #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
         }
-/* 🎡 كود العجلة الجديد */
-.wheel-container {
-    background: rgba(30, 41, 59, 0.5);
-    border-radius: 20px;
-    margin-bottom: 20px;
-    padding: 20px;
-}
+        /* 🎡 كود العجلة الجديد */
+        .wheel-container {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
 
-.wheel {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    border: 10px solid #fbbf24;
-    background: conic-gradient(
-        #ef4444 0deg 45deg, #f59e0b 45deg 90deg, 
-        #ef4444 90deg 135deg, #f59e0b 135deg 180deg, 
-        #ef4444 180deg 225deg, #f59e0b 225deg 270deg, 
-        #ef4444 270deg 315deg, #f59e0b 315deg 360deg
-    );
-    transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
-}
+        .wheel {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 10px solid #fbbf24;
+            background: conic-gradient(
+                #ef4444 0deg 45deg, #f59e0b 45deg 90deg, 
+                #ef4444 90deg 135deg, #f59e0b 135deg 180deg, 
+                #ef4444 180deg 225deg, #f59e0b 225deg 270deg, 
+                #ef4444 270deg 315deg, #f59e0b 315deg 360deg
+            );
+            transition: transform 5s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
 
-/* 💰 أنيماسيون الجاكبوت (نبض ضوئي) */
-.jackpot-card {
-    position: relative;
-    transition: all 0.3s ease;
-    animation: pulse-glow 3s infinite alternate;
-}
+        /* 💰 أنيماسيون الجاكبوت (نبض ضوئي) */
+        .jackpot-card {
+            position: relative;
+            transition: all 0.3s ease;
+            animation: pulse-glow 3s infinite alternate;
+        }
 
-@keyframes pulse-glow {
-    0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-    50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
-    100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
-}
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.4); }
+            100% { box-shadow: 0 0 5px rgba(251, 191, 36, 0.2); }
+        }
 
-/* تأثير لمعة خفيفة عند المرور */
-.jackpot-card:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-}
-
+        /* تأثير لمعة خفيفة عند المرور */
+        .jackpot-card:hover {
+            transform: scale(1.05);
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-[#050814] text-slate-200 min-h-screen font-sans flex flex-col md:flex-row md:overflow-hidden relative">
@@ -188,7 +185,6 @@
                         </span>
                     </span> 
                     <span class="font-medium text-sm">Live Sport</span>
-    
                 </button>
 
                 <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
@@ -217,14 +213,13 @@
                     <span class="font-medium text-sm text-teal-400">Aviator</span>
                 </button>
 
-                         <button onclick="toggleWheelModal(); toggleMobileSideBar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800 rounded transition">
-    <span class="text-xl w-6 text-center">🎰</span>
-    <span class="font-medium text-sm">عجلة الحظ</span>
-</button>
+                <button onclick="toggleWheelModal(); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                    <span class="text-xl w-6 text-center">🎰</span>
+                    <span class="font-medium text-sm">عجلة الحظ</span>
                 </button>
             </nav>
         </div>
-    </div> <!-- تم إصلاح العطل هنا: إضافة وسم الإغلاق المفقود -->
+    </div>
 
     <div id="player-login-modal" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
         <div class="w-full max-w-md bg-[#0b1124] border border-slate-800 rounded-3xl p-6 md:p-8 shadow-2xl space-y-6 relative">
@@ -341,17 +336,18 @@
                 </div>
             </div>
         </div>
-    </header> <!-- تم إزالة التكرار من هنا -->
+    </header>
         
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
             <!-- شريط الرابحين المتحرك -->
-        <div class="live-ticker-wrapper">
-            <div class="live-ticker-track" id="winners-ticker-track">
-                <!-- سيتم توليد الرابحين هنا -->
+            <div class="live-ticker-wrapper">
+                <div class="live-ticker-track" id="winners-ticker-track">
+                    <!-- سيتم توليد الرابحين هنا -->
+                </div>
             </div>
-        </div>
+
+            <!-- تم تعديل وسم الإغلاق هنا ليكون القسم الرئيسي محيطاً بالعناصر -->
             <div id="pane-accueil" class="player-view-section space-y-4">
-</div> 
                 <div class="grid grid-cols-3 gap-2 md:gap-4 mb-4">
                     <div class="jackpot-card bg-gradient-to-b from-amber-500/20 to-[#090f24] border border-amber-500/40 rounded-2xl p-3 text-center shadow-lg relative overflow-hidden">
                         <div class="text-amber-400 font-black text-[9px] md:text-xs uppercase tracking-widest mb-1">Mega 🥇</div>
@@ -373,7 +369,7 @@
                     </div>
                     <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
-            </div>
+            </div> <!-- إغلاق قسم pane-accueil بعد المباريات -->
 
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
                 <div class="flex justify-between items-center mb-2">
@@ -521,19 +517,21 @@
 
         </main>
     </div>
-<!-- النافذة المنبثقة للعجلة (مخفية افتراضياً) -->
-<div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
-    <div class="bg-slate-900 p-8 rounded-3xl border border-amber-500 shadow-2xl relative">
-        <button onclick="toggleWheelModal()" class="absolute top-4 right-4 text-white hover:text-red-500 text-xl font-bold">X</button>
-        
-        <div class="wheel-container flex flex-col items-center">
-            <div id="wheel" class="wheel"></div>
-            <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">
-                دوران العجلة! 🎰
-            </button>
+
+    <!-- النافذة المنبثقة للعجلة (مخفية افتراضياً) -->
+    <div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-slate-900 p-8 rounded-3xl border border-amber-500 shadow-2xl relative">
+            <button onclick="toggleWheelModal()" class="absolute top-4 right-4 text-white hover:text-red-500 text-xl font-bold">X</button>
+            
+            <div class="wheel-container flex flex-col items-center">
+                <div id="wheel" class="wheel"></div>
+                <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">
+                    دوران العجلة! 🎰
+                </button>
+            </div>
         </div>
     </div>
-</div>
+
     <script>
         function toggleMobileSidebar() {
             const drawer = document.getElementById('mobile-drawer-menu');
@@ -549,7 +547,6 @@
             return {
                 'Authorization': `Bearer ${token}`,
                 headers: { 'Content-Type': 'getAuthHeaders' },
-            
             };
         }
         
@@ -705,46 +702,42 @@
             } catch (e) { console.error("Error syncing tickets from database", e); }
         }
 
-     async function handlePlayerAuth() {
-    const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
-    const password = document.getElementById('p-auth-password').value;
-    
-    // تصحيح منطق التحقق (السطر 673)
-    if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
+        async function handlePlayerAuth() {
+            const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
+            const password = document.getElementById('p-auth-password').value;
+            
+            if(!username || !password) return showNotification('الرجاء ملء جميع الحقول أولاً', 'error');
 
-    try {
-        const res = await fetch(`${BACKEND_URL}/api/login`, {
-            method: 'POST',
-            // تصحيح الترويسة (السطر 678)
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify({ username, password })
-        });
-        
-        const data = await res.json();
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await res.json();
 
-        if(res.ok) {
-            // ... (باقي كود التحقق من الدور "admin/owner/shop") ...
-            if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
-                showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
-                return;
+                if(res.ok) {
+                    if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
+                        showNotification('Accès refusé. Vous n\'êtes pas un membre du joueur !', 'error');
+                        return;
+                    }
+
+                    playerSession = data;
+                    localStorage.setItem('alpha_player_session', JSON.stringify(data));
+                    localStorage.setItem('token', data.access_token); 
+
+                    setupLoggedInUI();
+                    await fetchPlayerTicketsFromServer();
+                } else { 
+                    showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
+                }
+            } catch(e) { 
+                showNotification('عطل اتصال بالسيرفر', 'error'); 
             }
-
-            playerSession = data;
-            localStorage.setItem('alpha_player_session', JSON.stringify(data));
-            localStorage.setItem('token', data.access_token); 
-
-            setupLoggedInUI();
-            await fetchPlayerTicketsFromServer();
-        } else { 
-            // الإشعار كما قمنا بتعديله سابقاً
-            showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
         }
-    } catch(e) { 
-        showNotification('عطل اتصال بالسيرفر', 'error'); 
-    }
-}
 
-         function setupLoggedInUI() {
+        function setupLoggedInUI() {
             closeLoginModal();
             document.getElementById('sidebar-login-btn')?.classList.add('hidden');
             document.getElementById('top-login-btn')?.classList.add('hidden');
@@ -1237,7 +1230,7 @@
             } catch(e) { spinBtn.disabled = false; }
         }
 
-      function logoutPlayer() {
+        function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
             
@@ -1348,53 +1341,44 @@
             
             track.innerHTML = tickerHTML;
         }
-async function spinWheel() {
-    const wheel = document.getElementById('wheel');
-    const token = localStorage.getItem('token'); // استرجاع التوكن للتحقق
 
-    try {
-        // 1. طلب النتيجة من السيرفر
-        const response = await fetch('/api/spin', { 
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
+        function toggleWheelModal() {
+            const modal = document.getElementById('wheel-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        async function spinWheel() {
+            const wheel = document.getElementById('wheel');
+            const token = localStorage.getItem('token');
+
+            try {
+                const response = await fetch('/api/spin', { 
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+
+                let degrees = 3600;
+                wheel.style.transform = `rotate(${degrees}deg)`;
+                
+                setTimeout(() => {
+                    if (result.status === 'win') {
+                        alert(result.message);
+                        location.reload(); 
+                    } else {
+                        alert(result.message);
+                    }
+                }, 5000);
+
+            } catch (error) {
+                console.error("Error:", error);
+                alert("حدث خطأ في الاتصال بالسيرفر");
             }
-        });
-        
-        const result = await response.json();
-
-        // 2. تدوير العجلة (حركة جمالية)
-        let degrees = 3600; // دوران كامل 10 مرات
-        // هنا يمكنك إضافة منطق لتغيير الزاوية بناءً على النتيجة إذا أردت
-        wheel.style.transform = `rotate(${degrees}deg)`;
-        
-        // 3. نظهر النتيجة بعد انتهاء الدوران (5 ثوانٍ)
-        setTimeout(() => {
-            if (result.status === 'win') {
-                alert(result.message); // سيظهر تنبيه بالربح
-                // اختياري: تحديث الرصيد في الصفحة فوراً
-                location.reload(); 
-            } else {
-                alert(result.message); // سيظهر تنبيه بالخسارة
-            }
-        }, 5000);
-
-    } catch (error) {
-        console.error("Error:", error);
-        alert("حدث خطأ في الاتصال بالسيرفر");
-    }
-}
-function toggleWheelModal() {
-    const modal = document.getElementById('wheel-modal');
-    modal.classList.toggle('hidden');
-}
-
-async function spinWheel() {
-    // كود دالة spinWheel الذي جهزناه سابقاً...
-    // (تأكد من نسخه هنا)
-}
+        }
     </script>
-
 </body>
 </html>
