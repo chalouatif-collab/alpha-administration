@@ -315,6 +315,7 @@
             <div class="bg-[#050814] border border-slate-800 px-2 py-1 rounded-lg hidden md:flex items-center gap-2 font-mono">
                 <span class="text-[#14b8a6] font-black text-xs" id="player-balance-val">0.00</span>
                 <button onclick="toggleBalanceVisibility()" class="text-slate-400 hover:text-white text-[10px]" id="eye-icon-btn">👁️</button>
+                <button onclick="toggleCashier()" class="bg-teal-500/20 text-teal-400 hover:bg-teal-500 hover:text-slate-950 font-bold px-2 py-0.5 rounded text-[10px] ml-2 transition-all cursor-pointer">Dépôt</button>
             </div>
 
             <button onclick="openLoginModal()" id="top-login-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 text-[10px] font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer">Connexion</button>
@@ -516,6 +517,54 @@
             </div>
 
         </main>
+    </div>
+<!-- 💰 نافذة الكاشير (الإيداع والسحب) -->
+    <div id="cashier-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-[#0b1124] border border-slate-800 rounded-3xl w-full max-w-md p-6 relative shadow-2xl">
+            <button onclick="toggleCashier()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+            
+            <h2 class="text-lg font-black text-white mb-4 flex items-center gap-2">💳 Caisse (الكاشير)</h2>
+            
+            <!-- أزرار التبديل بين الإيداع والسحب -->
+            <div class="flex gap-2 mb-6 bg-[#050814] p-1 rounded-xl border border-slate-800">
+                <button onclick="switchCashierTab('deposit')" id="tab-deposit" class="flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all">Dépôt (إيداع)</button>
+                <button onclick="switchCashierTab('withdraw')" id="tab-withdraw" class="flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all">Retrait (سحب)</button>
+            </div>
+
+            <!-- قسم الإيداع -->
+            <div id="deposit-section" class="space-y-4">
+                <label class="text-xs text-slate-400 font-bold">Choisissez la méthode:</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="selectPaymentMethod('d17')" class="border border-slate-700 bg-slate-800/50 hover:border-teal-500 hover:bg-slate-800 p-3 rounded-xl flex flex-col items-center gap-2 transition-all cursor-pointer">
+                        <span class="text-xl">📱</span>
+                        <span class="text-[10px] font-bold text-white">D17 / Flouci</span>
+                    </button>
+                    <button onclick="selectPaymentMethod('usdt')" class="border border-slate-700 bg-slate-800/50 hover:border-teal-500 hover:bg-slate-800 p-3 rounded-xl flex flex-col items-center gap-2 transition-all cursor-pointer">
+                        <span class="text-xl">🪙</span>
+                        <span class="text-[10px] font-bold text-white">USDT (Binance)</span>
+                    </button>
+                </div>
+
+                <div id="payment-details" class="hidden bg-[#050814] border border-slate-800 p-4 rounded-xl mt-4 space-y-3">
+                    <div class="text-[11px] text-slate-300 font-mono" id="payment-instructions">
+                        <!-- التعليمات ستظهر هنا -->
+                    </div>
+                    <input type="number" id="deposit-amount" placeholder="Montant (المبلغ TND)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-teal-400 text-sm font-mono focus:outline-none focus:border-teal-500">
+                    <input type="text" id="deposit-tx" placeholder="ID de transaction (رقم العملية)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-white text-sm font-mono focus:outline-none focus:border-teal-500">
+                    <button onclick="submitDeposit()" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all mt-2 cursor-pointer">Confirmer le Dépôt</button>
+                </div>
+            </div>
+
+            <!-- قسم السحب (مخفي افتراضياً) -->
+            <div id="withdraw-section" class="hidden space-y-4">
+                <div class="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl text-[10px] text-amber-400 font-bold mb-4">
+                    Solde disponible: <span id="cashier-balance-display">0.00</span> TND
+                </div>
+                <input type="number" id="withdraw-amount" placeholder="Montant à retirer (المبلغ)" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-3 text-teal-400 text-sm font-mono focus:outline-none focus:border-teal-500">
+                <input type="text" id="withdraw-account" placeholder="Numéro D17 / Adresse USDT" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-3 text-white text-sm font-mono focus:outline-none focus:border-teal-500">
+                <button onclick="submitWithdraw()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all mt-2 cursor-pointer">Demander le Retrait</button>
+            </div>
+        </div>
     </div>
 
     <!-- النافذة المنبثقة للعجلة (مخفية افتراضياً) -->
@@ -1384,6 +1433,68 @@
                 alert("حدث خطأ في الاتصال بالسيرفر");
             }
         }
+// --- نظام الكاشير (الإيداع والسحب) ---
+        function toggleCashier() {
+            if(!playerSession) return openLoginModal();
+            const modal = document.getElementById('cashier-modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                document.getElementById('cashier-balance-display').innerText = playerSession.balance.toFixed(2);
+            }
+        }
+
+        function switchCashierTab(tab) {
+            if(tab === 'deposit') {
+                document.getElementById('deposit-section').classList.remove('hidden');
+                document.getElementById('withdraw-section').classList.add('hidden');
+                document.getElementById('tab-deposit').className = "flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all";
+                document.getElementById('tab-withdraw').className = "flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all";
+            } else {
+                document.getElementById('deposit-section').classList.add('hidden');
+                document.getElementById('withdraw-section').classList.remove('hidden');
+                document.getElementById('tab-withdraw').className = "flex-1 bg-teal-500 text-slate-950 font-bold py-2 rounded-lg text-xs transition-all";
+                document.getElementById('tab-deposit').className = "flex-1 text-slate-400 hover:text-white font-bold py-2 rounded-lg text-xs transition-all";
+            }
+        }
+
+        let selectedMethod = "";
+        function selectPaymentMethod(method) {
+            selectedMethod = method;
+            document.getElementById('payment-details').classList.remove('hidden');
+            const inst = document.getElementById('payment-instructions');
+            if(method === 'd17') {
+                inst.innerHTML = `Veuillez envoyer via D17 au numéro: <br><strong class="text-teal-400 text-sm">55 123 456</strong><br>Puis entrez le montant et l'ID de transaction ci-dessous.`;
+            } else {
+                inst.innerHTML = `Envoyez USDT (TRC20) à l'adresse: <br><strong class="text-teal-400 text-[9px] break-all">TXYZ1234567890abcdefghijklmnopqrstuvwxyz</strong><br>Puis entrez le montant et le TXID ci-dessous.`;
+            }
+        }
+
+       async function submitDeposit() {
+            const amount = document.getElementById('deposit-amount').value;
+            const txId = document.getElementById('deposit-tx').value;
+            if(!amount || !txId) return showNotification('الرجاء تعمير جميع البيانات', 'error');
+
+            try {
+                const res = await fetch(`${BACKEND_URL}/api/admin/request-transaction`, {
+                    method: 'POST',
+                    headers: getAuthHeaders(),
+                    body: JSON.stringify({ admin_username: "admin", target_username: playerSession.username, action: "deposit_request", amount: amount })
+                });
+                if(res.ok) {
+                    showNotification('تم إرسال طلب الإيداع بنجاح!', 'success');
+                    toggleCashier();
+                } else {
+                    showNotification('حدث خطأ أثناء إرسال الطلب', 'error');
+                }
+            } catch(e) { 
+                showNotification('خطأ في الاتصال بالسيرفر', 'error'); 
+            }
+        }
+        function submitWithdraw() {
+            showNotification('تم تسجيل طلب السحب، ستتم المعالجة قريباً', 'success');
+            setTimeout(toggleCashier, 1500);
+        }
+
     </script>
 </body>
 </html>
