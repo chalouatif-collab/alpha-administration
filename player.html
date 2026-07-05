@@ -702,7 +702,7 @@
             } catch (e) { console.error("Error syncing tickets from database", e); }
         }
 
-        async function handlePlayerAuth() {
+       async function handlePlayerAuth() {
             const username = document.getElementById('p-auth-username').value.trim().toLowerCase();
             const password = document.getElementById('p-auth-password').value;
             
@@ -715,7 +715,15 @@
                     body: JSON.stringify({ username, password })
                 });
                 
-                const data = await res.json();
+                // نقرأ الرد كنص أولاً لتجنب انهيار الموقع إذا كان الرد ليس JSON
+                const responseText = await res.text(); 
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch(parseError) {
+                    console.error("Server Error Response:", responseText);
+                    return showNotification('السيرفر يواجه مشكلة داخلية، تفقد الـ Logs', 'error');
+                }
 
                 if(res.ok) {
                     if (data.role === 'owner' || data.role === 'admin' || data.role === 'shop') {
@@ -733,7 +741,8 @@
                     showNotification(typeof data === 'object' ? JSON.stringify(data.detail || data.message || data) : data, 'error');
                 }
             } catch(e) { 
-                showNotification('عطل اتصال بالسيرفر', 'error'); 
+                console.error("Network Error:", e);
+                showNotification('السيرفر قيد التشغيل، جرب مرة أخرى بعد ثوانٍ', 'error'); 
             }
         }
 
