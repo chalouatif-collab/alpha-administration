@@ -542,11 +542,12 @@
             }
         }
 
+        // تم تصحيح وظيفة توليد ترويسة الحماية بنجاح لتتوافق مع السيرفر 
         function getAuthHeaders() {
             const token = localStorage.getItem('token');
             return {
                 'Authorization': `Bearer ${token}`,
-                headers: { 'Content-Type': 'getAuthHeaders' },
+                'Content-Type': 'application/json'
             };
         }
         
@@ -599,7 +600,6 @@
             if(sectionId === 'paris') renderMyBetsHistoryPane();
         }
 
-        // 👁️ دالة إخفاء وإظهار الرصيد (نظام التمويه الحديث)
         function toggleBalanceVisibility() {
             const balSpan = document.getElementById('player-balance-val');
             const eyeBtn = document.getElementById('eye-icon-btn');
@@ -645,7 +645,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, {
                     method: 'GET',
-                   headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                 });
                 
                 if (res.ok) {
@@ -676,7 +676,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${playerSession.username}`, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                 });
                 if (res.ok) {
                     const tickets = await res.json();
@@ -822,7 +822,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                   headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: stake })
                 });
 
@@ -849,7 +849,7 @@
 
                     await fetch(`${BACKEND_URL}/api/admin/save-ticket`, {
                         method: 'POST',
-                       headers: { 'Content-Type': 'getAuthHeaders' },
+                        headers: getAuthHeaders(),
                         body: JSON.stringify({
                             username: playerSession.username,
                             ticket_data: betTicketObject
@@ -872,7 +872,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: parseFloat(cashOutAmount) })
                 });
 
@@ -889,7 +889,7 @@
 
                     await fetch(`${BACKEND_URL}/api/admin/update-ticket-status`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'getAuthHeaders' },
+                        headers: getAuthHeaders(),
                         body: JSON.stringify({
                             ticket_id: ticketId,
                             status: "cashout",
@@ -978,7 +978,7 @@
             try {
                 const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, {
                     method: 'GET',
-                    headers: { 'Content-Type': 'getAuthHeaders' }, 
+                    headers: getAuthHeaders(), 
                 });
                 if(res.ok) {
                     const matches = await res.json();
@@ -1085,7 +1085,7 @@
             try {
               const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "system", target_username: playerSession.username, action: "withdraw", amount: stakeAmount })
                 });
 
@@ -1134,7 +1134,7 @@
             try {
                 const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ 
                         admin_username: "System", 
                         target_username: playerSession.username, 
@@ -1194,7 +1194,7 @@
             try {
                 const deductRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'getAuthHeaders' },
+                    headers: getAuthHeaders(),
                     body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "withdraw", amount: betAmount })
                 });
                 if(!deductRes.ok) { spinBtn.disabled = false; return; }
@@ -1217,7 +1217,7 @@
                         const winAmount = betAmount * (res1 === "👑" ? 10 : 5);
                         const winRes = await fetch(`${BACKEND_URL}/api/admin/update-balance`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'getAuthHeaders' },
+                            headers: getAuthHeaders(),
                             body: JSON.stringify({ admin_username: "System", target_username: playerSession.username, action: "charge", amount: winAmount })
                         });
                         const winData = await winRes.json();
@@ -1349,15 +1349,11 @@
 
         async function spinWheel() {
             const wheel = document.getElementById('wheel');
-            const token = localStorage.getItem('token');
-
+            
             try {
-                const response = await fetch('/api/spin', { 
+                const response = await fetch(`${BACKEND_URL}/api/spin`, { 
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
+                    headers: getAuthHeaders()
                 });
                 
                 const result = await response.json();
