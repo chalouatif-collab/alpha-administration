@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Alphabet - Player Control Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
@@ -670,38 +671,47 @@
             document.getElementById('ticket-total-odds').innerText = totalCoteCalculated.toFixed(2);
             calculatePotentialGain();
         }
-
         function calculatePotentialGain() {
-            const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
-            const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText) || 1.00;
-            const matchCount = comboTicketMatchesList.length;
-            const bonusRate = getBonusRate(matchCount);
+    const stake = parseFloat(document.getElementById('ticket-stake-input').value) || 0;
+    const totalOdds = parseFloat(document.getElementById('ticket-total-odds').innerText) || 1.00;
+    const matchCount = comboTicketMatchesList.length;
+    const bonusRate = getBonusRate(matchCount);
 
-            const totalGain = (stake * totalOdds) * (1 + bonusRate);
-            
-            const displayElement = document.getElementById('ticket-potential-gain');
-            if (displayElement) {
-                displayElement.innerText = `${totalGain.toFixed(2)} TND`;
-            }
-        }
-        /* ========================================================= */
+    const totalGain = (stake * totalOdds) * (1 + bonusRate);
 
+    const displayElement = document.getElementById('ticket-potential-gain');
+    if (displayElement) {
+        displayElement.innerText = `${totalGain.toFixed(2)} TND`;
+    }
+
+}
         async function refreshPlayerBalance() {
-            if (!playerSession || !playerSession.username) return;
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, { method: 'GET', headers: getAuthHeaders(), });
-                if (res.ok) {
-                    const users = await res.json();
-                    const currentMe = users.find(u => u.username === playerSession.username);
-                    if (currentMe) {
-                        playerSession.balance = currentMe.balance;
-                        localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
-                        document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+    if (!playerSession || !playerSession.username) return;
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/users?timestamp=${new Date().getTime()}`, { method: 'GET', headers: getAuthHeaders() });
+        if (res.ok) {
+            const users = await res.json();
+            const currentMe = users.find(u => u.username === playerSession.username);
+            
+            if (currentMe) {
+                // --- اللمسة السحرية: مقارنة الرصيد القديم بالجديد ---
+                let oldBalance = parseFloat(playerSession.balance) || 0;
+                let newBalance = parseFloat(currentMe.balance) || 0;
+
+                if (newBalance > oldBalance) {
+                    if (typeof triggerGoldRain === "function") {
+                        triggerGoldRain();
                     }
                 }
-            } catch (e) { console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد:", e); }
+                // ----------------------------------------------------
+
+                playerSession.balance = currentMe.balance;
+                localStorage.setItem('alpha_player_session', JSON.stringify(playerSession));
+                document.getElementById('player-balance-val').innerText = `${parseFloat(playerSession.balance).toFixed(2)}`;
+            }
         }
-        
+    } catch (e) { console.error("عطل في الاتصال بالسيرفر أثناء تحديث الرصيد", e); }
+}
         async function fetchPlayerTicketsFromServer() {
             if (!playerSession || !playerSession.username) return;
             try {
@@ -1342,7 +1352,25 @@ function closeCasinoGame() {
         showNotification('خطأ في الاتصال بالسيرفر', 'error');
     }
     }
-        
+      function triggerGoldRain() {
+    const duration = 3 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({
+            particleCount: 5, angle: 60, spread: 55, origin: { x: 0 },
+            colors: ['#FFD700', '#F8B400', '#FFF8DC'], zIndex: 9999
+        });
+        confetti({
+            particleCount: 5, angle: 120, spread: 55, origin: { x: 1 },
+            colors: ['#FFD700', '#F8B400', '#FFF8DC'], zIndex: 9999
+        });
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+}  
       
             
    </script>
