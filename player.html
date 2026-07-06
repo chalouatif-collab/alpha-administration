@@ -388,6 +388,11 @@
                     <div class="text-[11px] text-slate-300 font-mono" id="payment-instructions"></div>
                     <input type="number" id="deposit-amount" placeholder="Montant (المبلغ TND)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-teal-400 text-sm font-mono focus:outline-none focus:border-teal-500">
                     <input type="text" id="deposit-tx" placeholder="ID de transaction (رقم العملية)" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2.5 text-white text-sm font-mono focus:outline-none focus:border-teal-500">
+                     <!-- حقل رفع صورة الإيصال الجديد -->
+               <div class="text-start">
+                    <label class="text-[11px] text-slate-400 font-mono mb-1 block">صورة الإيصال (اختياري):</label>
+                    <input type="file" id="deposit-file" accept="image/*" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2 text-white text-sm focus:outline-none focus:border-teal-400">
+                </div>
                     <button onclick="submitDeposit()" class="w-full bg-teal-500 hover:bg-teal-600 text-slate-950 font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all mt-2 cursor-pointer">Confirmer le Dépôt</button>
                 </div>
             </div>
@@ -1293,75 +1298,46 @@ function closeCasinoGame() {
             }
         }
 
-      async function submitDeposit() {
+   async function submitDeposit() {
     const amount = document.getElementById('deposit-amount').value;
     const txId = document.getElementById('deposit-tx').value;
+    const fileInput = document.getElementById('deposit-file');
+    // التحقق من أن البيانات موجودة
+    if(!amount || !txId) {
+        return showNotification('الرجاء تعمير جميع البيانات', 'error');
+    }
     
-    if(!amount || !txId) return showNotification('الرجاء تعمير جميع البيانات', 'error');
-    
-    try {
+   try {
+        // إنشاء FormData لإرسال النصوص والملفات معاً
+        const formData = new FormData();
+        formData.append('target_username', playerSession.username);
+        formData.append('action', 'deposit_request');
+        formData.append('amount', amount);
+        formData.append('tx_id', txId);
+        
+        // إذا قام اللاعب برفع صورة، يتم إرفاقها بالطلب
+        if (fileInput.files.length > 0) {
+            formData.append('file', fileInput.files[0]);
+        }
+
+        // نرسل الطلب للسيرفر عبر الـ FormData
         const res = await fetch(`${BACKEND_URL}/api/admin/request-transaction`, {
-            method: 'POST', 
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ 
-                admin_username: "admin", 
-                target_username: playerSession.username, 
-                action: "deposit_request", 
-                amount: amount,
-                tx_id: txId // أضفنا رقم العملية هنا
-            })
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }, // بدون Content-Type المتصفح يتعرف عليه تلقائياً
+            body: formData
         });
         
         if(res.ok) { 
-            showNotification('تم إرسال طلب الإيداع بنجاح!', 'success'); 
-            toggleCashier(); 
-        } 
-        else { 
-            showNotification('حدث خطأ أثناء إرسال الطلب', 'error'); 
+            showNotification('تم إرسال طلب الإيداع للأدمن بنجاح!', 'success'); 
+            toggleCashier(); // إغلاق نافذة الكاشير بعد النجاح
+        } else {
+            showNotification('حدث خطأ أثناء إرسال الطلب', 'error');
         }
     } catch(e) { 
         showNotification('خطأ في الاتصال بالسيرفر', 'error'); 
     }
 }
 
-        function submitWithdraw() {
-            showNotification('تم تسجيل طلب السحب، ستتم المعالجة قريباً', 'success');
-            setTimeout(toggleCashier, 1500);
-        }
-        
-        function openRegisterModal() {
-            const modal = document.getElementById('register-modal');
-            if(modal) { modal.classList.remove('hidden'); } 
-            else { showNotification('نظام التسجيل قيد التحديث', 'info'); }
-        }
-
-        async function registerPlayer() {
-            const username = document.getElementById('reg-username').value.trim();
-            const password = document.getElementById('reg-password').value;
-            if (!username || !password) return showNotification('الرجاء تعمير جميع البيانات', 'error');
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/register`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: username, password: password, role: "player", created_by: "Self-Register" })
-                });
-                if (response.ok) {
-                    showNotification('تم إنشاء الحساب بنجاح!', 'success');
-                    document.getElementById('register-modal').classList.add('hidden');
-                    openLoginModal(); 
-                } else {
-                    const data = await response.json(); showNotification(data.detail || 'حدث خطأ أثناء التسجيل', 'error');
-                }
-            } catch (error) { showNotification('خطأ في الاتصال بالسيرفر', 'error'); }
-        }
-
-        let currentActiveMarket = 'h2h'; 
-        function changeMarket(marketKey) {
-            currentActiveMarket = marketKey;
-            document.querySelectorAll('.market-tab').forEach(btn => btn.classList.remove('bg-teal-600'));
-            event.currentTarget.classList.add('bg-teal-600');
-            if(currentGlobalMatches.length > 0) renderMatchesList(currentGlobalMatches);
-            else injectBackupMatches();
-        }
-    </script>
+ </script>
 </body>
 </html>
