@@ -518,39 +518,48 @@
             }
             displayModalTransactions(filtered);
         }
+        
+       function displayModalTransactions(transactions) {
+    const listContainer = document.getElementById('modal-tx-list');
+    if (!transactions || transactions.length === 0) {
+        listContainer.innerHTML = '<div class="text-center text-secondary fw-bold p-3" style="font-size: 0.8rem;">لا توجد معاملات في هذه الفترة</div>';
+        return;
+    }
 
-        function displayModalTransactions(transactions) {
-            const listContainer = document.getElementById('modal-tx-list');
-            if (!transactions || transactions.length === 0) {
-                listContainer.innerHTML = '<div class="text-center text-secondary fw-bold p-3" style="font-size: 0.8rem;">لا توجد معاملات في هذه الفترة.</div>';
-                return;
-            }
-            let html = '';
-            transactions.forEach(t => {
-                const isCharge = t.action === 'charge'; 
-                const color = isCharge ? 'text-success' : 'text-danger';
-                const icon = isCharge ? '⬆️ شحن' : '⬇️ سحب';
-                const targetName = t.target_username || t.target || 'مجهول';
-                const date = t.date || 'بدون تاريخ';
-                
-                html += `
-                    <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
-                        <div class="card-body p-2 d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="text-white fw-bold mb-0" style="font-size: 0.85rem;">👤 ${targetName}</div>
-                                <div class="text-secondary font-monospace" style="font-size: 0.65rem;">🕒 ${date}</div>
-                            </div>
-                            <div class="text-end">
-                                <div class="${color} fw-bold font-monospace mb-0" style="font-size: 0.85rem;">
-                                    ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)}
-                                </div>
-                                <div class="text-info" style="font-size: 0.65rem;">${icon}</div>
-                            </div>
+    let html = '';
+    transactions.forEach(t => {
+        const isCharge = t.action === 'charge' || t.action === 'deposit_request'; // تم تحديثها لتشمل طلب الإيداع
+        const color = isCharge ? 'text-success' : 'text-danger';
+        const icon = isCharge ? '⬆️ شحن' : '⬇️ سحب';
+        const targetName = t.target_username || t.target || 'مجهول';
+        const date = t.date || 'بدون تاريخ';
+        
+        // التحقق من وجود صورة إيصال مرفقة بالعملية
+        const receiptBtn = t.image_path ? 
+            `<a href="${BACKEND_URL}/${t.image_path}" target="_blank" class="btn btn-sm btn-outline-info py-0 px-1 ms-2" style="font-size: 0.65rem;">📸 إيصال</a>` : 
+            '';
+
+        html += `
+            <div class="card bg-transparent border-secondary shadow-sm" style="background-color: #040a18 !important;">
+                <div class="card-body p-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-white fw-bold mb-0" style="font-size: 0.85rem;">👤 ${targetName}</div>
+                        <div class="text-secondary font-monospace d-flex align-items-center" style="font-size: 0.65rem;">
+                            🕒 ${date}
+                            ${receiptBtn} <!-- سيظهر الزر هنا بجانب التاريخ إذا وُجدت صورة -->
                         </div>
-                    </div>`;
-            });
-            listContainer.innerHTML = html;
-        }
+                    </div>
+                    <div class="text-end">
+                        <div class="${color} fw-bold font-monospace mb-0" style="font-size: 0.85rem;">
+                            ${isCharge ? '+' : '-'}${parseFloat(t.amount).toFixed(2)}
+                        </div>
+                        <div class="text-info" style="font-size: 0.65rem;">${icon}</div>
+                    </div>
+                </div>
+            </div>`;
+    });
+    listContainer.innerHTML = html;
+}
 // --- بناء واجهة الإحصائيات المالية (المحاسبة) ---
         function renderCompteStatsUI(container, usersList) {
             // تجهيز قائمة الخيارات للمستخدمين
