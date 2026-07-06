@@ -37,8 +37,8 @@
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
             #btn-menu-paris-view > div { display: flex !important; flex-direction: column !important; gap: 4px !important; }
             
-            /* تذكرة الهاتف */
-            #main-ticket-container { bottom: 75px !important; right: 0 !important; width: 100% !important; border-radius: 20px 20px 0 0 !important; padding: 0 10px !important; }
+            /* تحديد حجم التذكرة في الهاتف لكي لا تملأ الشاشة */
+            #main-ticket-container { bottom: 85px !important; right: 15px !important; width: 280px !important; }
         }
 
         .wheel-container { background: rgba(30, 41, 59, 0.5); border-radius: 20px; margin-bottom: 20px; padding: 20px; }
@@ -321,50 +321,45 @@
         </main>
     </div>
 
-    <!-- 🎫 التذكرة الجديدة المنبثقة من أسفل اليمين (على شكل شريط يفتح ويغلق) 🎫 -->
-    <div id="main-ticket-container" class="fixed bottom-0 right-4 w-full md:w-80 lg:w-[340px] z-50 flex flex-col transition-all duration-300 hidden">
+    <!-- 🎫 التذكرة الجديدة المنبثقة بحجم الشات الصغير 🎫 -->
+    <div id="main-ticket-container" class="fixed bottom-4 right-4 w-[280px] md:w-[300px] z-50 flex flex-col transition-all duration-300 hidden shadow-2xl rounded-2xl overflow-hidden border border-slate-700">
         
-        <!-- الرأس / الشريط المصغر الذي يظهر عندما تضيف رهاناً -->
-        <div id="ticket-minimized-bar" onclick="toggleTicketSize()" class="bg-[#14b8a6] hover:bg-teal-500 text-slate-950 rounded-t-2xl w-full p-3 flex justify-between items-center cursor-pointer shadow-[0_-4px_15px_rgba(0,0,0,0.3)] transition-colors">
-            <span class="font-black text-sm uppercase flex items-center gap-2">
-                📋 Bet Slip <span id="ticket-count-badge" class="bg-slate-950 text-teal-400 px-2 py-0.5 rounded-full text-[10px]">0</span>
+        <!-- الشريط المصغر (الرأس) -->
+        <div id="ticket-minimized-bar" onclick="toggleTicketSize()" class="bg-[#14b8a6] hover:bg-teal-500 text-slate-950 w-full p-2.5 flex justify-between items-center cursor-pointer transition-colors shrink-0">
+            <span class="font-black text-xs uppercase flex items-center gap-2">
+                📋 Ticket <span id="ticket-count-badge" class="bg-slate-950 text-teal-400 px-1.5 py-0.5 rounded-full text-[10px]">0</span>
             </span>
-            <span id="minimized-bar-label" class="text-[11px] font-black uppercase">👀 Ouvrir</span>
+            <span id="minimized-bar-label" class="text-[10px] font-black uppercase">👀 Ouvrir</span>
         </div>
 
-        <!-- جسم التذكرة الذي ينزلق للأعلى (مخفي افتراضياً) -->
-        <div id="ticket-full-body" class="bg-[#090f24] w-full border-x border-slate-800 shadow-2xl transition-all duration-300 overflow-hidden max-h-0 flex flex-col">
-            
-            <!-- شريط الأزرار الثلاثة المطلوبة (Réduire, Effacer, Fermer) -->
-            <div class="flex justify-between items-center p-2.5 border-b border-slate-800 bg-[#050814] shrink-0">
-                <span class="text-teal-400 font-bold text-[10px] uppercase">Vos Paris:</span>
-                <div class="flex gap-1.5">
-                    <button onclick="toggleTicketSize(); event.stopPropagation();" class="text-slate-300 hover:text-white text-[9px] font-bold bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition cursor-pointer">➖ Réduire</button>
+        <!-- جسم التذكرة (يتمدد للأسفل) -->
+        <div id="ticket-full-body" class="bg-[#090f24] w-full transition-all duration-300 overflow-hidden max-h-0 flex flex-col">
+            <div class="flex justify-between items-center p-2 border-b border-slate-800 bg-[#050814] shrink-0">
+                <span class="text-teal-400 font-bold text-[9px] uppercase">Vos Paris:</span>
+                <div class="flex gap-1">
                     <button onclick="clearTicket(); event.stopPropagation();" class="text-rose-400 hover:text-rose-500 text-[9px] font-bold bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition cursor-pointer">🗑️ Effacer</button>
                     <button onclick="closeTicketComplete(); event.stopPropagation();" class="text-white hover:text-red-500 text-[9px] font-bold bg-rose-600 hover:bg-rose-700 px-2 py-1 rounded transition cursor-pointer">✖ Fermer</button>
                 </div>
             </div>
             
-            <!-- قائمة الرهانات المحددة -->
-            <div id="ticket-odds-box" class="overflow-y-auto p-2 space-y-2 custom-scrollbar bg-[#090f24] flex-1 min-h-[150px] max-h-[300px]"></div>
+            <div id="ticket-odds-box" class="overflow-y-auto p-2 space-y-2 custom-scrollbar bg-[#090f24] flex-1 max-h-[250px]"></div>
             
-            <!-- قسم التأكيد والدفع -->
-            <div class="p-3 border-t border-slate-800 bg-[#050814] shrink-0">
+            <div class="p-2 border-t border-slate-800 bg-[#050814] shrink-0">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-slate-400 text-xs">Total Odds:</span>
-                    <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
+                    <span class="text-slate-400 text-[10px]">Total Odds:</span>
+                    <span id="ticket-total-odds" class="text-white font-mono font-bold text-xs">1.00</span>
                 </div>
-                <div class="mb-2">
-                    <label class="text-slate-400 text-[10px] mb-1 block">Stake (TND):</label>
-                    <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none" />
+                <div class="mb-2 flex items-center gap-2">
+                    <label class="text-slate-400 text-[9px] whitespace-nowrap">Stake (TND):</label>
+                    <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#090f24] border border-slate-700 rounded p-1 text-white text-[10px] focus:border-teal-500 outline-none" />
                 </div>
-                <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-black py-2.5 rounded-lg transition shadow-lg cursor-pointer uppercase tracking-wider">
+                <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-black py-2 rounded transition shadow-lg cursor-pointer uppercase tracking-wider text-[10px]">
                     Place Bet 🚀
                 </button>
             </div>
         </div>
     </div>
-    <!-- نهاية التذكرة الجديدة -->
+    <!-- نهاية التذكرة -->
 
     <!-- 💰 نوافذ الكاشير وألعاب الكازينو (مخفية) -->
     <div id="cashier-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
@@ -527,7 +522,7 @@
         /* ================= وظائف التذكرة الجديدة ================= */
         let isTicketOpen = false;
 
-        // الدالة لفتح وتصغير التذكرة (Réduire / Ouvrir)
+        // الدالة لفتح وتصغير التذكرة
         function toggleTicketSize() {
             const body = document.getElementById('ticket-full-body');
             const label = document.getElementById('minimized-bar-label');
@@ -535,13 +530,13 @@
             if (isTicketOpen) {
                 // إغلاق (تصغير)
                 body.classList.add('max-h-0');
-                body.classList.remove('max-h-[600px]', 'border-b');
+                body.classList.remove('max-h-[400px]');
                 label.innerText = "👀 Ouvrir";
                 isTicketOpen = false;
             } else {
                 // فتح
                 body.classList.remove('max-h-0');
-                body.classList.add('max-h-[600px]', 'border-b');
+                body.classList.add('max-h-[400px]');
                 label.innerText = "🔽 Réduire";
                 isTicketOpen = true;
                 
@@ -559,7 +554,7 @@
             // إرجاعها للحالة المصغرة عند الظهور القادم
             isTicketOpen = false;
             document.getElementById('ticket-full-body').classList.add('max-h-0');
-            document.getElementById('ticket-full-body').classList.remove('max-h-[600px]', 'border-b');
+            document.getElementById('ticket-full-body').classList.remove('max-h-[400px]');
             document.getElementById('minimized-bar-label').innerText = "👀 Ouvrir";
         }
 
@@ -627,7 +622,7 @@
             box.innerHTML = comboTicketMatchesList.map(item => {
                 totalCoteCalculated *= item.odds;
                 return `
-                    <div class="bg-[#050814] border border-slate-800 p-2.5 rounded-xl relative text-left font-sans shadow-sm">
+                    <div class="bg-[#050814] border border-slate-800 p-2 rounded-xl relative text-left font-sans shadow-sm">
                         <button onclick="removeMatchFromCombo('${item.matchId}')" class="absolute top-1 right-2 text-rose-400 hover:text-rose-500 font-bold text-xs cursor-pointer">&times;</button>
                         <div class="text-slate-400 text-[10px] truncate max-w-[90%]">${item.matchName}</div>
                         <div class="text-white text-[11px] font-bold">Option: <span class="text-teal-400">${item.outcome}</span></div>
