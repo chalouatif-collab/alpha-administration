@@ -1326,18 +1326,25 @@ function closeCasinoGame() {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }, // بدون Content-Type المتصفح يتعرف عليه تلقائياً
             body: formData
         });
-        
-        if(res.ok) { 
-            showNotification('تم إرسال طلب الإيداع للأدمن بنجاح!', 'success'); 
-            toggleCashier(); // إغلاق نافذة الكاشير بعد النجاح
+        if(res.ok) {
+            const data = await res.json();
+            if (data.status === 'success') {
+                showNotification('تم إرسال طلب الإيداع للأدمن بنجاح', 'success');
+                toggleCashier(); // إغلاق نافذة الكاشير بعد النجاح
+            } else {
+                // هذا السطر سيكشف لنا الخطأ الحقيقي القادم من السيرفر
+                showNotification(`رسالة من السيرفر: ${data.message}`, 'error'); 
+            }
         } else {
             showNotification('حدث خطأ أثناء إرسال الطلب', 'error');
         }
-    } catch(e) { 
-        showNotification('خطأ في الاتصال بالسيرفر', 'error'); 
+        } catch(e) {
+        showNotification('خطأ في الاتصال بالسيرفر', 'error');
     }
-}
-
- </script>
-</body>
-</html>
+    }
+        
+      
+            
+   </script>
+ </body>
+ </html>
