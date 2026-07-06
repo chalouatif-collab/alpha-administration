@@ -518,7 +518,7 @@
             }
             displayModalTransactions(filtered);
         }
-        
+
        function displayModalTransactions(transactions) {
     const listContainer = document.getElementById('modal-tx-list');
     if (!transactions || transactions.length === 0) {
@@ -535,8 +535,8 @@
         const date = t.date || 'بدون تاريخ';
         
         // التحقق من وجود صورة إيصال مرفقة بالعملية
-        const receiptBtn = t.image_path ? 
-            `<a href="${BACKEND_URL}/${t.image_path}" target="_blank" class="btn btn-sm btn-outline-info py-0 px-1 ms-2" style="font-size: 0.65rem;">📸 إيصال</a>` : 
+       const receiptBtn = t.image_path ? 
+            `<a href="${BACKEND_URL}/${t.image_path}" target="_blank" class="btn btn-sm btn-warning py-0 px-2 ms-2 text-dark fw-bold" style="font-size: 0.7rem; box-shadow: 0 0 5px #ffc107;">📸 عرض الإيصال</a>` : 
             '';
 
         html += `
