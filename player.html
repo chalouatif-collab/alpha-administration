@@ -1293,19 +1293,36 @@ function closeCasinoGame() {
             }
         }
 
-       async function submitDeposit() {
-            const amount = document.getElementById('deposit-amount').value;
-            const txId = document.getElementById('deposit-tx').value;
-            if(!amount || !txId) return showNotification('الرجاء تعمير جميع البيانات', 'error');
-            try {
-                const res = await fetch(`${BACKEND_URL}/api/admin/request-transaction`, {
-                    method: 'POST', headers: getAuthHeaders(),
-                    body: JSON.stringify({ admin_username: "admin", target_username: playerSession.username, action: "deposit_request", amount: amount })
-                });
-                if(res.ok) { showNotification('تم إرسال طلب الإيداع بنجاح!', 'success'); toggleCashier(); } 
-                else { showNotification('حدث خطأ أثناء إرسال الطلب', 'error'); }
-            } catch(e) { showNotification('خطأ في الاتصال بالسيرفر', 'error'); }
+      async function submitDeposit() {
+    const amount = document.getElementById('deposit-amount').value;
+    const txId = document.getElementById('deposit-tx').value;
+    
+    if(!amount || !txId) return showNotification('الرجاء تعمير جميع البيانات', 'error');
+    
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/request-transaction`, {
+            method: 'POST', 
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ 
+                admin_username: "admin", 
+                target_username: playerSession.username, 
+                action: "deposit_request", 
+                amount: amount,
+                tx_id: txId // أضفنا رقم العملية هنا
+            })
+        });
+        
+        if(res.ok) { 
+            showNotification('تم إرسال طلب الإيداع بنجاح!', 'success'); 
+            toggleCashier(); 
+        } 
+        else { 
+            showNotification('حدث خطأ أثناء إرسال الطلب', 'error'); 
         }
+    } catch(e) { 
+        showNotification('خطأ في الاتصال بالسيرفر', 'error'); 
+    }
+}
 
         function submitWithdraw() {
             showNotification('تم تسجيل طلب السحب، ستتم المعالجة قريباً', 'success');
