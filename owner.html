@@ -773,15 +773,13 @@ async function checkNewDeposits() {
                 
                 // إظهار إشعار للأدمن
                 showNotification(`🔔 تنبيه: لديك ${deposits.length} طلب إيداع جديد!`, 'success');
-            }
-        }
-    } catch (e) {
-        console.error("خطأ في جلب التنبيهات اللحظية:", e);
     }
-}
+                }
+            } catch (e) { console.error("خطأ:", e); }
+        }
+        setInterval(checkNewDeposits, 5000);
 
-// تشغيل الفحص التلقائي كل 5 ثوانٍ
-setInterval(checkNewDeposits, 5000);
 
-
-
+</script>
+</body>
+</html>
