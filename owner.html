@@ -722,16 +722,8 @@
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
         }
 
-        async function deleteAccountAction() {
-            const target_username = document.getElementById('ctrl-target-user').value;
-            if(!target_username) return showNotification('Sélectionnez un compte!', 'error');
-         const res = await fetch(`${BACKEND_URL}/api/admin/delete-account`, {
-            method: 'DELETE', 
-            headers: getAuthHeaders(),
-            body: JSON.stringify({ admin_username: user.username, target_username: target_username })
-        });
+       deleteAccountAction
             if(res.ok) { showNotification('Compte supprimé!'); setTimeout(() => location.reload(), 800); }
-        }
 
         async function executeAction(action) {
             const target_username = document.getElementById('target-action-user').value;
