@@ -23,7 +23,7 @@
         .winner-card { display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(5, 8, 20, 0.8); border: 1px solid rgba(30, 41, 59, 0.8); padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-family: monospace; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
         .winner-card .w-icon { font-size: 1rem; } .winner-card .w-name { color: #fff; font-weight: bold; } .winner-card .w-game { color: #64748b; font-family: sans-serif; font-size: 0.7rem;} .winner-card .w-amount { color: #14b8a6; font-weight: 900; text-shadow: 0 0 8px rgba(20, 184, 166, 0.4); }
       
-        @media (max-width: 550px) {
+        @media (max-width: 768px) {
             body { display: block !important; }
             #main-content-area { height: 100vh !important; padding-bottom: 80px !important; }
             #main-sidebar { position: fixed !important; bottom: 0 !important; left: 0 !important; width: 100% !important; height: 70px !important; padding: 0 !important; background-color: #090f24 !important; border-top: 1px solid #1e293b !important; z-index: 40 !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
@@ -36,6 +36,7 @@
             #my-bets-badge-count { position: absolute !important; top: 5px !important; right: 20px !important; transform: none !important; }
             .active-menu-btn { background-color: transparent !important; color: #14b8a6 !important; }
             #btn-menu-paris-view > div { display: flex !important; flex-direction: column !important; gap: 4px !important; }
+            #floating-mini-ticket { bottom: 95px !important; right: 15px !important; z-index: 40 !important; }
             #main-ticket-slip { bottom: 80px !important; right: 0 !important; width: 100% !important; border-radius: 20px 20px 0 0 !important; }
         }
 
@@ -299,28 +300,40 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="games-grid-container"></div>
                 </div>
             </div>
+
         </main>
-        
     </div>
-</div>
-  <!-- نافذة التذكرة التي تنزلق من الأسفل عند الضغط على الأيقونة -->
-    <div id="main-ticket-slip" class="fixed bottom-0 right-4 w-80 bg-[#090f24] border-t border-x border-slate-800 rounded-t-2xl shadow-2xl z-50 transition-transform duration-300 transform translate-y-full">
+
+    <!-- أيقونة التذكرة المصغرة التي تظهر في الأسفل -->
+    <div id="floating-mini-ticket" onclick="openTicket()" class="fixed bottom-6 right-6 z-50 bg-[#14b8a6] text-slate-950 font-black w-14 h-14 rounded-full shadow-2xl flex items-center justify-center cursor-pointer transition-all duration-300 scale-0 hover:scale-110 group hidden">
+        <span class="text-xl">📋</span>
+        <span class="absolute -top-1 -right-1 bg-rose-600 text-white font-black text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#090f24]" id="mini-ticket-badge">0</span>
+    </div>
+
+    <!-- نافذة التذكرة الثابتة التي تنزلق من أسفل اليمين -->
+    <div id="main-ticket-slip" class="fixed bottom-0 right-4 w-80 lg:w-[340px] bg-[#090f24] border-t border-x border-slate-800 rounded-t-2xl shadow-2xl z-50 transition-transform duration-300 transform translate-y-full">
         <div class="flex justify-between items-center p-3 border-b border-slate-800 bg-[#050814] rounded-t-2xl">
-            <span class="text-teal-400 font-bold text-xs uppercase">📋 Bet Slip</span>
-            <div class="flex gap-3">
+            <span class="text-teal-400 font-bold text-xs uppercase flex items-center gap-2">📋 Bet Slip</span>
+            <div class="flex gap-1.5">
+                <button onclick="minimizeTicket()" class="text-slate-300 hover:text-white text-[10px] font-bold bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition">➖ Réduire</button>
+                <button onclick="clearTicket()" class="text-rose-400 hover:text-rose-500 text-[10px] font-bold bg-slate-800 hover:bg-slate-700 px-2 py-1 rounded transition">🗑️ Effacer</button>
+                <button onclick="closeTicket()" class="text-white hover:text-red-500 text-[10px] font-bold bg-rose-600 hover:bg-rose-700 px-2 py-1 rounded transition">✖ Fermer</button>
+            </div>
         </div>
-        <div id="ticket-content-body">
-            <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar"></div>
-            <div class="p-3 border-t border-slate-800 bg-[#090f24]">
+        
+        <div id="ticket-content-body" class="block transition-all duration-300">
+            <div id="ticket-odds-box" class="max-h-[300px] overflow-y-auto p-3 space-y-2 custom-scrollbar bg-[#090f24]"></div>
+            
+            <div class="p-3 border-t border-slate-800 bg-[#050814]">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-slate-400 text-xs">Total Odds:</span>
                     <span id="ticket-total-odds" class="text-white font-mono font-bold text-sm">1.00</span>
                 </div>
                 <div class="mb-3">
                     <label class="text-slate-400 text-[10px] mb-1 block">Stake (TND):</label>
-                    <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none" />
+                    <input type="number" id="ticket-stake-input" oninput="calculatePotentialGain()" value="5" class="w-full bg-[#090f24] border border-slate-700 rounded-lg p-2 text-white text-sm focus:border-teal-500 outline-none" />
                 </div>
-                <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition">
+                <button onclick="submitSportTicket()" id="ticket-submit-btn" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 rounded-lg transition shadow-lg cursor-pointer">
                     Place Bet 🚀
                 </button>
             </div>
@@ -360,6 +373,39 @@
                 <input type="number" id="withdraw-amount" placeholder="Montant à retirer (المبلغ)" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-3 text-teal-400 text-sm font-mono focus:outline-none focus:border-teal-500">
                 <input type="text" id="withdraw-account" placeholder="Numéro D17 / Adresse USDT" class="w-full bg-[#050814] border border-slate-700 rounded-lg p-3 text-white text-sm font-mono focus:outline-none focus:border-teal-500">
                 <button onclick="submitWithdraw()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider transition-all mt-2 cursor-pointer">Demander le Retrait</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="wheel-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="bg-slate-900 p-8 rounded-3xl border border-amber-500 shadow-2xl relative">
+            <button onclick="toggleWheelModal()" class="absolute top-4 right-4 text-white hover:text-red-500 text-xl font-bold">X</button>
+            <div class="wheel-container flex flex-col items-center">
+                <div id="wheel" class="wheel"></div>
+                <button onclick="spinWheel()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-full transition">دوران العجلة! 🎰</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-slot-machine" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
+        <div class="bg-[#090f24] border border-slate-800 rounded-3xl max-w-md w-full p-6 text-center space-y-6 relative shadow-2xl">
+            <button onclick="closeGameMachine()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold text-lg cursor-pointer">&times;</button>
+            <h3 class="text-xs font-black text-teal-400 tracking-wider uppercase" id="modal-game-title">GATES OF OLYMPUS</h3>
+            <div class="flex justify-center gap-4 text-4xl p-6 bg-[#050814] border border-slate-800/80 rounded-2xl shadow-md mx-auto">
+                <div id="slot-reel-1" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">👑</div>
+                <div id="slot-reel-2" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">💎</div>
+                <div id="slot-reel-3" class="bg-[#050814] p-3 rounded-xl border border-slate-800 w-16 h-16 flex items-center justify-center">🍒</div>
+            </div>
+            <div class="flex items-center justify-center gap-4 text-xs font-bold">
+                <div class="flex items-center gap-2 bg-[#050814] border border-slate-800 px-3 py-2 rounded-xl">
+                    <span id="trans-slot-bet">BET TND:</span>
+                    <select id="player-bet-select" class="bg-[#090f24] border border-slate-700 rounded text-teal-400 font-mono">
+                        <option value="1">1.00</option>
+                        <option value="5">5.00</option>
+                        <option value="10">10.00</option>
+                    </select>
+                </div>
+                <button onclick="spinPragmaticSlot()" id="spin-btn" class="bg-[#14b8a6] hover:bg-teal-600 text-slate-950 font-black px-6 py-3 rounded-xl transition-all cursor-pointer shadow-md">SPIN 🎰</button>
             </div>
         </div>
     </div>
@@ -453,17 +499,47 @@
         }
 
         /* ---------------- وظائف التذكرة (إخفاء وإظهار) ---------------- */
-        function minimizeTicket() {
+        
+        function openTicket() {
+            document.getElementById('main-ticket-slip').classList.remove('translate-y-full');
+            document.getElementById('ticket-content-body').style.display = 'block'; 
+            document.getElementById('floating-mini-ticket').classList.add('hidden');
+            isTicketMinimized = false;
+        }
+
+        function closeTicket() {
             document.getElementById('main-ticket-slip').classList.add('translate-y-full');
-            if(comboTicketMatchesList.length > 0) {
-                document.getElementById('floating-mini-ticket').classList.remove('scale-0');
+            if (comboTicketMatchesList.length > 0) {
+                document.getElementById('floating-mini-ticket').classList.remove('scale-0', 'hidden');
+                document.getElementById('mini-ticket-badge').innerText = comboTicketMatchesList.length;
+            } else {
+                document.getElementById('floating-mini-ticket').classList.add('scale-0', 'hidden');
             }
         }
 
-        function maximizeTicket() {
-            document.getElementById('floating-mini-ticket').classList.add('scale-0');
-            document.getElementById('main-ticket-slip').classList.remove('translate-y-full');
+        let isTicketMinimized = false;
+        function minimizeTicket() {
+            const body = document.getElementById('ticket-content-body');
+            if (!isTicketMinimized) {
+                body.style.display = 'none';
+                isTicketMinimized = true;
+            } else {
+                body.style.display = 'block';
+                isTicketMinimized = false;
+            }
         }
+
+        function clearTicket() {
+            comboTicketMatchesList = [];
+            renderComboTicketUI();
+            closeTicket();
+            
+            // إرجاع الألوان الحمراء لطبيعتها
+            if(currentGlobalMatches.length > 0) renderMatchesList(currentGlobalMatches);
+            else injectBackupMatches();
+        }
+
+        /* -------------------------------------------------------- */
 
         async function refreshPlayerBalance() {
             if (!playerSession || !playerSession.username) return;
@@ -550,6 +626,14 @@
 
         /* ---------------- اختيار الرهانات وتحويل الزر للأحمر ---------------- */
         function selectBetOutcome(outcome, odds, matchName, matchId) {
+            
+            // تحقق إذا كان المستخدم يضغط على نفس الرهان مجدداً (لإلغائه)
+            const existing = comboTicketMatchesList.find(item => item.matchId === matchId);
+            if (existing && existing.outcome === outcome) {
+                removeMatchFromCombo(matchId);
+                return;
+            }
+
             comboTicketMatchesList = comboTicketMatchesList.filter(item => item.matchId !== matchId);
             comboTicketMatchesList.push({ matchId, matchName, outcome, odds });
             
@@ -560,7 +644,7 @@
             else injectBackupMatches();
 
             // إظهار التذكرة عندما تضيف رهان
-            maximizeTicket();
+            openTicket();
         }
 
         function removeMatchFromCombo(matchId) {
@@ -571,19 +655,7 @@
             if(currentGlobalMatches.length > 0) renderMatchesList(currentGlobalMatches);
             else injectBackupMatches();
 
-            if(comboTicketMatchesList.length === 0) minimizeTicket();
-        }
-
-        function clearTicket() {
-            comboTicketMatchesList = [];
-            renderComboTicketUI();
-            
-            // إرجاع كل الأزرار للونها الطبيعي
-            if(currentGlobalMatches.length > 0) renderMatchesList(currentGlobalMatches);
-            else injectBackupMatches();
-            
-            document.getElementById('floating-mini-ticket').classList.add('scale-0');
-            minimizeTicket();
+            if(comboTicketMatchesList.length === 0) closeTicket();
         }
 
         function renderComboTicketUI() {
@@ -754,7 +826,14 @@
             }).join('');
         }
 
+        function changePlayerLanguage(lang) {
+            currentLangCode = lang;
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            if(comboTicketMatchesList.length === 0) document.getElementById('ticket-odds-box').innerText = dictionary_translations[lang].ticket_empty;
+        }
+
         async function loadLiveMatchesData() {
+            const container = document.getElementById('matches-list-container');
             try {
                 const res = await fetch(`${BACKEND_URL}/api/sports/get-live-matches`, { method: 'GET', headers: getAuthHeaders() });
                 if(res.ok) {
