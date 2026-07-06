@@ -753,6 +753,32 @@
                 } else { showNotification('Nom d\'utilisateur déjà pris', 'error'); }
             } catch(e) { showNotification('Erreur', 'error'); }
         }
-    </script>
-</body>
-</html>
+   // دالة التحقق من وجود طلبات إيداع جديدة
+async function checkNewDeposits() {
+    try {
+        // فحص الطلبات المعلقة من السيرفر
+        const res = await fetch(`${BACKEND_URL}/api/admin/get-pending-deposits`, { 
+            method: 'GET',
+            headers: getAuthHeaders() 
+        });
+        
+        if (res.ok) {
+            const deposits = await res.json();
+            
+            // إذا وجدنا طلبات جديدة (أكبر من صفر)
+            if (deposits.length > 0) {
+                // تشغيل صوت تنبيه
+                const audio = new Audio('https://actions.google.com/sounds/v1/notifications/complete.ogg');
+                audio.play().catch(e => console.log("الصوت يحتاج تفاعل المستخدم"));
+                
+                // إظهار إشعار للأدمن
+                showNotification(`🔔 تنبيه: لديك ${deposits.length} طلب إيداع جديد!`, 'success');
+            }
+        }
+    } catch (e) {
+        console.error("خطأ في جلب التنبيهات اللحظية:", e);
+    }
+}
+
+// تشغيل الفحص التلقائي كل 5 ثوانٍ
+setInterval(checkNewDeposits, 5000);
