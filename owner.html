@@ -722,9 +722,31 @@
             if(res.ok) { showNotification('Configuration enregistrée!'); loadNetworkData(); }
         }
 
-       deleteAccountAction
-            if(res.ok) { showNotification('Compte supprimé!'); setTimeout(() => location.reload(), 800); }
+       async function deleteAccountAction() {
+        const target_username = document.getElementById('ctrl-target-user').value;
+        if(!target_username) return showNotification('Sélectionnez un compte d\'abord!', 'error');
+        
+        let headers = getAuthHeaders();
+        headers['Content-Type'] = 'application/json';
 
+        try {
+            const res = await fetch(`${BACKEND_URL}/api/admin/delete-account`, {
+                method: 'DELETE', 
+                headers: headers,
+                body: JSON.stringify({ admin_username: user.username, target_username: target_username })
+            });
+            
+            if(res.ok) { 
+                showNotification('Compte supprimé!', 'success'); 
+                setTimeout(() => location.reload(), 1000); 
+            } else {
+                const data = await res.json();
+                showNotification('الخطأ: ' + (data.detail || data.message), 'error');
+            }
+        } catch(e) {
+            showNotification('مشكلة في الاتصال بالسيرفر', 'error');
+        }
+    }
         async function executeAction(action) {
             const target_username = document.getElementById('target-action-user').value;
             const amountInput = document.getElementById('target-action-amount').value;
