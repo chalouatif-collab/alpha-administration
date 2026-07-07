@@ -443,21 +443,9 @@
     <!-- 🎰 شاشة عرض الكازينو الحقيقي (Fullscreen Iframe) 🎰 -->
     <div id="casino-iframe-container" class="fixed inset-0 z-[100] bg-black hidden flex-col transition-all duration-300">
         <!-- الشريط العلوي للعبة -->
-        <div class="bg-[#050814] border-b border-slate-800 p-2 flex justify-between items-center shrink-0 shadow-lg">
-            <div class="flex items-center gap-2">
-                <span class="text-xl">🎰</span>
-                <span id="casino-game-title" class="text-teal-400 font-black text-sm uppercase tracking-widest">Game Name</span>
-            </div>
-            <div class="flex items-center gap-3">
-                <div class="bg-slate-900 px-3 py-1 rounded-lg border border-slate-700">
-                    <span class="text-slate-400 text-[10px]">Solde:</span>
-                    <span id="casino-live-balance" class="text-white font-mono font-bold text-xs">0.00 TND</span>
-                </div>
-                <button onclick="closeCasinoGame()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-1 rounded-lg font-bold text-xs uppercase cursor-pointer transition-all">
-                    Quitter (خروج) ✖
-                </button>
-            </div>
-        </div>
+        <button onclick="closeCasinoGame()" class="absolute top-4 right-4 z-[110] bg-black/50 hover:bg-rose-600 text-white w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold backdrop-blur-md border border-white/20 transition-all shadow-2xl cursor-pointer">
+            ✖
+        </button>
         <!-- إطار اللعبة -->
         <div class="w-full flex-1 relative bg-[#090f24] flex items-center justify-center">
             <!-- رسالة تحميل تظهر قبل فتح اللعبة -->
@@ -1166,14 +1154,16 @@
         }
 
       // دالة فتح لعبة كازينو أو سبورت بوك حقيقية عبر السيرفر
+// دالة فتح لعبة كازينو أو سبورت بوك
 async function openLiveGame(gameName, isSportsbook = false) {
     if(!playerSession) return openLoginModal();
     
-    // 1. تحديث الرصيد في شريط اللعبة العلوي وتغيير العنوان
+    // إخبار الهاتف أننا دخلنا صفحة اللعبة لكي يعمل زر العودة
+    history.pushState({ isGame: true }, "", "#playing");
+
     document.getElementById('casino-live-balance').innerText = parseFloat(playerSession.balance).toFixed(2) + ' TND';
     document.getElementById('casino-game-title').innerText = gameName;
     
-    // 2. إظهار شاشة العرض العملاقة (Container)
     const container = document.getElementById('casino-iframe-container');
     container.classList.remove('hidden');
     container.classList.add('flex');
@@ -1181,12 +1171,11 @@ async function openLiveGame(gameName, isSportsbook = false) {
     const iframe = document.getElementById('casino-iframe');
     const loader = document.getElementById('casino-loader');
     
-    loader.style.display = 'flex'; // إظهار أنيميشن التحميل
+    loader.style.display = 'flex';
     iframe.style.opacity = '0';
-    iframe.src = ""; // تصفير الإطار مؤقتاً
+    iframe.src = "";
     
     try {
-        // 3. الاتصال بالسيرفر الخاص بك لإنشاء جلسة لعبة حقيقية وآمنة للمستخدم
         const endpoint = isSportsbook ? `${BACKEND_URL}/api/provider/launch-sportsbook` : `${BACKEND_URL}/api/provider/launch-game`;
         
         const res = await fetch(endpoint, {
@@ -1198,20 +1187,17 @@ async function openLiveGame(gameName, isSportsbook = false) {
         if (res.ok) {
             const data = await res.json();
             if (data.launch_url) {
-                // إذا نجح السيرفر، نضع الرابط الحقيقي
                 iframe.src = data.launch_url;
             } else {
-                showNotification("فشل جلب رابط اللعبة الحقيقي من المزود", "error");
+                showNotification("فشل جلب رابط اللعبة", "error");
                 closeCasinoGame();
                 return;
             }
         } else {
-            // كخطوة احتياطية أثناء التطوير: سنفتح الرابط التجريبي
             console.log("وضع التطوير: فتح الرابط التجريبي المؤقت");
             iframe.src = isSportsbook ? "https://ggr.gitbook.io/docs/integration/sportsbook-installation" : "https://html5.gamedesire.com/games/pragmatic/gates_of_olympus/demo";
         }
         
-        // 4. إخفاء التحميل وإظهار اللعبة بمجرد اكتمال فتح الرابط
         iframe.onload = () => {
             loader.style.display = 'none';
             iframe.style.opacity = '1';
@@ -1225,17 +1211,19 @@ async function openLiveGame(gameName, isSportsbook = false) {
     }
 }
 
-// دالة الخروج من اللعبة وتحديث رصيد اللاعب فوراً
-function closeCasinoGame() {
+// دالة الخروج من اللعبة (تدعم زر X وزر الهاتف)
+function closeCasinoGame(fromPhoneBackButton = false) {
     const container = document.getElementById('casino-iframe-container');
     container.classList.add('hidden');
     container.classList.remove('flex');
     
-    // مسح الرابط تماماً لإيقاف اللعبة
     document.getElementById('casino-iframe').src = "";
-    
-    // تحديث رصيد اللاعب بشكل فوري
     refreshPlayerBalance();
+
+    // إذا ضغط اللاعب على زر ✖ (وليس زر الهاتف)، نمسح الصفحة الوهمية من السجل
+    if (!fromPhoneBackButton && window.location.hash === "#playing") {
+        history.back();
+    }
 }
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
@@ -1399,7 +1387,15 @@ function closeCasinoGame() {
         }
     }());
 }  
-      
+      // التقاط ضغطة زر "العودة" في الهاتف
+window.addEventListener("popstate", function(event) {
+    const container = document.getElementById('casino-iframe-container');
+    // إذا كانت شاشة اللعبة مفتوحة، نغلقها ونمنع الخروج من الموقع
+    if (!container.classList.contains('hidden')) {
+        closeCasinoGame(true); 
+    }
+});
+
             
    </script>
  </body>
