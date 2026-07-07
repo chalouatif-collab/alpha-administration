@@ -1153,16 +1153,14 @@
             } catch(e) { spinBtn.disabled = false; }
         }
 
-      // دالة فتح لعبة كازينو أو سبورت بوك حقيقية عبر السيرفر
-// دالة فتح لعبة كازينو أو سبورت بوك
+     // دالة فتح لعبة كازينو أو سبورت بوك
 async function openLiveGame(gameName, isSportsbook = false) {
     if(!playerSession) return openLoginModal();
     
     // إخبار الهاتف أننا دخلنا صفحة اللعبة لكي يعمل زر العودة
     history.pushState({ isGame: true }, "", "#playing");
 
-    document.getElementById('casino-live-balance').innerText = parseFloat(playerSession.balance).toFixed(2) + ' TND';
-    document.getElementById('casino-game-title').innerText = gameName;
+    // تم حذف أسطر تحديث الرصيد والاسم من هنا لأننا ألغينا الشريط العلوي 🎯
     
     const container = document.getElementById('casino-iframe-container');
     container.classList.remove('hidden');
