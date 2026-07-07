@@ -1250,7 +1250,9 @@ function closeCasinoGame(fromPhoneBackButton = false) {
             generateLiveWinnersTicker();
             // قراءة الذاكرة وفتح القسم الأخير الذي كان يتصفحه اللاعب
             const savedSection = localStorage.getItem('active_section') || 'accueil';
-            switchSection(savedSection);
+            setTimeout(() => {
+                switchSection(savedSection);
+            }, 500);
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
                 playerSession = JSON.parse(savedSession);
