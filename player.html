@@ -1447,6 +1447,30 @@ window.addEventListener("popstate", function(event) {
 });
 
 
+    // هذه الدالة تعمل بمجرد تحميل الصفحة
+    window.onload = function() {
+        console.log("جاري طلب رابط السبورت بوك...");
+        
+        // استبدل '/api/provider/launch-sportsbook' بالرابط (Endpoint) الذي تستخدمه في السيرفر
+        fetch('/api/provider/launch-sportsbook', {
+            method: 'POST', // أو GET حسب إعداداتك في السيرفر
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.launch_url) {
+                // هنا نضع الرابط في الـ iframe
+                document.getElementById('sportsbook-iframe').src = data.launch_url;
+                console.log("تم تحديث الرابط بنجاح!");
+            } else {
+                console.error("لم يتم العثور على الرابط في الاستجابة:", data);
+            }
+        })
+        .catch(error => {
+            console.error("خطأ في الاتصال بالسيرفر:", error);
+        });
+    };
+</script>
             
    </script>
  </body>
