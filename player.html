@@ -63,13 +63,13 @@
                 <button onclick="switchSection('accueil'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
                     <span class="text-xl w-6 text-center">🏠</span> <span class="font-medium text-sm">Accueil</span>
                 </button>
-                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                <button onclick="openLiveGame('Alphabet Sportsbook', true); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
                     <span class="text-xl w-6 text-center">⚽</span> <span class="font-medium text-sm">Sport</span>
                 </button>
-                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                <button onclick="openLiveGame('Alphabet Sportsbook', true); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
                     <span class="text-xl w-6 text-center relative">⚡<span class="absolute -top-1 -right-1 flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span></span></span> <span class="font-medium text-sm">Live Sport</span>
                 </button>
-                <button onclick="switchSection('sport'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
+                <button onclick="openLiveGame('Alphabet Sportsbook', true); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
                     <span class="text-xl w-6 text-center">🎮</span> <span class="font-medium text-sm">E-Sport</span>
                 </button>
                 <button onclick="switchSection('casino'); toggleMobileSidebar();" class="w-full flex items-center gap-4 p-3 text-slate-300 hover:text-white hover:bg-slate-800/80 rounded-xl transition-all text-left">
@@ -134,7 +134,7 @@
                 <button onclick="switchSection('accueil')" id="btn-menu-accueil" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left active-menu-btn">
                     <span>🏠</span> <span id="menu-accueil">Accueil</span>
                 </button>
-                <button onclick="switchSection('sport')" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+               <button onclick="openLiveGame('Alphabet Sportsbook', true)" id="btn-menu-sport" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🏆</span> <span id="menu-sport">Sport</span>
                 </button>
                 <button onclick="switchSection('paris')" id="btn-menu-paris-view" class="w-full flex justify-between items-center hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left relative">
@@ -1165,15 +1165,15 @@
             } catch(e) { spinBtn.disabled = false; }
         }
 
-        // دالة فتح لعبة الكازينو
-async function openLiveGame(gameName) {
+      // دالة فتح لعبة كازينو أو سبورت بوك حقيقية عبر السيرفر
+async function openLiveGame(gameName, isSportsbook = false) {
     if(!playerSession) return openLoginModal();
     
-    // تحديث الرصيد في شريط اللعبة
-    document.getElementById('casino-live-balance').innerText = playerSession.balance.toFixed(2) + ' TND';
+    // 1. تحديث الرصيد في شريط اللعبة العلوي وتغيير العنوان
+    document.getElementById('casino-live-balance').innerText = parseFloat(playerSession.balance).toFixed(2) + ' TND';
     document.getElementById('casino-game-title').innerText = gameName;
     
-    // إظهار الشاشة
+    // 2. إظهار شاشة العرض العملاقة (Container)
     const container = document.getElementById('casino-iframe-container');
     container.classList.remove('hidden');
     container.classList.add('flex');
@@ -1181,34 +1181,62 @@ async function openLiveGame(gameName) {
     const iframe = document.getElementById('casino-iframe');
     const loader = document.getElementById('casino-loader');
     
-    loader.style.display = 'flex'; // إظهار التحميل
+    loader.style.display = 'flex'; // إظهار أنيميشن التحميل
     iframe.style.opacity = '0';
+    iframe.src = ""; // تصفير الإطار مؤقتاً
     
-    // محاكاة الاتصال بالسيرفر (تأخير ثانية واحدة للتحميل)
-    setTimeout(() => {
-        // رابط تجريبي للعبة (يمكنك تغييره لاحقاً لرابط اللعبة الحقيقي)
-        iframe.src = "https://html5.gamedesire.com/games/pragmatic/gates_of_olympus/demo"; 
+    try {
+        // 3. الاتصال بالسيرفر الخاص بك لإنشاء جلسة لعبة حقيقية وآمنة للمستخدم
+        const endpoint = isSportsbook ? `${BACKEND_URL}/api/provider/launch-sportsbook` : `${BACKEND_URL}/api/provider/launch-game`;
+        
+        const res = await fetch(endpoint, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ game_name: gameName, player_id: playerSession.username })
+        });
+        
+        if (res.ok) {
+            const data = await res.json();
+            if (data.launch_url) {
+                // إذا نجح السيرفر، نضع الرابط الحقيقي
+                iframe.src = data.launch_url;
+            } else {
+                showNotification("فشل جلب رابط اللعبة الحقيقي من المزود", "error");
+                closeCasinoGame();
+                return;
+            }
+        } else {
+            // كخطوة احتياطية أثناء التطوير: سنفتح الرابط التجريبي
+            console.log("وضع التطوير: فتح الرابط التجريبي المؤقت");
+            iframe.src = isSportsbook ? "https://ggr.gitbook.io/docs/integration/sportsbook-installation" : "https://html5.gamedesire.com/games/pragmatic/gates_of_olympus/demo";
+        }
+        
+        // 4. إخفاء التحميل وإظهار اللعبة بمجرد اكتمال فتح الرابط
         iframe.onload = () => {
             loader.style.display = 'none';
             iframe.style.opacity = '1';
         };
-    }, 1000);
+        
+    } catch (e) {
+        console.error("خطأ أثناء تشغيل اللعبة الحقيقية:", e);
+        iframe.src = isSportsbook ? "https://ggr.gitbook.io/docs/integration/sportsbook-installation" : "https://html5.gamedesire.com/games/pragmatic/gates_of_olympus/demo";
+        loader.style.display = 'none';
+        iframe.style.opacity = '1';
+    }
 }
 
-// دالة الخروج من اللعبة
+// دالة الخروج من اللعبة وتحديث رصيد اللاعب فوراً
 function closeCasinoGame() {
     const container = document.getElementById('casino-iframe-container');
     container.classList.add('hidden');
     container.classList.remove('flex');
     
-    // مسح الرابط لإيقاف اللعبة في الخلفية
+    // مسح الرابط تماماً لإيقاف اللعبة
     document.getElementById('casino-iframe').src = "";
     
-    // تحديث رصيد اللاعب بعد خروجه (لأنه قد يكون ربح أو خسر أثناء اللعب)
+    // تحديث رصيد اللاعب بشكل فوري
     refreshPlayerBalance();
 }
-
-
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
             if(crashLoopInterval) clearInterval(crashLoopInterval);
