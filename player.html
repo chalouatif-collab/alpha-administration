@@ -234,6 +234,17 @@
                     </div>
                     <div id="home-matches-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
+                <div id="pane-accueil" class="player-view-section space-y-4">
+    
+    <div class="w-full bg-[#0a0f24] rounded-2xl overflow-hidden border border-slate-800 shadow-2xl relative" style="height: 85vh; min-height: 700px;">
+        <div id="inline-sportsbook-loader" class="absolute inset-0 flex items-center justify-center bg-[#050814] z-10">
+            <span class="text-teal-400 font-bold animate-pulse">جاري تحميل المباريات المباشرة... ⚽</span>
+        </div>
+        
+        <iframe id="inline-sportsbook-iframe" src="" class="w-full h-full border-0 opacity-0 transition-opacity duration-500"></iframe>
+    </div>
+
+</div>
             </div>
 
             <div id="pane-sport" class="player-view-section space-y-4 hidden">
@@ -1225,6 +1236,7 @@ function closeCasinoGame(fromPhoneBackButton = false) {
     if (!fromPhoneBackButton && window.location.hash === "#playing") {
         history.back();
     }
+
 }
         function logoutPlayer() {
             if(balanceInterval) clearInterval(balanceInterval);
@@ -1266,6 +1278,40 @@ function closeCasinoGame(fromPhoneBackButton = false) {
     if(typeof loadLiveMatchesData === 'function') {
         loadLiveMatchesData();
     }
+
+    // === كود تشغيل السبورت بوك المدمج في الاستقبال ===
+    const inlineIframe = document.getElementById('inline-sportsbook-iframe');
+    const inlineLoader = document.getElementById('inline-sportsbook-loader');
+    
+    // تأكد أن اللاعب مسجل دخوله وأن الإطار موجود في الصفحة
+    if (inlineIframe && savedSession) {
+        fetch(`${BACKEND_URL}/api/provider/launch-sportsbook`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ game_name: 'Alphabet Sportsbook', player_id: JSON.parse(savedSession).username })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.launch_url) {
+                inlineIframe.src = data.launch_url; // الرابط الحقيقي للمباريات
+            } else {
+                // رابط تجريبي للرؤية أثناء التطوير
+                inlineIframe.src = "https://ggr.gitbook.io/docs/integration/sportsbook-installation"; 
+            }
+            
+            // إخفاء التحميل وإظهار المباريات بمجرد اكتمال الجلب
+            inlineIframe.onload = () => {
+                inlineLoader.style.display = 'none';
+                inlineIframe.style.opacity = '1';
+            };
+        })
+        .catch(err => {
+            console.error("خطأ في جلب الرياضة المدمجة:", err);
+            inlineIframe.src = "https://ggr.gitbook.io/docs/integration/sportsbook-installation";
+            inlineLoader.style.display = 'none';
+            inlineIframe.style.opacity = '1';
+        });
+    }
 };
 
         function startJackpots() {
@@ -1276,6 +1322,7 @@ function closeCasinoGame(fromPhoneBackButton = false) {
                 document.getElementById('jackpot-major').innerText = ((((now.getDay() === 0 ? 7 : now.getDay()) - 1) * 86400 + (now.getHours() * 3600 + now.getMinutes() * 60)) / 604800 * 350).toFixed(2);
                 document.getElementById('jackpot-mini').innerText = (miniProgress * 120).toFixed(2);
             }, 1000); 
+
         }
 
         function toggleUserMenu() { document.getElementById('user-dropdown').classList.toggle('hidden'); }
