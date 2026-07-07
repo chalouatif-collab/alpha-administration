@@ -533,7 +533,9 @@
                 else injectBackupMatches();
             }
             if(sectionId === 'paris') renderMyBetsHistoryPane();
+            localStorage.setItem('active_section', sectionName);
         }
+        
 
         function toggleBalanceVisibility() {
             const balSpan = document.getElementById('player-balance-val');
@@ -1394,6 +1396,16 @@ window.addEventListener("popstate", function(event) {
     }
 });
 
+// استرجاع القسم الأخير عند تحديث الصفحة أو الدخول للموقع
+document.addEventListener("DOMContentLoaded", () => {
+    // قراءة القسم المحفوظ، وإذا لم يوجد نفتح قسم الاستقبال كافتراضي
+    const savedSection = localStorage.getItem('active_section') || 'accueil';
+    
+    // ننتظر قليلاً جداً لضمان تحميل كل عناصر الصفحة ثم نشغل القسم
+    setTimeout(() => {
+        switchSection(savedSection);
+    }, 100);
+});
             
    </script>
  </body>
