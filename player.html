@@ -520,6 +520,7 @@
         }
 
         function switchSection(sectionId) {
+            localStorage.setItem('active_section', sectionId);
             document.querySelectorAll('.player-view-section').forEach(el => el.classList.add('hidden'));
             const panelElement = document.getElementById(`pane-${sectionId}`);
             if (panelElement) panelElement.classList.remove('hidden');
@@ -533,7 +534,7 @@
                 else injectBackupMatches();
             }
             if(sectionId === 'paris') renderMyBetsHistoryPane();
-            localStorage.setItem('active_section', sectionName);
+            
         }
         
 
