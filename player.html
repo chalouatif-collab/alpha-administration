@@ -985,44 +985,9 @@
             if(homeContainer) homeContainer.innerHTML = htmlContent;
         }
 
-        function injectBackupMatches() {
-            const container = document.getElementById('matches-list-container');
-            const homeContainer = document.getElementById('home-matches-container');
-            const backups = [
-                { id: "b1", title: "Ligue 1 Pro", home: "الترجي الرياضي", away: "النادي الإفريقي", c1: 1.75, cx: 3.10, c2: 2.50 },
-                { id: "b2", title: "UEFA Champions League", home: "Real Madrid", away: "Manchester City", c1: 2.10, cx: 3.40, c2: 1.95 },
-                { id: "b3", title: "Liga Spain", home: "FC Barcelona", away: "Atletico Madrid", c1: 1.80, cx: 3.25, c2: 2.30 }
-            ];
-            
-            const htmlContent = backups.map(m => {
-                const is1 = comboTicketMatchesList.some(i => i.matchId === m.id && i.outcome === '1');
-                const isX = comboTicketMatchesList.some(i => i.matchId === m.id && i.outcome === 'X');
-                const is2 = comboTicketMatchesList.some(i => i.matchId === m.id && i.outcome === '2');
-
-                const class1 = is1 ? 'bg-rose-600 border-rose-500 text-white shadow-[0_0_10px_rgba(225,29,72,0.3)]' : 'bg-[#050814] border-slate-800 text-slate-300 hover:border-teal-500 hover:text-teal-400';
-                const classX = isX ? 'bg-rose-600 border-rose-500 text-white shadow-[0_0_10px_rgba(225,29,72,0.3)]' : 'bg-[#050814] border-slate-800 text-slate-300 hover:border-teal-500 hover:text-teal-400';
-                const class2 = is2 ? 'bg-rose-600 border-rose-500 text-white shadow-[0_0_10px_rgba(225,29,72,0.3)]' : 'bg-[#050814] border-slate-800 text-slate-300 hover:border-teal-500 hover:text-teal-400';
-
-                return `
-                <div class="bg-[#090f24] border border-slate-800 p-4 rounded-2xl space-y-3 shadow-md font-bold text-left hover:border-teal-500/50 transition">
-                    <div class="flex justify-between items-center text-[10px] text-slate-400 border-b border-slate-800/80 pb-2">
-                        <span>🏆 ${m.title}</span><span class="text-teal-400 border border-teal-500/30 bg-teal-500/10 px-1.5 py-0.5 rounded">🔴 LIVE</span>
-                    </div>
-                    <div class="text-sm text-white flex justify-between items-center">
-                        <span>${m.home}</span><span class="text-[10px] text-slate-500">VS</span><span>${m.away}</span>
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-[11px] font-mono mt-2">
-                        <button onclick="selectBetOutcome('1', ${m.c1}, '${m.home} vs ${m.away}', '${m.id}')" class="${class1} py-2.5 rounded-xl text-center cursor-pointer transition-all border flex flex-col items-center gap-1"><span>1</span><span class="${is1 ? 'text-white' : 'text-teal-400'} font-black text-sm">${m.c1.toFixed(2)}</span></button>
-                        <button onclick="selectBetOutcome('X', ${m.cx}, '${m.home} vs ${m.away}', '${m.id}')" class="${classX} py-2.5 rounded-xl text-center cursor-pointer transition-all border flex flex-col items-center gap-1"><span>X</span><span class="${isX ? 'text-white' : 'text-teal-400'} font-black text-sm">${m.cx.toFixed(2)}</span></button>
-                        <button onclick="selectBetOutcome('2', ${m.c2}, '${m.home} vs ${m.away}', '${m.id}')" class="${class2} py-2.5 rounded-xl text-center cursor-pointer transition-all border flex flex-col items-center gap-1"><span>2</span><span class="${is2 ? 'text-white' : 'text-teal-400'} font-black text-sm">${m.c2.toFixed(2)}</span></button>
-                    </div>
-                </div>`;
-            }).join('');
-            
-            container.innerHTML = htmlContent;
-            if(homeContainer) homeContainer.innerHTML = htmlContent;
+        function injectBackupMatches()  {
+        
         }
-
         function renderCasinoGames() {
             const container = document.getElementById('games-grid-container');
             const games = [
