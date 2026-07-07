@@ -1244,28 +1244,29 @@ function closeCasinoGame(fromPhoneBackButton = false) {
             document.getElementById('auth-buttons-container').classList.remove('hidden');
         }
 
-        window.onload = function() { 
-            renderCasinoGames(); 
-            clearTicket(); 
-            startJackpots();
-            generateLiveWinnersTicker();
-            // قراءة الذاكرة وفتح القسم الأخير الذي كان يتصفحه اللاعب
-            const savedSection = localStorage.getItem('active_section') || 'accueil';
-            setTimeout(() => {
-                switchSection(savedSection);
-            }, 500);
-            const savedSession = localStorage.getItem('alpha_player_session');
-            if (savedSession) {
-                playerSession = JSON.parse(savedSession);
-                refreshPlayerBalance();
-                setupLoggedInUI();
-                fetchPlayerTicketsFromServer(); 
-            }
+       window.onload = function() {
+    // 1. فتح القسم المحفوظ فوراً وبدون أي تأخير لمنع الوميض 🎯
+    const savedSection = localStorage.getItem('active_section') || 'accueil';
+    switchSection(savedSection);
 
-            if(typeof loadLiveMatchesData === 'function') {
-                loadLiveMatchesData(); 
-            }
-        };
+    // 2. باقي العمليات وتجهيز الألعاب تعمل في الخلفية
+    renderCasinoGames();
+    clearTicket();
+    startJackpots();
+    generateLiveWinnersTicker();
+
+    const savedSession = localStorage.getItem('alpha_player_session');
+    if (savedSession) {
+        playerSession = JSON.parse(savedSession);
+        refreshPlayerBalance();
+        setupLoggedInUI();
+        fetchPlayerTicketsFromServer();
+    }
+
+    if(typeof loadLiveMatchesData === 'function') {
+        loadLiveMatchesData();
+    }
+};
 
         function startJackpots() {
             setInterval(() => {
