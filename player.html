@@ -1277,6 +1277,38 @@ function closeCasinoGame(fromPhoneBackButton = false) {
 
     if(typeof loadLiveMatchesData === 'function') {
         loadLiveMatchesData();
+   
+      // === كود تشغيل السبورت بوك المدمج في الاستقبال ===
+    const inlineIframe = document.getElementById('inline-sportsbook-iframe');
+    const inlineLoader = document.getElementById('inline-sportsbook-loader');
+    
+    if (inlineIframe) {
+        const userData = localStorage.getItem('alpha_player_session');
+        const username = userData ? JSON.parse(userData).username : 'guest';
+        
+        fetch(`${BACKEND_URL}/api/provider/launch-sportsbook`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ game_name: 'Alphabet Sportsbook', player_id: username })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.launch_url) {
+                inlineIframe.src = data.launch_url;
+                inlineIframe.onload = () => {
+                    if (inlineLoader) inlineLoader.style.display = 'none';
+                    inlineIframe.style.opacity = '1';
+                };
+            } else {
+                inlineIframe.src = "about:blank"; 
+                if (inlineLoader) inlineLoader.innerText = "السبورت بوك سيفتح قريباً...";
+            }
+        })
+        .catch(err => {
+            console.error("خطأ:", err);
+            if (inlineLoader) inlineLoader.innerText = "تعذر الاتصال بخادم الألعاب.";
+        });
+    }  
     }
 
     // === كود تشغيل السبورت بوك المدمج في الاستقبال ===
