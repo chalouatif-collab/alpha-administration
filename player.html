@@ -1248,7 +1248,9 @@ function closeCasinoGame(fromPhoneBackButton = false) {
             clearTicket(); 
             startJackpots();
             generateLiveWinnersTicker();
-            
+            // قراءة الذاكرة وفتح القسم الأخير الذي كان يتصفحه اللاعب
+            const savedSection = localStorage.getItem('active_section') || 'accueil';
+            switchSection(savedSection);
             const savedSession = localStorage.getItem('alpha_player_session');
             if (savedSession) {
                 playerSession = JSON.parse(savedSession);
@@ -1396,16 +1398,7 @@ window.addEventListener("popstate", function(event) {
     }
 });
 
-// استرجاع القسم الأخير عند تحديث الصفحة أو الدخول للموقع
-document.addEventListener("DOMContentLoaded", () => {
-    // قراءة القسم المحفوظ، وإذا لم يوجد نفتح قسم الاستقبال كافتراضي
-    const savedSection = localStorage.getItem('active_section') || 'accueil';
-    
-    // ننتظر قليلاً جداً لضمان تحميل كل عناصر الصفحة ثم نشغل القسم
-    setTimeout(() => {
-        switchSection(savedSection);
-    }, 100);
-});
+
             
    </script>
  </body>
