@@ -1134,6 +1134,7 @@
 
      // دالة فتح لعبة كازينو أو سبورت بوك
 async function openLiveGame(gameName, isSportsbook = false) {
+console.log("تم الضغط على الزر، والآن أحاول الاتصال بالسيرفر...");
     if(!playerSession) return openLoginModal();
     
     // إخبار الهاتف أننا دخلنا صفحة اللعبة لكي يعمل زر العودة
