@@ -529,7 +529,6 @@
                 </div>
 
             </div>
-    </div>
 
     <div id="pane-sport" class="player-view-section space-y-4 hidden">
         <div class="flex justify-between items-center mb-2">
@@ -1911,12 +1910,55 @@
             });
         }
 
-        // 4. دالة استدعاء السيرفر لفتح اللعبة 
-        async function playCasinoGame(providerCode, gameCode) {
-            alert(`جاري الاتصال بالسيرفر لفتح اللعبة: ${gameCode}`);
-            // سنضع كود الاتصال بـ API هنا في الخطوة القادمة
+       // 4. دالة استدعاء السيرفر لفتح اللعبة في الشاشة المخصصة
+async function playCasinoGame(providerCode, gameCode) {
+    if (!playerSession) return openLoginModal();
+
+    // إظهار الشاشة السوداء المنبثقة ودائرة التحميل
+    const container = document.getElementById('casino-iframe-container');
+    const iframe = document.getElementById('casino-iframe');
+    const loader = document.getElementById('casino-loader');
+    
+    container.classList.remove('hidden');
+    container.classList.add('flex');
+    loader.style.display = 'flex';
+    iframe.style.opacity = '0';
+    iframe.src = "";
+
+    // إخبار الهاتف أننا داخل لعبة لكي يعمل زر الرجوع
+    history.pushState({ isGame: true }, "", "#playing");
+
+    try {
+        // الاتصال بالسيرفر (main.py) الذي برمجناه سابقاً
+        const res = await fetch(`${BACKEND_URL}/api/provider/launch-casino`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ 
+                game_code: gameCode, 
+                provider_code: providerCode 
+            })
+        });
+
+        const data = await res.json();
+
+        if (data.launch_url) {
+            iframe.src = data.launch_url;
+        } else {
+            showNotification("المزود رفض الطلب، الرصيد غير كافٍ أو اللعبة غير متاحة", "error");
+            closeCasinoGame();
         }
 
+        // إخفاء التحميل عند اكتمال فتح اللعبة
+        iframe.onload = () => {
+            loader.style.display = 'none';
+            iframe.style.opacity = '1';
+        };
+
+    } catch (error) {
+        showNotification("خطأ في الاتصال بسيرفر الألعاب", "error");
+        closeCasinoGame();
+    }
+}
         // تشغيل الواجهة عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
             initCasinoLobby();
