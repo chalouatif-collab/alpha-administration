@@ -398,7 +398,9 @@
                     <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black"
                         id="my-bets-badge-count">0</span>
                 </button>
-                <button onclick="switchSection('casino')" id="btn-menu-casino"
+                <button onclick="switchSection('casino'); initCasinoLobby()" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+    <span>🎰</span> <span id="menu-casino">Le casino</span>
+</button>
                     class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🎰</span> <span id="menu-casino">Le casino</span>
                 </button>
@@ -458,6 +460,8 @@
                         <span id="header-username-display">User</span>
                         <span class="text-[8px] text-slate-400">▼</span>
                     </button>
+                   <div id="pane-casino" class="player-view-section hidden" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px;">
+                   </div>
                     <div id="main-balance-container"
                         class="hidden bg-[#050814] border border-slate-800 px-1.5 py-0.5 rounded-md flex items-center gap-1 font-mono">
                         <span class="text-[#14b8a6] font-black text-[10px]" id="player-balance-val">0.00</span>
@@ -903,6 +907,9 @@
                 else injectBackupMatches();
             }
             if (sectionId === 'paris') renderMyBetsHistoryPane();
+            if (sectionId === 'casino') {
+        initCasinoLobby(); // استدعاء دالة جلب الألعاب عند فتح الكازينو
+    }
 
         }
 
