@@ -1855,38 +1855,33 @@
             }
         };
 
-        // 2. دالة بناء شريط المزودين
-        function initCasinoLobby() {
-            const providersBar = document.getElementById('providers-bar');
-            if (!providersBar) return;
-            providersBar.innerHTML = '';
+       async function showProviderGames(providerCode) {
+    const grid = document.getElementById('games-grid');
+    grid.innerHTML = '<p class="text-white">جاري تحميل الألعاب...</p>';
 
-            let isFirst = true;
-            for (const providerCode in casinoData) {
-                const provider = casinoData[providerCode];
-                const btn = document.createElement('button');
-
-                // تصميم الأزرار
-                btn.className = `px-5 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-all shadow-md ${isFirst ? 'bg-gradient-to-r from-teal-500 to-teal-400 text-slate-900' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`;
-                btn.innerText = provider.name;
-
-                btn.onclick = () => {
-                    Array.from(providersBar.children).forEach(child => {
-                        child.className = 'px-5 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-all shadow-md bg-slate-800 text-slate-300 hover:bg-slate-700';
-                    });
-                    btn.className = 'px-5 py-2 rounded-full font-bold text-sm whitespace-nowrap transition-all shadow-md bg-gradient-to-r from-teal-500 to-teal-400 text-slate-900';
-
-                    showProviderGames(providerCode);
-                };
-
-                providersBar.appendChild(btn);
-
-                if (isFirst) {
-                    showProviderGames(providerCode);
-                    isFirst = false;
-                }
-            }
+    try {
+        // نطلب القائمة من سيرفرنا (الذي بدوره يسحبها من المزود)
+        const response = await fetch('/api/get-games-list', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ provider_code: providerCode })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 1) {
+            grid.innerHTML = ''; // تفريغ القائمة الحالية
+            data.games.forEach(game => {
+                // هنا نقوم بإنشاء كرت اللعبة بناءً على البيانات القادمة من المزود (game_name, banner)
+                const gameCard = document.createElement('div');
+                // ... (نفس كود بناء الكرت الذي كتبناه سابقاً) ...
+                // ملاحظة: استخدم game.banner لصورة اللعبة و game.game_code للرابط
+            });
         }
+    } catch (e) {
+        grid.innerHTML = '<p class="text-rose-500">فشل تحميل الألعاب</p>';
+    }
+}
 
         // 3. دالة عرض الألعاب في الشبكة
         function showProviderGames(providerCode) {
