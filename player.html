@@ -2000,7 +2000,7 @@
 
             const renderGames = (gamesList) => {
                 container.innerHTML = ''; 
-                gamesList.forEach(game => {
+                gamesList.slice(0, 40).forEach(game => {
                     container.innerHTML += `
                         <div onclick="playCasinoGame('${providerCode}', '${game.game_code}')" class="hover:scale-105 transition-all shadow-lg group" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
                             <div class="relative overflow-hidden rounded-lg mb-2">
