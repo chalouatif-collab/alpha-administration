@@ -457,9 +457,7 @@
                         <span id="header-username-display">User</span>
                         <span class="text-[8px] text-slate-400">▼</span>
                     </button>
-                    <div id="games-container"
-                        style="display: none; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px; overflow-y: auto;">
-                    </div>
+                
                     <div id="main-balance-container"
                         class="hidden bg-[#050814] border border-slate-800 px-1.5 py-0.5 rounded-md flex items-center gap-1 font-mono">
                         <span class="text-[#14b8a6] font-black text-[10px]" id="player-balance-val">0.00</span>
@@ -1936,14 +1934,15 @@ const container = document.getElementById('games-grid');
 if (container && data && data.games) {
     container.innerHTML = ''; // تفريغ الحاوية
     
-    data.games.forEach(game => {
+  data.games.forEach(game => {
         container.innerHTML += `
-            onclick="playCasinoGame('PRAGMATIC', '${game.game_code}')"" class="hover:scale-105 transition-all" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
+            <div onclick="playCasinoGame('PRAGMATIC', '${game.game_code}')" class="hover:scale-105 transition-all" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
                 <img src="${game.banner}" alt="${game.game_name}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
                 <span style="color: #cbd5e1; font-size: 13px; font-weight: bold;">${game.game_name}</span>
             </div>
         `;
     });
+    
 } else {
     console.log("تم جلب البيانات بنجاح، لكن لا يوجد عنصر 'pane-casino' لعرضها:", data);
 }
