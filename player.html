@@ -1842,34 +1842,6 @@
             }
         };
 
-        async function showProviderGames(providerCode) {
-            const grid = document.getElementById('games-grid');
-            grid.innerHTML = '<p class="text-white">جاري تحميل الألعاب...</p>';
-
-            try {
-                // نطلب القائمة من سيرفرنا (الذي بدوره يسحبها من المزود)
-                const response = await fetch('/api/get-games-list', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ provider_code: providerCode })
-                });
-
-                const data = await response.json();
-
-                if (data.status === 1) {
-                    grid.innerHTML = ''; // تفريغ القائمة الحالية
-                    data.games.forEach(game => {
-                        // هنا نقوم بإنشاء كرت اللعبة بناءً على البيانات القادمة من المزود (game_name, banner)
-                        const gameCard = document.createElement('div');
-                        // ... (نفس كود بناء الكرت الذي كتبناه سابقاً) ...
-                        // ملاحظة: استخدم game.banner لصورة اللعبة و game.game_code للرابط
-                    });
-                }
-            } catch (e) {
-                grid.innerHTML = '<p class="text-rose-500">فشل تحميل الألعاب</p>';
-            }
-        }
-
         // 3. دالة عرض الألعاب في الشبكة
         function showProviderGames(providerCode) {
             const grid = document.getElementById('games-grid');
@@ -1966,7 +1938,7 @@ if (container && data && data.games) {
     
     data.games.forEach(game => {
         container.innerHTML += `
-            <div onclick="launchGame('${game.game_code}')" class="hover:scale-105 transition-all" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
+            onclick="playCasinoGame('PRAGMATIC', '${game.game_code}')"" class="hover:scale-105 transition-all" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
                 <img src="${game.banner}" alt="${game.game_name}" style="width: 100%; height: auto; border-radius: 8px; margin-bottom: 10px;">
                 <span style="color: #cbd5e1; font-size: 13px; font-weight: bold;">${game.game_name}</span>
             </div>
