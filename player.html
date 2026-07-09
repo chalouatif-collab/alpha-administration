@@ -1980,6 +1980,11 @@
             `).join('');
         }
 
+        // متغيرات التحكم في عرض الألعاب (التحميل اللانهائي)
+        let currentProviderGames = [];
+        let currentlyDisplayedCount = 0;
+        let currentActiveProviderCode = ''; 
+
         // 3. دالة جلب الألعاب (مجهزة بالتحميل السريع Cache)
         async function loadProviderGames(providerCode) {
             document.querySelectorAll('.prov-tab-btn').forEach(btn => {
@@ -1998,21 +2003,14 @@
             const cacheKey = 'alpha_games_' + providerCode;
             const cachedGames = localStorage.getItem(cacheKey);
 
+            currentActiveProviderCode = providerCode;
+
+            // دالة ذكية للبدء برسم أول 40 لعبة
             const renderGames = (gamesList) => {
+                currentProviderGames = gamesList;
+                currentlyDisplayedCount = 0;
                 container.innerHTML = ''; 
-                gamesList.slice(0, 40).forEach(game => {
-                    container.innerHTML += `
-                        <div onclick="playCasinoGame('${providerCode}', '${game.game_code}')" class="hover:scale-105 transition-all shadow-lg group" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
-                            <div class="relative overflow-hidden rounded-lg mb-2">
-                                <img src="${game.banner}" alt="${game.game_name}" loading="lazy" style="width: 100%; height: auto;" class="group-hover:opacity-80 transition-opacity">
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
-                                    <span class="bg-teal-500 text-slate-950 font-black text-[10px] px-3 py-1.5 rounded-full uppercase">▶ Jouer</span>
-                                </div>
-                            </div>
-                            <span style="color: #cbd5e1; font-size: 12px; font-weight: bold;" class="truncate block">${game.game_name}</span>
-                        </div>
-                    `;
-                });
+                loadMoreGames(); // سحب الدفعة الأولى
             };
 
             if (cachedGames) {
@@ -2045,6 +2043,36 @@
                     container.innerHTML = '<div class="col-span-full text-center text-rose-500 py-10 font-bold">حدث خطأ أثناء الاتصال بالسيرفر ❌</div>';
                 }
             }
+        }
+
+        // دالة سحب 40 لعبة إضافية كلما نزل اللاعب للأسفل
+        function loadMoreGames() {
+            if (currentlyDisplayedCount >= currentProviderGames.length) return; 
+
+            const container = document.getElementById('games-grid');
+            if (!container) return;
+
+            // أخذ 40 لعبة جديدة فقط
+            const nextBatch = currentProviderGames.slice(currentlyDisplayedCount, currentlyDisplayedCount + 40);
+            let htmlChunk = '';
+            
+            nextBatch.forEach(game => {
+                htmlChunk += `
+                    <div onclick="playCasinoGame('${currentActiveProviderCode}', '${game.game_code}')" class="hover:scale-105 transition-all shadow-lg group" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
+                        <div class="relative overflow-hidden rounded-lg mb-2">
+                            <img src="${game.banner}" alt="${game.game_name}" loading="lazy" style="width: 100%; height: auto;" class="group-hover:opacity-80 transition-opacity">
+                            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+                                <span class="bg-teal-500 text-slate-950 font-black text-[10px] px-3 py-1.5 rounded-full uppercase">▶ Jouer</span>
+                            </div>
+                        </div>
+                        <span style="color: #cbd5e1; font-size: 12px; font-weight: bold;" class="truncate block">${game.game_name}</span>
+                    </div>
+                `;
+            });
+
+            // إضافتها للشبكة بهدوء بدون مسح الألعاب السابقة
+            container.insertAdjacentHTML('beforeend', htmlChunk);
+            currentlyDisplayedCount += nextBatch.length;
         }
 
         // 4. دالة استدعاء السيرفر لفتح اللعبة في الشاشة المخصصة
@@ -2099,10 +2127,21 @@
             loadProviderGames('PRAGMATIC'); 
         }
 
-        // تشغيل واجهة الكازينو فور تحميل الصفحة
+        // تشغيل واجهة الكازينو + إعداد حساس النزول (Infinite Scroll)
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof initCasinoLobby === 'function') {
                 initCasinoLobby();
+            }
+
+            // هذا هو الحساس الذي يراقب النزول
+            const mainContentArea = document.querySelector('main.overflow-y-auto');
+            if (mainContentArea) {
+                mainContentArea.addEventListener('scroll', () => {
+                    // إذا وصل اللاعب لأسفل الصفحة تقريباً، اسحب المزيد من الألعاب!
+                    if (mainContentArea.scrollTop + mainContentArea.clientHeight >= mainContentArea.scrollHeight - 300) {
+                        loadMoreGames();
+                    }
+                });
             }
         });
 
