@@ -397,10 +397,11 @@
                     <span class="bg-[#eab308] text-slate-950 text-[10px] px-2 py-0.5 rounded-full font-black"
                         id="my-bets-badge-count">0</span>
                 </button>
-               <button onclick="switchSection('casino'); initCasinoLobby()" id="btn-menu-casino" class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
+                <button onclick="switchSection('casino'); initCasinoLobby()" id="btn-menu-casino"
+                    class="w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left">
                     <span>🎰</span> <span id="menu-casino">Le casino</span>
                 </button>
-                   
+
                 <button
                     class="hide-on-mobile-bar w-full flex items-center gap-4 hover:bg-slate-900/60 p-3 rounded-xl transition-all cursor-pointer text-left opacity-40 cursor-not-allowed">
                     <span>🤵</span> <span id="menu-live">Casino en direct</span>
@@ -457,7 +458,7 @@
                         <span id="header-username-display">User</span>
                         <span class="text-[8px] text-slate-400">▼</span>
                     </button>
-                
+
                     <div id="main-balance-container"
                         class="hidden bg-[#050814] border border-slate-800 px-1.5 py-0.5 rounded-md flex items-center gap-1 font-mono">
                         <span class="text-[#14b8a6] font-black text-[10px]" id="player-balance-val">0.00</span>
@@ -487,7 +488,7 @@
         </header>
 
         <!-- المحتوى الرئيسي -->
-      
+
         <main class="flex-1 overflow-y-auto p-4 md:p-6 no-scrollbar relative">
 
             <div class="live-ticker-wrapper">
@@ -1911,55 +1912,55 @@
                 closeCasinoGame();
             }
         }
-       // ==========================================
+        // ==========================================
         // أكواد الكازينو الشاملة (نظيفة ومحدثة)
         // ==========================================
 
         // 1. قائمة المشغلين الشاملة
         const casinoProviders = [
             { code: "PRAGMATIC", name: "Pragmatic Play", icon: "👑" },
-            { code: "AMATIC", name: "Amatic ", icon: "🎰" },
-            { code: "EVO", name: "Evolution", icon: "🤵" },
-            { code: "HACKSAW", name: "Hacksaw Gaming", icon: "🤠" },
+            { code: "AMATIC", name: "AMATIC ", icon: "🎰" },
+            { code: "HACKSAW", name: "Hacksaw", icon: "🤠" }
             { code: "PLAYNGO", name: "Play'n GO", icon: "🔥" },
-            { code: "NOLIMIT", name: "Nolimit City", icon: "🚀" },
+            { code: "AMUSNET", name: "Amusnet (EGT)", icon: "🎰" },
+            { code: "EVOPLAY", name: "Evoplay", icon: "🎰" },
+            { code: "HABANERO", name: "Habanero", icon: "🎰" },
+            { code: "PGSOFT", name: "PG Soft", icon: "🎰" },
+            { code: "PLAYSON", name: "Playson", icon: "🎰" },
+            { code: "EVO", name: "Evolution", icon: "🤵" },
+            { code: "NOLIMIT", name: "Nolimit", icon: "🚀" },
             { code: "NETENT", name: "NetEnt", icon: "🌟" },
             { code: "1X2GAMING", name: "1x2 Gaming", icon: "🎰" },
             { code: "2BY2", name: "2 By 2 Gaming", icon: "🎰" },
             { code: "3OAKS", name: "3 Oaks Gaming", icon: "🎰" },
             { code: "4THEPLAYER", name: "4ThePlayer", icon: "🎰" },
             { code: "AINSWORTH", name: "Ainsworth", icon: "🎰" },
-            { code: "AMUSNET", name: "Amusnet (EGT)", icon: "🎰" },
             { code: "APOLLO", name: "Apollo Games", icon: "🎰" },
             { code: "ARISTOCRAT", name: "Aristocrat", icon: "🎰" },
-            { code: "BELATRA", name: "Belatra Games", icon: "🎰" },
+            { code: "BELATRA", name: "Belatra", icon: "🎰" },
             { code: "BETSOFT", name: "Betsoft", icon: "🎰" },
             { code: "BGAMING", name: "BGaming", icon: "🎰" },
             { code: "BTG", name: "Big Time Gaming", icon: "🎰" },
-            { code: "BLUEPRINT", name: "Blueprint Gaming", icon: "🎰" },
-            { code: "BOOMING", name: "Booming Games", icon: "🎰" },
+            { code: "BLUEPRINT", name: "Blueprint", icon: "🎰" },
+            { code: "BOOMING", name: "Booming", icon: "🎰" },
             { code: "ELK", name: "Elk Studios", icon: "🎰" },
             { code: "ENDORPHINA", name: "Endorphina", icon: "🎰" },
-            { code: "EVOPLAY", name: "Evoplay", icon: "🎰" },
             { code: "FUGASO", name: "Fugaso", icon: "🎰" },
             { code: "GAMEART", name: "GameArt", icon: "🎰" },
             { code: "GAMESGLOBAL", name: "Games Global", icon: "🎰" },
             { code: "GAMOMAT", name: "Gamomat", icon: "🎰" },
-            { code: "HABANERO", name: "Habanero", icon: "🎰" },
             { code: "IGT", name: "IGT", icon: "🎰" },
-            { code: "IRONDOG", name: "Iron Dog Studio", icon: "🎰" },
-            { code: "KALAMBA", name: "Kalamba Games", icon: "🎰" },
+            { code: "IRONDOG", name: "Iron Dog", icon: "🎰" },
+            { code: "KALAMBA", name: "Kalamba", icon: "🎰" },
             { code: "KONAMI", name: "Konami", icon: "🎰" },
             { code: "MERKUR", name: "Merkur Gaming", icon: "🎰" },
             { code: "NOVOMATIC", name: "Novomatic", icon: "🎰" },
-            { code: "PGSOFT", name: "PG Soft", icon: "🎰" },
-            { code: "PLAYSON", name: "Playson", icon: "🎰" },
             { code: "PLAYTECH", name: "Playtech", icon: "🎰" },
             { code: "PUSHGAMING", name: "Push Gaming", icon: "🎰" },
             { code: "QUICKSPIN", name: "Quickspin", icon: "🎰" },
             { code: "REDTIGER", name: "Red Tiger", icon: "🎰" },
             { code: "RELAX", name: "Relax Gaming", icon: "🎰" },
-            { code: "SMARTSOFT", name: "SmartSoft Gaming", icon: "🎰" },
+            { code: "SMARTSOFT", name: "SmartSoft", icon: "🎰" },
             { code: "SPINOMENAL", name: "Spinomenal", icon: "🎰" },
             { code: "STAKELOGIC", name: "Stakelogic", icon: "🎰" },
             { code: "THUNDERKICK", name: "Thunderkick", icon: "🎰" },
@@ -1971,7 +1972,7 @@
         function renderProvidersBar() {
             const bar = document.getElementById('providers-bar');
             if (!bar) return;
-            
+
             bar.innerHTML = casinoProviders.map(p => `
                 <button onclick="loadProviderGames('${p.code}')" id="btn-prov-${p.code}"
                     class="prov-tab-btn flex items-center gap-2 px-4 py-2 bg-[#050814] hover:bg-teal-600 border border-slate-800 hover:border-teal-400 rounded-xl text-xs font-bold text-slate-300 hover:text-slate-950 transition-all cursor-pointer whitespace-nowrap shadow-md">
@@ -1983,7 +1984,7 @@
         // متغيرات التحكم في عرض الألعاب (التحميل اللانهائي)
         let currentProviderGames = [];
         let currentlyDisplayedCount = 0;
-        let currentActiveProviderCode = ''; 
+        let currentActiveProviderCode = '';
 
         // 3. دالة جلب الألعاب (مجهزة بالتحميل السريع Cache)
         async function loadProviderGames(providerCode) {
@@ -2009,7 +2010,7 @@
             const renderGames = (gamesList) => {
                 currentProviderGames = gamesList;
                 currentlyDisplayedCount = 0;
-                container.innerHTML = ''; 
+                container.innerHTML = '';
                 loadMoreGames(); // سحب الدفعة الأولى
             };
 
@@ -2047,7 +2048,7 @@
 
         // دالة سحب 40 لعبة إضافية كلما نزل اللاعب للأسفل
         function loadMoreGames() {
-            if (currentlyDisplayedCount >= currentProviderGames.length) return; 
+            if (currentlyDisplayedCount >= currentProviderGames.length) return;
 
             const container = document.getElementById('games-grid');
             if (!container) return;
@@ -2055,7 +2056,7 @@
             // أخذ 40 لعبة جديدة فقط
             const nextBatch = currentProviderGames.slice(currentlyDisplayedCount, currentlyDisplayedCount + 40);
             let htmlChunk = '';
-            
+
             nextBatch.forEach(game => {
                 htmlChunk += `
                     <div onclick="playCasinoGame('${currentActiveProviderCode}', '${game.game_code}')" class="hover:scale-105 transition-all shadow-lg group" style="cursor: pointer; background: #1e293b; padding: 10px; border-radius: 12px; text-align: center; border: 1px solid #334155;">
@@ -2123,8 +2124,8 @@
 
         // 5. دالة التشغيل الأولية
         function initCasinoLobby() {
-            renderProvidersBar(); 
-            loadProviderGames('PRAGMATIC'); 
+            renderProvidersBar();
+            loadProviderGames('PRAGMATIC');
         }
 
         // تشغيل واجهة الكازينو + إعداد حساس النزول (Infinite Scroll)
