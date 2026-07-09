@@ -615,14 +615,32 @@
                     </div>
                 </div>
             </div>
-            <div id="pane-casino" class="player-view-section space-y-4 hidden">
+           <div id="pane-casino" class="player-view-section space-y-4 hidden">
 
-                <div class="w-full overflow-x-auto no-scrollbar py-2 border-b border-slate-800/60">
-                    <div id="providers-bar" class="flex gap-3 w-max px-2">
+                <div class="flex flex-col gap-4 mb-6 mt-2">
+                    
+                    <div id="casino-controls" class="flex flex-col md:flex-row gap-4 justify-between items-center bg-[#0f172a] p-4 rounded-xl border border-slate-800 shadow-md w-full">
+                        <div class="relative w-full md:w-1/2">
+                            <input type="text" id="game-search-input" onkeyup="filterGames()" placeholder="ابحث عن اسم اللعبة..." 
+                                class="w-full bg-[#1e293b] text-slate-200 border border-slate-700 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:border-teal-500 transition-colors text-sm font-bold">
+                            <span class="absolute left-3 top-2 text-slate-400 text-lg">🔍</span>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <select id="game-sort-select" onchange="filterGames()" 
+                                class="w-full bg-[#1e293b] text-slate-200 border border-slate-700 rounded-lg px-4 py-2 focus:outline-none focus:border-teal-500 cursor-pointer text-sm font-bold">
+                                <option value="default">الترتيب الافتراضي</option>
+                                <option value="az">أبجدياً (A-Z)</option>
+                                <option value="za">أبجدياً (Z-A)</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <div id="providers-bar" class="flex overflow-x-auto gap-2 pb-2 custom-scrollbar">
+                    </div>
+                    
                 </div>
 
-                <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-2">
+                <div id="games-grid" class="grid grid-cols-2 md:grid-cols-4 sm:grid-cols-3 gap-4 p-2">
                 </div>
 
             </div>
@@ -1979,10 +1997,43 @@
     `).join('');
 }
 
-        // متغيرات التحكم في عرض الألعاب (التحميل اللانهائي)
+   // متغيرات التحكم المتطورة (للبحث والتحميل اللانهائي)
         let currentProviderGames = [];
+        let filteredProviderGames = []; 
         let currentlyDisplayedCount = 0;
         let currentActiveProviderCode = '';
+
+        // دالة الفلترة والترتيب (السحرية)
+        function filterGames() {
+            const searchTerm = document.getElementById('game-search-input').value.toLowerCase();
+            const sortType = document.getElementById('game-sort-select').value;
+
+            // 1. البحث بالاسم
+            filteredProviderGames = currentProviderGames.filter(game => 
+                game.game_name.toLowerCase().includes(searchTerm)
+            );
+
+            // 2. الترتيب (Sort)
+            if (sortType === 'az') {
+                filteredProviderGames.sort((a, b) => a.game_name.localeCompare(b.game_name));
+            } else if (sortType === 'za') {
+                filteredProviderGames.sort((a, b) => b.game_name.localeCompare(a.game_name));
+            }
+
+            // 3. تصفير العداد ورسم الشبكة من جديد
+            currentlyDisplayedCount = 0;
+            const container = document.getElementById('games-grid');
+            if (container) {
+                container.innerHTML = '';
+                
+                if (filteredProviderGames.length === 0) {
+                    container.innerHTML = `<div class="col-span-full text-center text-slate-500 py-10 font-bold">لا توجد ألعاب تطابق بحثك " ${searchTerm} " 🕵️‍♂️</div>`;
+                    return;
+                }
+                
+                loadMoreGames(); // عرض أول 40 لعبة من نتائج البحث
+            }
+        }
 
         // 3. دالة جلب الألعاب (مجهزة بالتحميل السريع Cache)
         async function loadProviderGames(providerCode) {
@@ -2004,12 +2055,19 @@
 
             currentActiveProviderCode = providerCode;
 
-            // دالة ذكية للبدء برسم أول 40 لعبة
+            // تصفير البحث عند تغيير المزود
+            const searchInput = document.getElementById('game-search-input');
+            const sortSelect = document.getElementById('game-sort-select');
+            if(searchInput) searchInput.value = '';
+            if(sortSelect) sortSelect.value = 'default';
+
+            // دالة ذكية للبدء برسم الألعاب
             const renderGames = (gamesList) => {
                 currentProviderGames = gamesList;
+                filteredProviderGames = [...gamesList]; // نسخ للفلترة
                 currentlyDisplayedCount = 0;
                 container.innerHTML = '';
-                loadMoreGames(); // سحب الدفعة الأولى
+                loadMoreGames();
             };
 
             if (cachedGames) {
@@ -2030,9 +2088,7 @@
                     const data = JSON.parse(rawText);
                     if (data && data.games && data.games.length > 0) {
                         localStorage.setItem(cacheKey, JSON.stringify(data.games));
-                        if (!cachedGames) {
-                            renderGames(data.games);
-                        }
+                        if (!cachedGames) renderGames(data.games);
                     } else if (!cachedGames) {
                         container.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10 font-bold">لا توجد ألعاب متاحة لهذا المشغل حالياً. 📭</div>';
                     }
@@ -2046,13 +2102,13 @@
 
         // دالة سحب 40 لعبة إضافية كلما نزل اللاعب للأسفل
         function loadMoreGames() {
-            if (currentlyDisplayedCount >= currentProviderGames.length) return;
+            if (currentlyDisplayedCount >= filteredProviderGames.length) return;
 
             const container = document.getElementById('games-grid');
             if (!container) return;
 
-            // أخذ 40 لعبة جديدة فقط
-            const nextBatch = currentProviderGames.slice(currentlyDisplayedCount, currentlyDisplayedCount + 40);
+            // أخذ 40 لعبة من القائمة المفلترة
+            const nextBatch = filteredProviderGames.slice(currentlyDisplayedCount, currentlyDisplayedCount + 40);
             let htmlChunk = '';
 
             nextBatch.forEach(game => {
@@ -2069,7 +2125,6 @@
                 `;
             });
 
-            // إضافتها للشبكة بهدوء بدون مسح الألعاب السابقة
             container.insertAdjacentHTML('beforeend', htmlChunk);
             currentlyDisplayedCount += nextBatch.length;
         }
