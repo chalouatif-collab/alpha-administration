@@ -188,7 +188,7 @@
 
                 <!-- Section de Recherche -->
                 <div class="input-group mb-4">
-                   <input type="text" id="ticket-search-input" class="form-control input-blue" style="color: #e8006f !important; font-weight: bold;" placeholder="Entrez l'ID du Ticket (ex: TCK-98765)">
+                    <input type="text" id="ticket-search-input" class="form-control input-blue" style="color: #e8006f !important; font-weight: bold;" placeholder="Entrez l'ID du Ticket (ex: TCK-98765)">
                     <button class="btn bg-owner-primary text-white fw-bold px-4" onclick="searchTicket()">
                         <i class="fas fa-search me-2"></i> Rechercher
                     </button>
@@ -235,6 +235,11 @@
                     <button onclick="resettleTicket()" class="btn btn-success w-100 fw-bold py-3 fs-5">
                         <i class="fas fa-check-circle me-2"></i> Recalculer et Soumettre
                     </button>
+                <!-- القائمة المضافة حديثاً -->
+<div class="mt-4">
+    <h6 class="text-white fw-bold mb-3">📜 جميع التذاكر (Derniers Tickets)</h6>
+    <div id="all-tickets-list" style="max-height: 300px; overflow-y: auto;"></div>
+</div>
                 </div>
             </div>
         </div>
@@ -275,10 +280,12 @@
 
     <script>
         // ================= وظائف تصحيح التذاكر (Resettlement) =================
-        function showResettlementPanel() {
-            document.getElementById('default-dashboard-view').classList.add('d-none');
-            document.getElementById('admin-resettlement-panel').classList.remove('d-none');
-        }
+       // استدعاء البيانات عند فتح اللوحة
+function showResettlementPanel() {
+    document.getElementById('default-dashboard-view').classList.add('d-none');
+    document.getElementById('admin-resettlement-panel').classList.remove('d-none');
+    fetchAllTickets(); // إضافة هذا السطر لجلب التذاكر
+}
 
         function hideResettlementPanel() {
             document.getElementById('admin-resettlement-panel').classList.add('d-none');
@@ -316,6 +323,36 @@
         }
     } catch (e) {
         showNotification("خطأ في الاتصال بالسيرفر", "error");
+    }
+}
+async function fetchAllTickets() {
+    const listContainer = document.getElementById('all-tickets-list');
+    if(!listContainer) return;
+    listContainer.innerHTML = '<div class="text-info text-center p-3">جاري تحميل جميع الأوراق... ⏳</div>';
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/get-all-tickets`, { headers: getAuthHeaders() });
+        const tickets = await res.json();
+        
+        if (tickets.length === 0) {
+            listContainer.innerHTML = '<div class="text-secondary text-center p-3">لا توجد أوراق حالياً.</div>';
+            return;
+        }
+
+        listContainer.innerHTML = tickets.map(t => `
+            <div class="card bg-dark border border-blue-custom p-3 mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="text-white fw-bold">#${t.ticket_id}</span> | 
+                        <span class="text-secondary" style="font-size: 0.7rem;">${t.username}</span>
+                    </div>
+                    <span class="badge ${t.status === 'gagne' ? 'bg-success' : (t.status === 'perdu' ? 'bg-danger' : 'bg-info')}">${t.status}</span>
+                </div>
+                <div class="mt-2 text-white small">${t.match || 'Match ...'}</div>
+            </div>
+        `).join('');
+    } catch(e) {
+        listContainer.innerHTML = '<div class="text-danger text-center p-3">خطأ في جلب البيانات</div>';
     }
 }
         // ======================================================================
