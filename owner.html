@@ -328,29 +328,38 @@ function showResettlementPanel() {
 async function fetchAllTickets() {
     const listContainer = document.getElementById('all-tickets-list');
     if(!listContainer) return;
-    listContainer.innerHTML = '<div class="text-info text-center p-3">جاري تحميل جميع الأوراق... ⏳</div>';
+    listContainer.innerHTML = '<div class="text-info text-center p-3">جاري التحميل... ⏳</div>';
 
     try {
         const res = await fetch(`${BACKEND_URL}/api/admin/get-all-tickets`, { headers: getAuthHeaders() });
         const tickets = await res.json();
         
+        // تصحيح: هنا نطبع أول تذكرة لنعرف أسماء الحقول الحقيقية
+        console.log("هيكل التذكرة:", tickets[0]); 
+
         if (tickets.length === 0) {
             listContainer.innerHTML = '<div class="text-secondary text-center p-3">لا توجد أوراق حالياً.</div>';
             return;
         }
 
-        listContainer.innerHTML = tickets.map(t => `
+        listContainer.innerHTML = tickets.map(t => {
+            // سنستخدم || لضمان عدم ظهور undefined إذا كان الاسم مختلفاً
+            const tId = t.ticket_id || t.id || "N/A";
+            const user = t.username || t.user || "Unknown";
+            const status = t.status || "N/A";
+            
+            return `
             <div class="card bg-dark border border-blue-custom p-3 mb-2">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <span class="text-white fw-bold">#${t.ticket_id}</span> | 
-                        <span class="text-secondary" style="font-size: 0.7rem;">${t.username}</span>
+                        <span class="text-white fw-bold">#${tId}</span> | 
+                        <span class="text-secondary" style="font-size: 0.7rem;">${user}</span>
                     </div>
-                    <span class="badge ${t.status === 'gagne' ? 'bg-success' : (t.status === 'perdu' ? 'bg-danger' : 'bg-info')}">${t.status}</span>
+                    <span class="badge ${status === 'gagne' ? 'bg-success' : (status === 'perdu' ? 'bg-danger' : 'bg-info')}">${status}</span>
                 </div>
                 <div class="mt-2 text-white small">${t.match || 'Match ...'}</div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     } catch(e) {
         listContainer.innerHTML = '<div class="text-danger text-center p-3">خطأ في جلب البيانات</div>';
     }
