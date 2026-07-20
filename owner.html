@@ -489,6 +489,7 @@ async function fetchAllTickets() {
                     const res = await fetch(`${BACKEND_URL}/api/admin/get-player-tickets?username=${encodeURIComponent(target_username)}&t=${Date.now()}`, { headers: getAuthHeaders() });
                     if (res.ok) {
                         const tickets = await res.json();
+                        console.log("هيكل التذاكر القادم من السيرفر:", tickets); // أضف هذا السطر
                         if (tickets && tickets.length > 0) {
                             let html = `<div class="d-flex flex-column gap-2" style="max-height: 400px; overflow-y: auto;">`;
                             tickets.forEach(t => {
