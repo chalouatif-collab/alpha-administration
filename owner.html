@@ -396,8 +396,13 @@ async function fetchAllTickets() {
         let user = JSON.parse(localStorage.getItem('alpha_user')) || { username: 'fethi', role: 'owner' };
 function getAuthHeaders() {
     const token = localStorage.getItem('token');
-    console.log("Current Token in localStorage:", token); // <-- أضف هذا السطر
-    return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` };
+    // إضافة تنبيه إذا كان التوكين يبدو غير صحيح
+    if (!token) console.error("لا يوجد توكين!");
+    
+    return { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+    };
 }
 
         const translations = {
