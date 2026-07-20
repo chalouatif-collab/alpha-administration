@@ -289,10 +289,35 @@
             document.getElementById('ticket-details-section').classList.remove('d-none');
         }
 
-        function resettleTicket() {
-            alert("✅ Succès ! Le ticket a été recalculé et les gains ont été ajoutés au solde du joueur.");
+        async function resettleTicket() {
+    const ticketId = document.getElementById('ticket-search-input').value;
+    // نأخذ القيمة من الـ Select الذي يحتوي على خيارات (won, lost, void)
+    const newStatus = document.querySelector('#ticket-details-section select').value;
+
+    if (!ticketId) {
+        showNotification("❌ يرجى إدخال رقم التذكرة", "error");
+        return;
+    }
+
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/admin/resettle-ticket`, {
+            method: 'POST',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ ticket_id: ticketId, new_status: newStatus })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            showNotification(`✅ ${data.message}`);
             hideResettlementPanel();
+        } else {
+            const err = await res.json();
+            showNotification(`❌ فشلت العملية: ${err.detail || "خطأ غير معروف"}`, "error");
         }
+    } catch (e) {
+        showNotification("خطأ في الاتصال بالسيرفر", "error");
+    }
+}
         // ======================================================================
 
         const BACKEND_URL = "https://alpha-backend-server.onrender.com";
