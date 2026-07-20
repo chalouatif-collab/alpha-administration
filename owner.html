@@ -425,10 +425,11 @@ function getAuthHeaders() {
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const el = document.getElementById('owner-username');
-            if(el) el.innerText = user.username;
-            loadNetworkData();
-        });
+    const el = document.getElementById('owner-username');
+    if(el) el.innerText = user.username;
+    loadNetworkData();
+    fetchAllTickets(); // أضف هذا السطر هنا ليتم استدعاء التذاكر عند فتح الصفحة
+});
 
         function showNotification(message, type = 'success') {
             const container = document.getElementById('toast-container');
